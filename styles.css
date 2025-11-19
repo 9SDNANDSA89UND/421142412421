@@ -1,15 +1,22 @@
-/* TamedBlox Styled Store — styles.css */
+/* Fully Upgraded Neon + Glow + TamedBlox UI — styles.css */
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  transition: all 0.25s ease;
 }
 
 body {
   font-family: 'Inter', sans-serif;
   background: #0c0f17;
   color: #ffffff;
+  animation: fadeIn 1s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* NAVBAR */
@@ -21,6 +28,12 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  animation: fadeInUp 0.8s ease;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .nav-left {
@@ -33,6 +46,13 @@ body {
   font-weight: 700;
   font-size: 20px;
   color: #4ef58a;
+  text-shadow: 0 0 10px #4ef58a;
+  animation: neonPulse 2s infinite;
+}
+
+@keyframes neonPulse {
+  0%, 100% { text-shadow: 0 0 6px #4ef58a, 0 0 12px #4ef58a; }
+  50% { text-shadow: 0 0 16px #4ef58a, 0 0 26px #4ef58a; }
 }
 
 .balance {
@@ -55,6 +75,7 @@ body {
   font-weight: 600;
   cursor: pointer;
   font-size: 14px;
+  transition: all 0.2s ease;
 }
 
 .btn.login {
@@ -62,10 +83,19 @@ body {
   color: #ffffff;
   border: 1px solid rgba(255,255,255,0.1);
 }
+.btn.login:hover {
+  background: #1b2437;
+  box-shadow: 0 0 10px rgba(255,255,255,0.2);
+}
 
 .btn.signup {
   background: #4ef58a;
   color: #000000;
+  box-shadow: 0 0 10px #4ef58a;
+}
+.btn.signup:hover {
+  background: #67ff9d;
+  box-shadow: 0 0 15px #4ef58a;
 }
 
 /* HERO SECTION */
@@ -73,6 +103,7 @@ body {
   padding: 40px 20px;
   max-width: 1200px;
   margin: auto;
+  animation: fadeInUp 1s ease;
 }
 
 .hero h1 {
@@ -83,6 +114,8 @@ body {
 
 .hero h1 span {
   color: #4ef58a;
+  text-shadow: 0 0 10px #4ef58a, 0 0 20px #4ef58a;
+  animation: neonPulse 2s infinite ease-in-out;
 }
 
 .search-box {
@@ -92,6 +125,7 @@ body {
   border-radius: 14px;
   display: flex;
   align-items: center;
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
 }
 
 .search-box input {
@@ -118,12 +152,19 @@ body {
   cursor: pointer;
   font-size: 14px;
   color: white;
+  transition: all 0.2s ease;
+}
+
+.filter:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 12px rgba(255,255,255,0.1);
 }
 
 .filter.active {
   background: #4ef58a;
   color: #000;
   font-weight: 600;
+  box-shadow: 0 0 15px #4ef58a;
 }
 
 /* STATS */
@@ -147,6 +188,7 @@ body {
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 25px;
   margin-top: 35px;
+  animation: fadeIn 1.2s ease;
 }
 
 .card {
@@ -154,7 +196,14 @@ body {
   padding: 20px;
   border-radius: 18px;
   border: 1px solid rgba(255,255,255,0.06);
-  box-shadow: 0 0 35px rgba(0,0,0,0.2);
+  box-shadow: 0 0 25px rgba(0,0,0,0.25);
+  transform: translateY(0);
+  transition: all 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 0 35px rgba(78,245,138,0.3);
 }
 
 .card img {
@@ -178,6 +227,7 @@ body {
   margin-top: 16px;
   font-weight: 700;
   color: #4ef58a;
+  text-shadow: 0 0 8px #4ef58a;
 }
 
 .stock {
@@ -197,6 +247,13 @@ body {
   font-weight: 600;
   border: none;
   cursor: pointer;
+  box-shadow: 0 0 12px #4ef58a;
+}
+
+.buy-btn:hover {
+  background: #67ff9d;
+  box-shadow: 0 0 20px #4ef58a;
+  transform: translateY(-3px);
 }
 
 /* FOOTER */
