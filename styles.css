@@ -1,4 +1,4 @@
-/* ——— GENERAL ——— */
+/* General styles */
 body {
     margin: 0;
     font-family: 'Segoe UI', Arial, sans-serif;
@@ -6,7 +6,7 @@ body {
     overflow-x: hidden;
 }
 
-/* ——— HEADER ——— */
+/* Header */
 .header {
     background: rgba(0, 0, 0, 0.75);
     backdrop-filter: blur(10px);
@@ -24,20 +24,19 @@ body {
     margin-left: 20px;
     text-decoration: none;
     font-size: 18px;
-    transition: 0.25s;
+    transition: 0.25s ease;
 }
 
 .header nav a:hover {
     opacity: 0.7;
 }
 
-/* ——— HERO SECTION ——— */
+/* Hero section */
 .hero {
     padding: 120px 20px;
     text-align: center;
     background: linear-gradient(135deg, #6f42c1, #9d4edd, #b07cd9);
     color: white;
-    animation: fadeUp 1.4s ease-out;
     border-bottom-left-radius: 30px;
     border-bottom-right-radius: 30px;
 }
@@ -51,7 +50,7 @@ body {
     font-size: 20px;
 }
 
-/* ——— PRODUCT GRID ——— */
+/* Products */
 .products-section {
     padding: 60px 40px;
     text-align: center;
@@ -63,14 +62,12 @@ body {
     gap: 25px;
 }
 
-/* ——— PRODUCT CARD ——— */
 .product-card {
     background: white;
     padding: 20px;
     border-radius: 14px;
     box-shadow: 0 4px 18px rgba(0,0,0,0.12);
-    transition: 0.3s;
-    transform: translateY(0px);
+    transition: 0.3s ease;
     opacity: 0;
     animation: fadeUp 0.8s ease forwards;
 }
@@ -80,7 +77,6 @@ body {
     box-shadow: 0 8px 24px rgba(0,0,0,0.18);
 }
 
-/* ——— BUTTON ——— */
 .add-btn {
     background: #ff9800;
     border: none;
@@ -88,7 +84,7 @@ body {
     border-radius: 6px;
     cursor: pointer;
     font-weight: bold;
-    transition: 0.25s;
+    transition: 0.25s ease;
 }
 
 .add-btn:hover {
@@ -96,7 +92,7 @@ body {
     transform: scale(1.05);
 }
 
-/* ——— CART ——— */
+/* Cart Section */
 .cart-section {
     padding: 40px;
 }
@@ -115,6 +111,11 @@ body {
     border-bottom: 1px solid #eee;
 }
 
+.cart-total {
+    margin-top: 20px;
+    font-size: 22px;
+}
+
 .checkout-btn {
     margin-top: 20px;
     background: #9d4edd;
@@ -124,7 +125,7 @@ body {
     font-size: 18px;
     border-radius: 6px;
     cursor: pointer;
-    transition: 0.25s;
+    transition: 0.25s ease;
 }
 
 .checkout-btn:hover {
@@ -132,16 +133,19 @@ body {
     transform: scale(1.05);
 }
 
-/* ——— ANIMATIONS ——— */
+/* Animations */
 @keyframes fadeUp {
-    0% { opacity: 0; transform: translateY(30px); }
-    100% { opacity: 1; transform: translateY(0px); }
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .fade-in {
     opacity: 0;
     animation: fadeUp 1s ease forwards;
 }
-
-.delay-1 { animation-delay: 0.3s; }
-.delay-2 { animation-delay: 0.6s; }
