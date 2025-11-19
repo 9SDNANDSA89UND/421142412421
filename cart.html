@@ -15,34 +15,50 @@
   </div>
 </header>
 
+<!-- Sliding Banners -->
+<div class="banner-slider scroll-fade">
+  <div class="banner">🛒 Review your cart before checkout!</div>
+  <div class="banner">⚡ Instant Delivery Under 30 Seconds</div>
+  <div class="banner">⭐ Trusted Sellers • Secure Checkout</div>
+</div>
+
 <section class="hero scroll-fade" style="padding-bottom:0;">
   <h1>Your <span>Cart</span></h1>
-  <p style="color:#8b92a1;margin-top:10px;">Instant delivery • Secure checkout</p>
+  <p style="color:#8b92a1;margin-top:10px;">Instant delivery • Safe checkout</p>
 </section>
 
 <section class="products scroll-fade" style="max-width:900px;">
-  <div id="cartItems" style="margin-bottom:30px;"></div>
+  
+  <div id="cartItems" style="margin-bottom:30px;">
+    <!-- Items loaded via cart.js -->
+  </div>
 
-  <div id="cartSummary" class="scroll-fade" style="
-    background:#121722;
-    padding:25px;
-    border-radius:16px;
-    border:1px solid rgba(255,255,255,0.05);
-    box-shadow:0 0 25px rgba(78,245,138,0.15);
-  ">
-    <h2 style="font-size:24px;font-weight:700;">Order
-      <span style="color:#4ef58a;text-shadow:0 0 12px #4ef58a;">Summary</span>
+  <div id="cartSummary" class="scroll-fade"
+    style="
+      background:#0d1117;
+      padding:25px;
+      border-radius:16px;
+      border: 1px solid rgba(255,255,255,0.05);
+      box-shadow:0 0 25px rgba(78,245,138,0.12);
+    ">
+    
+    <h2 style="font-size:24px;font-weight:700;">
+      Order <span style="color:#4ef58a;text-shadow:0 0 12px #4ef58a;">Summary</span>
     </h2>
 
-    <p id="totalCost" style="
-      margin-top:14px;
-      font-size:22px;
-      font-weight:700;
-      color:#4ef58a;
-      text-shadow:0 0 10px #4ef58a;
-    ">Total: £0.00</p>
+    <p id="totalCost"
+      style="
+        margin-top:14px;
+        font-size:22px;
+        font-weight:700;
+        color:#4ef58a;
+        text-shadow:0 0 10px #4ef58a;
+      ">
+      Total: £0.00
+    </p>
 
     <button class="buy-btn" style="margin-top:22px;">Checkout</button>
+  
   </div>
 </section>
 
