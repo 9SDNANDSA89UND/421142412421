@@ -1,15 +1,15 @@
 const API = "https://website-5eml.onrender.com";
-const IMG = "https://dummyimage.com/400x280/2a2d44/ffffff&text=TamedBlox+Item";
+const PLACEHOLDER_IMG = "https://dummyimage.com/400x280/2a2d44/ffffff&text=TamedBlox+Item";
 
 async function loadProducts() {
     const res = await fetch(`${API}/products`);
     const products = await res.json();
 
-    let container = document.getElementById("product-list");
-    container.innerHTML = "";
+    const grid = document.getElementById("product-list");
+    grid.innerHTML = "";
 
     products.forEach(p => {
-        container.innerHTML += `
+        grid.innerHTML += `
             <div class="product-card">
 
                 <div class="badges">
@@ -17,13 +17,14 @@ async function loadProducts() {
                     <div class="badge blue">Deal</div>
                 </div>
 
-                <img src="${IMG}" class="product-img" />
+                <img src="${PLACEHOLDER_IMG}" class="product-img" />
 
                 <h3>${p.name}</h3>
                 <p>${p.description}</p>
 
                 <div class="add-bar">
                     <strong>£${p.price}</strong>
+
                     <button class="add-btn" onclick="addToCart('${p.id}', '${p.name}', ${p.price})">
                         Add
                     </button>
@@ -36,14 +37,17 @@ async function loadProducts() {
 
 function addToCart(id, name, price) {
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
     cart.push({ id, name, price });
+
     localStorage.setItem("cart", JSON.stringify(cart));
+
     alert("Added to cart!");
 }
 
 function loadCart() {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    let tbody = document.getElementById("cart-items");
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const tbody = document.getElementById("cart-items");
 
     if (!tbody) return;
 
@@ -52,6 +56,7 @@ function loadCart() {
 
     cart.forEach(item => {
         total += item.price;
+
         tbody.innerHTML += `
             <tr>
                 <td>${item.name}</td>
