@@ -1,266 +1,322 @@
-/* Fully Upgraded Neon + Glow + TamedBlox UI — styles.css */
+/* ---------------------------------
+   FONT IMPORT
+----------------------------------- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap');
 
+/* ---------------------------------
+   RESET + GLOBAL
+----------------------------------- */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  transition: all 0.25s ease;
 }
 
-body {
+html, body {
+  height: 100%;
+  background: #05080a;
   font-family: 'Inter', sans-serif;
-  background: #0c0f17;
-  color: #ffffff;
-  animation: fadeIn 1s ease;
+  color: #fff;
+  user-select: none;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+/* Smooth animations */
+.fade-in-up {
+  animation: fadeUp 0.7s ease forwards;
 }
 
-/* NAVBAR */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Scroll fade-in */
+.scroll-fade {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.7s ease;
+}
+.scroll-fade.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------------------------------
+   NAVBAR
+----------------------------------- */
 .nav {
   width: 100%;
-  padding: 22px;
-  background: #0c0f17;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+  height: 70px;
+  padding: 0 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  animation: fadeInUp 0.8s ease;
-}
-
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(15px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.nav-left {
-  display: flex;
-  align-items: center;
-  gap: 14px;
+  background: transparent;
 }
 
 .logo {
-  font-weight: 700;
-  font-size: 20px;
+  font-size: 24px;
+  font-weight: 800;
   color: #4ef58a;
-  text-shadow: 0 0 10px #4ef58a;
-  animation: neonPulse 2s infinite;
-}
-
-@keyframes neonPulse {
-  0%, 100% { text-shadow: 0 0 6px #4ef58a, 0 0 12px #4ef58a; }
-  50% { text-shadow: 0 0 16px #4ef58a, 0 0 26px #4ef58a; }
+  text-shadow: 0 0 12px #4ef58a;
 }
 
 .balance {
-  background: #141926;
-  padding: 8px 14px;
-  border-radius: 20px;
-  font-size: 14px;
+  margin-left: 18px;
+  padding: 6px 12px;
+  background: #0d1117;
+  border-radius: 10px;
   color: #8b92a1;
-}
-
-.nav-right {
-  display: flex;
-  gap: 10px;
-}
-
-.btn {
-  padding: 10px 18px;
-  border-radius: 30px;
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
   font-size: 14px;
-  transition: all 0.2s ease;
+  border: 1px solid rgba(255,255,255,0.07);
+  backdrop-filter: blur(4px);
 }
 
-.btn.login {
-  background: #141926;
-  color: #ffffff;
-  border: 1px solid rgba(255,255,255,0.1);
-}
-.btn.login:hover {
-  background: #1b2437;
-  box-shadow: 0 0 10px rgba(255,255,255,0.2);
-}
-
-.btn.signup {
-  background: #4ef58a;
-  color: #000000;
-  box-shadow: 0 0 10px #4ef58a;
-}
-.btn.signup:hover {
-  background: #67ff9d;
-  box-shadow: 0 0 15px #4ef58a;
+/* ---------------------------------
+   SLIDING BANNERS
+----------------------------------- */
+.banner-slider {
+  width: 100%;
+  height: 40px;
+  overflow: hidden;
+  margin-top: 5px;
 }
 
-/* HERO SECTION */
+.banner {
+  width: 100%;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  color: #4ef58a;
+  font-weight: 600;
+  animation: slideBanner 12s infinite;
+  text-shadow: 0 0 10px #4ef58a;
+}
+
+@keyframes slideBanner {
+  0%     { transform: translateY(0); }
+  25%    { transform: translateY(-40px); }
+  50%    { transform: translateY(-80px); }
+  75%    { transform: translateY(-40px); }
+  100%   { transform: translateY(0); }
+}
+
+/* ---------------------------------
+   HERO SECTION
+----------------------------------- */
 .hero {
-  padding: 40px 20px;
-  max-width: 1200px;
-  margin: auto;
-  animation: fadeInUp 1s ease;
+  padding: 40px 60px;
+  padding-bottom: 20px;
 }
 
 .hero h1 {
-  font-size: 34px;
+  font-size: 46px;
   font-weight: 800;
   line-height: 1.2;
 }
 
 .hero h1 span {
   color: #4ef58a;
-  text-shadow: 0 0 10px #4ef58a, 0 0 20px #4ef58a;
-  animation: neonPulse 2s infinite ease-in-out;
+  text-shadow: 0 0 16px #4ef58a;
 }
 
+/* ---------------------------------
+   SEARCH BAR
+----------------------------------- */
 .search-box {
-  margin-top: 20px;
-  background: #141926;
-  padding: 16px;
+  margin-top: 25px;
+  width: 100%;
+  max-width: 900px;
+  background: #0d1117;
   border-radius: 14px;
-  display: flex;
-  align-items: center;
-  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+  padding: 14px 18px;
+  border: 1px solid rgba(255,255,255,0.07);
+  transition: 0.2s ease;
 }
 
 .search-box input {
   width: 100%;
-  background: none;
+  background: transparent;
   border: none;
-  color: #ffffff;
-  font-size: 15px;
   outline: none;
+  color: #fff;
+  font-size: 16px;
 }
 
-/* FILTER BUTTONS */
+.glow-box:hover {
+  box-shadow: 0 0 12px rgba(78,245,138,0.2);
+}
+
+/* ---------------------------------
+   FILTER BUTTONS
+----------------------------------- */
 .filters {
-  margin-top: 18px;
   display: flex;
-  gap: 10px;
+  gap: 12px;
+  margin-top: 20px;
 }
 
 .filter {
-  padding: 8px 16px;
-  background: #141926;
-  border-radius: 20px;
-  border: 1px solid rgba(255,255,255,0.08);
+  padding: 6px 14px;
+  border-radius: 50px;
+  background: #0f131a;
+  border: 1px solid rgba(255,255,255,0.07);
+  color: #fff;
   cursor: pointer;
-  font-size: 14px;
-  color: white;
-  transition: all 0.2s ease;
+  transition: 0.15s ease;
 }
 
+.filter.active,
 .filter:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0 12px rgba(255,255,255,0.1);
-}
-
-.filter.active {
   background: #4ef58a;
   color: #000;
-  font-weight: 600;
-  box-shadow: 0 0 15px #4ef58a;
+  box-shadow: 0 0 16px rgba(78,245,138,0.6);
 }
 
-/* STATS */
+/* ---------------------------------
+   STATS
+----------------------------------- */
 .stats {
-  margin-top: 20px;
-  font-size: 14px;
+  margin-top: 18px;
   color: #8b92a1;
   display: flex;
-  gap: 20px;
+  gap: 25px;
+  font-size: 14px;
 }
 
-/* PRODUCT GRID */
+/* ---------------------------------
+   PRODUCT GRID
+----------------------------------- */
 .products {
-  max-width: 1200px;
-  margin: auto;
-  padding: 20px;
+  padding: 40px 60px;
 }
 
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 25px;
-  margin-top: 35px;
-  animation: fadeIn 1.2s ease;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 26px;
+  margin-top: 20px;
 }
 
+/* ---------------------------------
+   PRODUCT CARD
+----------------------------------- */
 .card {
-  background: #121722;
+  background: #0d1117;
   padding: 20px;
-  border-radius: 18px;
-  border: 1px solid rgba(255,255,255,0.06);
-  box-shadow: 0 0 25px rgba(0,0,0,0.25);
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.05);
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+  transition: 0.2s ease;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.card.visible {
+  opacity: 1;
   transform: translateY(0);
-  transition: all 0.25s ease;
 }
 
 .card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 0 35px rgba(78,245,138,0.3);
+  box-shadow: 0 0 20px rgba(78,245,138,0.25);
+  transform: translateY(-3px);
 }
 
 .card img {
   width: 100%;
+  height: 170px;
+  object-fit: cover;
   border-radius: 12px;
   margin-bottom: 12px;
 }
 
 .card h3 {
+  font-family: 'Outfit', sans-serif;
   font-size: 20px;
-  font-weight: 700;
+  margin-bottom: 4px;
 }
 
 .card p {
   color: #8b92a1;
-  margin-top: 6px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
 }
 
+/* ---------------------------------
+   PRODUCT TAG
+----------------------------------- */
+.tag {
+  background: #141926;
+  color: #4ef58a;
+  border: 1px solid rgba(78,245,138,0.4);
+  padding: 4px 10px;
+  width: fit-content;
+  border-radius: 14px;
+  font-size: 12px;
+  margin-bottom: 10px;
+  text-transform: capitalize;
+  box-shadow: 0 0 12px rgba(78,245,138,0.2);
+}
+
+/* ---------------------------------
+   PRICE + DISCOUNT
+----------------------------------- */
 .price {
+  margin-top: 8px;
   font-size: 20px;
-  margin-top: 16px;
   font-weight: 700;
   color: #4ef58a;
-  text-shadow: 0 0 8px #4ef58a;
+  text-shadow: 0 0 12px #4ef58a;
 }
 
-.stock {
+.old-price {
+  color: #8b92a1;
+  margin-left: 8px;
+  text-decoration: line-through;
+  opacity: 0.6;
   font-size: 14px;
-  color: #b0b8c8;
-  margin-top: 4px;
 }
 
+/* ---------------------------------
+   STOCK TEXT
+----------------------------------- */
+.stock {
+  margin-top: 3px;
+  color: #8b92a1;
+  font-size: 14px;
+}
+
+/* ---------------------------------
+   BUY BUTTON
+----------------------------------- */
 .buy-btn {
-  margin-top: 18px;
   width: 100%;
   padding: 12px;
-  border-radius: 30px;
+  margin-top: 15px;
   background: #4ef58a;
-  color: #000;
-  font-size: 16px;
-  font-weight: 600;
   border: none;
+  border-radius: 25px;
+  font-weight: 700;
+  font-size: 16px;
   cursor: pointer;
-  box-shadow: 0 0 12px #4ef58a;
+  color: #000;
+  transition: 0.15s ease;
+  box-shadow: 0 0 15px rgba(78,245,138,0.5);
 }
 
 .buy-btn:hover {
-  background: #67ff9d;
-  box-shadow: 0 0 20px #4ef58a;
-  transform: translateY(-3px);
+  box-shadow: 0 0 25px rgba(78,245,138,0.8);
+  transform: scale(1.03);
 }
 
-/* FOOTER */
+/* ---------------------------------
+   FOOTER
+----------------------------------- */
 footer {
   text-align: center;
-  padding: 25px;
+  margin: 40px 0;
   color: #8b92a1;
   font-size: 14px;
-  margin-top: 40px;
 }
