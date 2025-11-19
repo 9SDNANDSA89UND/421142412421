@@ -1,5 +1,8 @@
 const API = "https://website-5eml.onrender.com";
 
+// Placeholder image for all products for now
+const PLACEHOLDER_IMG = "https://dummyimage.com/400x300/eae2ff/7b2cbf&text=TamedBlox+Item";
+
 async function loadProducts() {
     const res = await fetch(`${API}/products`);
     const products = await res.json();
@@ -12,6 +15,7 @@ async function loadProducts() {
     products.forEach(p => {
         container.innerHTML += `
             <div class="product-card">
+                <img src="${PLACEHOLDER_IMG}" class="product-img">
                 <h3>${p.name}</h3>
                 <p>${p.description}</p>
                 <p><strong>£${p.price}</strong></p>
