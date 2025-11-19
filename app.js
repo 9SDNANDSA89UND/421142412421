@@ -1,12 +1,10 @@
 const API = "https://website-5eml.onrender.com";
 
-// Load products on homepage
 async function loadProducts() {
     const res = await fetch(`${API}/products`);
     const products = await res.json();
 
     const container = document.getElementById("product-list");
-
     if (!container) return;
 
     container.innerHTML = "";
@@ -30,7 +28,6 @@ function addToCart(id, name, price) {
     alert("Added to cart!");
 }
 
-// Load cart page
 function loadCart() {
     const tbody = document.getElementById("cart-items");
     if (!tbody) return;
@@ -53,11 +50,9 @@ function loadCart() {
     document.getElementById("total").innerText = total;
 }
 
-// Checkout (example)
-async function checkout() {
+function checkout() {
     alert("Checkout coming soon!");
 }
 
-// Initialize pages
 loadProducts();
 loadCart();
