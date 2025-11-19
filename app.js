@@ -1,6 +1,9 @@
-// TamedBlox Neon Edition — app.js
+// ===============================
+//   TamedBlox Store — APP.JS
+//   Neon Edition (Final Build)
+// ===============================
 
-// Product list
+// PRODUCT DATA
 const products = [
   {
     name: "Grass V2 Seed",
@@ -25,7 +28,9 @@ const products = [
   }
 ];
 
-// Render product grid
+// ====================================
+//  RENDER PRODUCTS
+// ====================================
 function renderProducts(list) {
   const grid = document.getElementById("productGrid");
   if (!grid) return;
@@ -34,26 +39,40 @@ function renderProducts(list) {
 
   list.forEach((p, i) => {
     const card = document.createElement("div");
-    card.className = "card fade-in-up";
+    card.className = "card scroll-fade";
     card.style.animationDelay = `${i * 0.1}s`;
 
     card.innerHTML = `
+      <div class="tag">${p.tag}</div>
       <img src="${p.img}" alt="${p.name}">
       <h3>${p.name}</h3>
       <p>Instant delivery • Trusted seller</p>
-      <div class="price">£${p.price}</div>
+
+      <div class="price">
+        £${p.price}
+        <span class="old-price">£${(p.price * 1.25).toFixed(2)}</span>
+      </div>
+
       <div class="stock">${p.stock} left</div>
-      <button class="buy-btn" onclick="addToCart('${p.name}', ${p.price})">Buy</button>
+
+      <button class="buy-btn" onclick="addToCart('${p.name}', ${p.price})">
+        Buy
+      </button>
     `;
 
     grid.appendChild(card);
   });
+
+  scrollFadeCheck();
 }
 
 // Initial load
 renderProducts(products);
 
-// ---------- FILTERS ----------
+
+// ====================================
+//  FILTERS
+// ====================================
 const filterButtons = document.querySelectorAll(".filter");
 
 filterButtons.forEach(btn => {
@@ -61,13 +80,19 @@ filterButtons.forEach(btn => {
     filterButtons.forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
 
-    const t = btn.textContent.toLowerCase();
+    const type = btn.innerText.toLowerCase();
 
-    renderProducts(t === "all" ? products : products.filter(x => x.tag === t));
+    if (type === "all") {
+      renderProducts(products);
+    } else {
+      renderProducts(products.filter(p => p.tag === type));
+    }
   });
 });
 
-// ---------- SEARCH FIX ----------
+// ====================================
+//  SEARCH SYSTEM
+// ====================================
 const searchBox = document.querySelector(".search-box input");
 
 if (searchBox) {
@@ -83,11 +108,33 @@ if (searchBox) {
   });
 }
 
-// ---------- CART SYSTEM ----------
+
+// ====================================
+//  CART SYSTEM (LOCALSTORAGE)
+// ====================================
 function addToCart(name, price) {
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
   cart.push({ name, price });
   localStorage.setItem("cart", JSON.stringify(cart));
 
-  alert("Item added to cart!");
+  // Neon popup effect?
+  alert("Added to cart!");
 }
+
+
+// ====================================
+//  SCROLL FADE-IN ANIMATION
+// ====================================
+function scrollFadeCheck() {
+  const elems = document.querySelectorAll(".scroll-fade");
+
+  elems.forEach(el => {
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight - 60) {
+      el.classList.add("visible");
+    }
+  });
+}
+
+window.addEventListener("scroll", scrollFadeCheck);
+window.addEventListener("load", scrollFadeCheck);
