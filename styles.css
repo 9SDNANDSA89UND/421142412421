@@ -1,10 +1,10 @@
 /* ---------------------------------
-   FONT IMPORT
+   FONTS
 ----------------------------------- */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap');
 
 /* ---------------------------------
-   RESET + GLOBAL
+   GLOBAL RESET
 ----------------------------------- */
 * {
   margin: 0;
@@ -15,30 +15,9 @@
 html, body {
   height: 100%;
   background: #05080a;
-  font-family: 'Inter', sans-serif;
   color: #fff;
+  font-family: "Inter", sans-serif;
   user-select: none;
-}
-
-/* Smooth animations */
-.fade-in-up {
-  animation: fadeUp 0.7s ease forwards;
-}
-
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* Scroll fade-in */
-.scroll-fade {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: all 0.7s ease;
-}
-.scroll-fade.visible {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 /* ---------------------------------
@@ -46,94 +25,99 @@ html, body {
 ----------------------------------- */
 .nav {
   width: 100%;
-  height: 70px;
-  padding: 0 40px;
+  padding: 18px 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.nav-inner {
+  width: 100%;
+  max-width: 1400px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: transparent;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
 
 .logo {
-  font-size: 24px;
+  font-size: 26px;
   font-weight: 800;
   color: #4ef58a;
-  text-shadow: 0 0 12px #4ef58a;
+  text-shadow: 0 0 10px #4ef58a, 0 0 18px #4ef58a;
 }
 
 .balance {
-  margin-left: 18px;
-  padding: 6px 12px;
-  background: #0d1117;
-  border-radius: 10px;
-  color: #8b92a1;
   font-size: 14px;
-  border: 1px solid rgba(255,255,255,0.07);
-  backdrop-filter: blur(4px);
+  padding: 6px 14px;
+  background: #0e131a;
+  border-radius: 12px;
+  color: #b3bac8;
+  border: 1px solid rgba(255,255,255,0.06);
+  backdrop-filter: blur(6px);
 }
 
 /* ---------------------------------
-   SLIDING BANNERS
+   BANNER SLIDER
 ----------------------------------- */
 .banner-slider {
   width: 100%;
-  height: 40px;
+  display: flex;
+  justify-content: center;
   overflow: hidden;
+  height: 30px;
   margin-top: 5px;
 }
 
 .banner {
-  width: 100%;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 16px;
   color: #4ef58a;
   font-weight: 600;
-  animation: slideBanner 12s infinite;
   text-shadow: 0 0 10px #4ef58a;
+  animation: slideBanner 12s infinite;
 }
 
 @keyframes slideBanner {
-  0%     { transform: translateY(0); }
-  25%    { transform: translateY(-40px); }
-  50%    { transform: translateY(-80px); }
-  75%    { transform: translateY(-40px); }
-  100%   { transform: translateY(0); }
+  0% { transform: translateY(0); }
+  33% { transform: translateY(-30px); }
+  66% { transform: translateY(-60px); }
+  100% { transform: translateY(0); }
 }
 
 /* ---------------------------------
-   HERO SECTION
+   HERO
 ----------------------------------- */
 .hero {
   padding: 40px 60px;
-  padding-bottom: 20px;
+  padding-bottom: 10px;
 }
 
 .hero h1 {
-  font-size: 46px;
+  font-size: 48px;
   font-weight: 800;
   line-height: 1.2;
 }
 
-.hero h1 span {
+.hero span {
   color: #4ef58a;
-  text-shadow: 0 0 16px #4ef58a;
+  text-shadow: 0 0 15px #4ef58a;
 }
 
 /* ---------------------------------
-   SEARCH BAR
+   SEARCH BOX
 ----------------------------------- */
 .search-box {
-  margin-top: 25px;
-  width: 100%;
+  margin: 0 auto;
+  margin-top: 20px;
   max-width: 900px;
   background: #0d1117;
+  padding: 14px 20px;
   border-radius: 14px;
-  padding: 14px 18px;
-  border: 1px solid rgba(255,255,255,0.07);
-  transition: 0.2s ease;
+  border: 1px solid rgba(255,255,255,0.06);
+  transition: 0.2s;
 }
 
 .search-box input {
@@ -141,53 +125,52 @@ html, body {
   background: transparent;
   border: none;
   outline: none;
-  color: #fff;
+  color: white;
   font-size: 16px;
 }
 
 .glow-box:hover {
-  box-shadow: 0 0 12px rgba(78,245,138,0.2);
+  box-shadow: 0 0 14px rgba(78,245,138,0.25);
 }
 
 /* ---------------------------------
-   FILTER BUTTONS
+   FILTERS
 ----------------------------------- */
 .filters {
+  margin: 20px 60px;
   display: flex;
   gap: 12px;
-  margin-top: 20px;
 }
 
 .filter {
   padding: 6px 14px;
-  border-radius: 50px;
   background: #0f131a;
-  border: 1px solid rgba(255,255,255,0.07);
-  color: #fff;
+  border-radius: 50px;
+  border: 1px solid rgba(255,255,255,0.06);
   cursor: pointer;
-  transition: 0.15s ease;
+  transition: 0.15s;
 }
 
 .filter.active,
 .filter:hover {
   background: #4ef58a;
   color: #000;
-  box-shadow: 0 0 16px rgba(78,245,138,0.6);
+  box-shadow: 0 0 15px rgba(78,245,138,0.6);
 }
 
 /* ---------------------------------
    STATS
 ----------------------------------- */
 .stats {
-  margin-top: 18px;
-  color: #8b92a1;
+  margin: 10px 60px;
   display: flex;
   gap: 25px;
+  color: #8b92a1;
   font-size: 14px;
 }
 
 /* ---------------------------------
-   PRODUCT GRID
+   PRODUCTS GRID
 ----------------------------------- */
 .products {
   padding: 40px 60px;
@@ -195,9 +178,8 @@ html, body {
 
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 26px;
-  margin-top: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(320px,1fr));
+  gap: 28px;
 }
 
 /* ---------------------------------
@@ -208,10 +190,9 @@ html, body {
   padding: 20px;
   border-radius: 16px;
   border: 1px solid rgba(255,255,255,0.05);
-  box-shadow: 0 0 20px rgba(0,0,0,0.3);
-  transition: 0.2s ease;
   opacity: 0;
   transform: translateY(20px);
+  transition: 0.4s ease;
 }
 
 .card.visible {
@@ -219,104 +200,106 @@ html, body {
   transform: translateY(0);
 }
 
-.card:hover {
-  box-shadow: 0 0 20px rgba(78,245,138,0.25);
-  transform: translateY(-3px);
-}
-
 .card img {
   width: 100%;
   height: 170px;
   object-fit: cover;
-  border-radius: 12px;
-  margin-bottom: 12px;
+  border-radius: 14px;
 }
 
 .card h3 {
-  font-family: 'Outfit', sans-serif;
   font-size: 20px;
-  margin-bottom: 4px;
+  font-family: "Outfit", sans-serif;
+  margin-top: 10px;
 }
 
 .card p {
   color: #8b92a1;
-  font-family: 'Outfit', sans-serif;
   font-size: 14px;
 }
 
-/* ---------------------------------
-   PRODUCT TAG
------------------------------------ */
+/* TAG */
 .tag {
   background: #141926;
-  color: #4ef58a;
-  border: 1px solid rgba(78,245,138,0.4);
   padding: 4px 10px;
-  width: fit-content;
-  border-radius: 14px;
   font-size: 12px;
+  color: #4ef58a;
+  border-radius: 12px;
+  border: 1px solid rgba(78,245,138,0.4);
+  display: inline-block;
   margin-bottom: 10px;
   text-transform: capitalize;
-  box-shadow: 0 0 12px rgba(78,245,138,0.2);
 }
 
-/* ---------------------------------
-   PRICE + DISCOUNT
------------------------------------ */
+/* PRICE */
 .price {
-  margin-top: 8px;
+  color: #4ef58a;
   font-size: 20px;
   font-weight: 700;
-  color: #4ef58a;
-  text-shadow: 0 0 12px #4ef58a;
+  text-shadow: 0 0 10px #4ef58a;
+  margin-top: 10px;
 }
 
 .old-price {
+  font-size: 14px;
   color: #8b92a1;
   margin-left: 8px;
   text-decoration: line-through;
-  opacity: 0.6;
-  font-size: 14px;
 }
 
-/* ---------------------------------
-   STOCK TEXT
------------------------------------ */
+/* STOCK */
 .stock {
-  margin-top: 3px;
+  margin-top: 2px;
   color: #8b92a1;
   font-size: 14px;
 }
 
-/* ---------------------------------
-   BUY BUTTON
------------------------------------ */
+/* BUY BUTTON */
 .buy-btn {
   width: 100%;
-  padding: 12px;
-  margin-top: 15px;
+  margin-top: 14px;
   background: #4ef58a;
   border: none;
+  padding: 12px;
   border-radius: 25px;
+  color: #000;
   font-weight: 700;
   font-size: 16px;
   cursor: pointer;
-  color: #000;
-  transition: 0.15s ease;
   box-shadow: 0 0 15px rgba(78,245,138,0.5);
+  transition: 0.15s ease;
 }
 
 .buy-btn:hover {
-  box-shadow: 0 0 25px rgba(78,245,138,0.8);
   transform: scale(1.03);
+  box-shadow: 0 0 25px rgba(78,245,138,0.8);
 }
 
-/* ---------------------------------
-   FOOTER
------------------------------------ */
+/* FOOTER */
 footer {
   text-align: center;
   margin: 40px 0;
   color: #8b92a1;
   font-size: 14px;
+}
+
+/* ANIMATIONS */
+.fade-in-up {
+  animation: fadeUp 0.7s ease forwards;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.scroll-fade {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: 0.7s ease;
+}
+
+.scroll-fade.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
