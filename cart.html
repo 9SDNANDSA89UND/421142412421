@@ -11,19 +11,41 @@
 <!-- NAVBAR -->
 <header class="nav">
   <div class="nav-inner">
-    <div class="nav-left">
+
+    <!-- CENTERED LOGO -->
+    <div class="nav-center">
       <div class="logo">
         <span class="logo-white">TAMED</span><span class="logo-green">BLOX</span>
       </div>
     </div>
+
+    <!-- RIGHT USER MENU -->
+    <div class="nav-right">
+      <div class="balance-pill">£0.00</div>
+
+      <a href="#" class="icon-btn">
+        <svg viewBox="0 0 24 24">
+          <path d="M20 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M4 21v-2a4 4 0 0 1 3-3.87"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+      </a>
+
+      <a href="cart.html" class="icon-btn">
+        <svg viewBox="0 0 24 24">
+          <circle cx="9" cy="21" r="1"/>
+          <circle cx="20" cy="21" r="1"/>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+        </svg>
+      </a>
+    </div>
+
   </div>
 </header>
 
 <!-- ANNOUNCEMENT -->
 <div class="announcement-section scroll-fade">
-  <div class="announcement">
-    ⚡ Instant Delivery • Secure Checkout • 500+ Orders Delivered
-  </div>
+  <div class="announcement">⚡ Instant Delivery • Secure Checkout • 500+ Orders Delivered</div>
 </div>
 
 <!-- HERO -->
@@ -32,15 +54,13 @@
   <p style="color:#8b92a1;margin-top:10px;">Review your items before checkout.</p>
 </section>
 
-<!-- CART CONTENT -->
+<!-- CART AREA -->
 <section class="products scroll-fade" style="max-width:900px;">
   
-  <!-- CART ITEMS -->
   <div id="cartItems" style="margin-bottom:30px;">
-    <!-- Cart.js will load items here -->
+    <!-- Cart.js places the items here -->
   </div>
 
-  <!-- SUMMARY BOX -->
   <div id="cartSummary" class="scroll-fade" style="
       background:#0d1117;
       padding:25px;
@@ -49,7 +69,7 @@
       box-shadow:0 0 25px rgba(78,245,138,0.12);
       margin-bottom:50px;
     ">
-    
+
     <h2 style="font-size:24px;font-weight:700;">
       Order <span style="color:#4ef58a;text-shadow:0 0 12px #4ef58a;">Summary</span>
     </h2>
@@ -71,7 +91,6 @@
 
 </section>
 
-<!-- FOOTER -->
 <footer class="scroll-fade">
   © 2025 TamedBlox Store — All Rights Reserved.
 </footer>
