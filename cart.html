@@ -1,45 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cart — TamedBlox Store</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Cart — TamedBlox Store</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-<header class="nav fade-in-up">
-  <div class="nav-left">
-    <div class="logo">TAMEDBLOX</div>
-    <div class="balance">Balance: £0.00</div>
+<!-- NAVBAR -->
+<header class="nav">
+  <div class="nav-inner">
+    <div class="nav-left">
+      <div class="logo">
+        <span class="logo-white">TAMED</span><span class="logo-green">BLOX</span>
+      </div>
+    </div>
   </div>
 </header>
 
-<!-- Sliding Banners -->
-<div class="banner-slider scroll-fade">
-  <div class="banner">🛒 Review your cart before checkout!</div>
-  <div class="banner">⚡ Instant Delivery Under 30 Seconds</div>
-  <div class="banner">⭐ Trusted Sellers • Secure Checkout</div>
+<!-- ANNOUNCEMENT -->
+<div class="announcement-section scroll-fade">
+  <div class="announcement">
+    ⚡ Instant Delivery • Secure Checkout • 500+ Orders Delivered
+  </div>
 </div>
 
-<section class="hero scroll-fade" style="padding-bottom:0;">
+<!-- HERO -->
+<section class="hero scroll-fade" style="padding-bottom: 0;">
   <h1>Your <span>Cart</span></h1>
-  <p style="color:#8b92a1;margin-top:10px;">Instant delivery • Safe checkout</p>
+  <p style="color:#8b92a1;margin-top:10px;">Review your items before checkout.</p>
 </section>
 
+<!-- CART CONTENT -->
 <section class="products scroll-fade" style="max-width:900px;">
   
+  <!-- CART ITEMS -->
   <div id="cartItems" style="margin-bottom:30px;">
-    <!-- Items loaded via cart.js -->
+    <!-- Cart.js will load items here -->
   </div>
 
-  <div id="cartSummary" class="scroll-fade"
-    style="
+  <!-- SUMMARY BOX -->
+  <div id="cartSummary" class="scroll-fade" style="
       background:#0d1117;
       padding:25px;
       border-radius:16px;
       border: 1px solid rgba(255,255,255,0.05);
       box-shadow:0 0 25px rgba(78,245,138,0.12);
+      margin-bottom:50px;
     ">
     
     <h2 style="font-size:24px;font-weight:700;">
@@ -60,9 +68,11 @@
     <button class="buy-btn" style="margin-top:22px;">Checkout</button>
   
   </div>
+
 </section>
 
-<footer class="scroll-fade" style="margin-top:60px;">
+<!-- FOOTER -->
+<footer class="scroll-fade">
   © 2025 TamedBlox Store — All Rights Reserved.
 </footer>
 
