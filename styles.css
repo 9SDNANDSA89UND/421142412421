@@ -1,7 +1,11 @@
-/* FONTS */
+/* ---------------------------------
+   FONTS
+----------------------------------- */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap');
 
-/* RESET */
+/* ---------------------------------
+   GLOBAL RESET
+----------------------------------- */
 * {
   margin: 0;
   padding: 0;
@@ -19,7 +23,6 @@ html, body {
 /* ---------------------------------
    NAVBAR
 ----------------------------------- */
-
 .nav {
   width: 100%;
   padding: 18px 40px;
@@ -41,7 +44,7 @@ html, body {
   gap: 20px;
 }
 
-/* New logo styling */
+/* SPLIT LOGO */
 .logo {
   font-size: 28px;
   font-weight: 800;
@@ -57,7 +60,7 @@ html, body {
   text-shadow: 0 0 10px #4ef58a, 0 0 18px #4ef58a;
 }
 
-/* Hide balance everywhere */
+/* Remove balance */
 .balance {
   display: none !important;
 }
@@ -65,7 +68,6 @@ html, body {
 /* ---------------------------------
    ANNOUNCEMENT BAR
 ----------------------------------- */
-
 .announcement-section {
   width: 100%;
   display: flex;
@@ -88,7 +90,6 @@ html, body {
 /* ---------------------------------
    HERO
 ----------------------------------- */
-
 .hero {
   padding: 40px 60px;
 }
@@ -107,7 +108,6 @@ html, body {
 /* ---------------------------------
    SEARCH BOX
 ----------------------------------- */
-
 .search-box {
   margin: 0 auto;
   margin-top: 20px;
@@ -133,9 +133,8 @@ html, body {
 }
 
 /* ---------------------------------
-   FILTERS
+   FILTER BUTTONS
 ----------------------------------- */
-
 .filters {
   margin: 20px 60px;
   display: flex;
@@ -149,6 +148,7 @@ html, body {
   border: 1px solid rgba(255,255,255,0.06);
   cursor: pointer;
   transition: 0.15s ease;
+  text-transform: capitalize;
 }
 
 .filter.active,
@@ -161,7 +161,6 @@ html, body {
 /* ---------------------------------
    STATS
 ----------------------------------- */
-
 .stats {
   margin: 10px 60px;
   display: flex;
@@ -171,9 +170,8 @@ html, body {
 }
 
 /* ---------------------------------
-   PRODUCTS
+   PRODUCT GRID
 ----------------------------------- */
-
 .products {
   padding: 40px 60px;
 }
@@ -184,7 +182,7 @@ html, body {
   gap: 28px;
 }
 
-/* PRODUCT CARD */
+/* PRODUCT CARD (future items will use this) */
 .card {
   background: #0d1117;
   padding: 20px;
@@ -253,7 +251,6 @@ html, body {
 }
 
 /* BUY BUTTON */
-
 .buy-btn {
   width: 100%;
   background: #4ef58a;
@@ -274,14 +271,36 @@ html, body {
   box-shadow: 0 0 25px rgba(78,245,138,0.8);
 }
 
-/* FOOTER */
+/* ---------------------------------
+   REVIEWS
+----------------------------------- */
+.reviews h2 span {
+  color: #4ef58a;
+  text-shadow: 0 0 12px #4ef58a;
+}
+
+.review-card {
+  transition: 0.3s ease;
+}
+
+.review-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 20px rgba(78,245,138,0.3);
+}
+
+/* ---------------------------------
+   FOOTER
+----------------------------------- */
 footer {
   text-align: center;
   margin: 40px 0;
   color: #8b92a1;
+  font-size: 14px;
 }
 
-/* SCROLL ANIMATION */
+/* ---------------------------------
+   ANIMATIONS
+----------------------------------- */
 .scroll-fade {
   opacity: 0;
   transform: translateY(20px);
@@ -298,6 +317,12 @@ footer {
 }
 
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
