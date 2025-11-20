@@ -11,102 +11,149 @@ body {
 --------------------------------------------------- */
 
 .nav {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  position: relative;
-  z-index: 20;
+  width:100%;
+  display:flex;
+  justify-content:center;
+  position:relative;
+  z-index:20;
 }
 
 .nav-inner {
-  width: 100%;
-  max-width: 1400px;
-  padding: 36px 60px;   /* more height to match TamedBlox */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
+  width:100%;
+  max-width:1400px;
+  padding:36px 60px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
 }
 
-/* Centered logo */
+/* Left Back Button */
+.nav-left {
+  position:absolute;
+  left:40px;
+  top:50%;
+  transform:translateY(-50%);
+  display:flex;
+  align-items:center;
+}
+
+.back-btn {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 14px;
+  background:#0d1117;
+  border:1px solid rgba(78,245,138,0.3);
+  color:#4ef58a;
+  font-weight:600;
+  border-radius:10px;
+  text-decoration:none;
+  text-shadow:0 0 6px #4ef58a;
+  transition:0.2s ease;
+}
+
+.back-btn svg {
+  width:20px;
+  height:20px;
+  stroke:#4ef58a;
+  stroke-width:2.2;
+  fill:none;
+}
+
+.back-btn:hover {
+  transform:translate(-3px, -50%);
+  box-shadow:0 0 14px rgba(78,245,138,0.5);
+}
+
+/* Center logo */
 .nav-center {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  pointer-events: none;
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  pointer-events:none;
 }
 
 .logo {
-  font-size: 44px;     /* bigger, premium */
-  font-weight: 900;
-  transform: translateY(3px); /* visually centered */
-  letter-spacing: 1.5px;
+  font-size:44px;
+  font-weight:900;
+  letter-spacing:1.5px;
+  transform:translateY(3px);
 }
 .logo-white {
-  color: #fff;
-  text-shadow: 0 0 12px rgba(255,255,255,0.45);
+  color:#fff;
+  text-shadow:0 0 12px rgba(255,255,255,0.45);
 }
 .logo-green {
-  color: #4ef58a;
-  text-shadow: 0 0 18px #4ef58a;
+  color:#4ef58a;
+  text-shadow:0 0 18px #4ef58a;
 }
 
-/* Right user section */
+/* Right user menu */
 .nav-right {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 28px;            /* cleaner spacing */
-  padding-right: 40px;  /* pulls icons inward */
+  margin-left:auto;
+  display:flex;
+  align-items:center;
+  gap:28px;
+  padding-right:40px;
 }
 
 /* Balance pill */
 .balance-pill {
-  background: #0d1117;
-  padding: 8px 22px;
-  border-radius: 50px;
-  border: 1px solid rgba(78,245,138,0.25);
-  color: #4ef58a;
-  font-weight: 600;
-  font-size: 15px;
-  text-shadow: 0 0 6px #4ef58a;
-  box-shadow: 0 0 8px rgba(78,245,138,0.2);
+  background:#0d1117;
+  padding:8px 22px;
+  border-radius:50px;
+  border:1px solid rgba(78,245,138,0.25);
+  color:#4ef58a;
+  font-weight:600;
+  font-size:15px;
+  text-shadow:0 0 6px #4ef58a;
+  box-shadow:0 0 8px rgba(78,245,138,0.2);
 }
 
 /* Icon buttons */
 .icon-btn svg {
-  width: 28px;
-  height: 28px;
-  stroke: #4ef58a;
-  stroke-width: 2.2;
-  fill: none;
-  opacity: 0.85;
-  transition: 0.2s ease;
+  width:28px;
+  height:28px;
+  stroke:#4ef58a;
+  stroke-width:2.2;
+  fill:none;
+  opacity:0.85;
+  transition:0.2s ease;
 }
 
 .icon-btn:hover svg {
-  opacity: 1;
-  filter: drop-shadow(0 0 8px #4ef58a);
+  opacity:1;
+  filter:drop-shadow(0 0 8px #4ef58a);
 }
 
 /* Mobile adjustments */
-@media (max-width: 700px) {
-  .logo {
-    font-size: 34px;
+@media (max-width:700px) {
+  .nav-inner {
+    padding:26px 28px;
   }
 
-  .nav-inner {
-    padding: 26px 28px;
+  .logo {
+    font-size:34px;
+  }
+
+  .nav-left {
+    left:20px;
   }
 
   .nav-right {
-    gap: 20px;
-    padding-right: 10px;
+    padding-right:20px;
+    gap:20px;
   }
 
   .icon-btn svg {
-    width: 24px;
-    height: 24px;
+    width:24px;
+    height:24px;
+  }
+
+  .back-btn {
+    padding:6px 12px;
+    font-size:14px;
   }
 }
 
@@ -171,6 +218,12 @@ body {
   gap:28px;
 }
 
+/* REVIEWS */
+.review-card:hover {
+  transform:translateY(-4px);
+  box-shadow:0 0 20px rgba(78,245,138,0.3);
+}
+
 /* FOOTER */
 footer { text-align:center; margin:40px 0; color:#8b92a1; }
 
@@ -181,5 +234,5 @@ footer { text-align:center; margin:40px 0; color:#8b92a1; }
 
 @keyframes fadeInUp {
   from { opacity:0; transform:translateY(20px); }
-  to   { opacity:1; transform:translateY(0); }
+  to { opacity:1; transform:translateY(0); }
 }
