@@ -12,24 +12,38 @@ body {
   width: 100%;
   position: sticky;
   top: 0;
-  background: rgba(5, 8, 10, 0.8);
+  background: rgba(5, 8, 10, 0.85);
   backdrop-filter: blur(12px);
   z-index: 50;
+  display: flex;
+  justify-content: center;
 }
+
 .nav-inner {
+  width: 100%;
   max-width: 1400px;
-  margin: 0 auto;
   padding: 22px 60px;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+/* LEFT SIDE (for balance symmetry) */
+.nav-left {
+  width: 200px; /* fixed width for symmetry */
+  display: flex;
   align-items: center;
 }
 
-/* LOGO CENTERED */
+/* LOGO perfectly centered */
 .nav-center {
-  justify-self: center;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   text-align: center;
 }
+
 .logo {
   font-size: 42px;
   font-weight: 900;
@@ -40,11 +54,13 @@ body {
 
 /* RIGHT SIDE */
 .nav-right {
-  justify-self: end;
+  width: 200px; /* same fixed width as left */
   display: flex;
   align-items: center;
-  gap: 22px;
+  justify-content: flex-end;
+  gap: 20px;
 }
+
 .balance-pill {
   background: #0d1117;
   padding: 8px 20px;
@@ -68,13 +84,6 @@ body {
 .icon-btn:hover svg {
   opacity: 1;
   filter: drop-shadow(0 0 8px #4ef58a);
-}
-
-/* LEFT SIDE */
-.nav-left {
-  justify-self: start;
-  display: flex;
-  align-items: center;
 }
 
 /* ANNOUNCEMENT */
