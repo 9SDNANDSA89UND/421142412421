@@ -1,23 +1,14 @@
 /* GLOBAL */
 * { margin:0; padding:0; box-sizing:border-box; }
 body {
-  background:#05080a;
-  color:white;
-  font-family:"Inter",sans-serif;
+  background: radial-gradient(ellipse at top, #0c1014 0%, #05080a 100%);
+  background-attachment: fixed;
+  color: white;
+  font-family: "Inter", sans-serif;
 }
 
-/* ---------------------------------------------------
-   NAVBAR — FINAL POLISHED VERSION
---------------------------------------------------- */
-
-.nav {
-  width:100%;
-  display:flex;
-  justify-content:center;
-  position:relative;
-  z-index:20;
-}
-
+/* NAVBAR */
+.nav { width:100%; display:flex; justify-content:center; position:relative; z-index:20; }
 .nav-inner {
   width:100%;
   max-width:1400px;
@@ -27,16 +18,13 @@ body {
   justify-content:center;
   position:relative;
 }
-
-/* LEFT BACK ICON BUTTON — NO MOVEMENT, PERFECTLY ANCHORED */
 .nav-left {
   position: absolute;
   left: 40px;
   height: 100%;
   display: flex;
-  align-items: center; /* vertically centered with no transform */
+  align-items: center;
 }
-
 .back-btn {
   display:flex;
   align-items:center;
@@ -47,9 +35,8 @@ body {
   background:#0d1117;
   border:1px solid rgba(78,245,138,0.25);
   text-decoration:none;
-  transition: box-shadow 0.2s ease; /* no transform at all */
+  transition: box-shadow 0.2s ease;
 }
-
 .back-btn svg {
   width:20px;
   height:20px;
@@ -58,19 +45,14 @@ body {
   fill:none;
   filter:drop-shadow(0 0 4px rgba(78,245,138,0.5));
 }
+.back-btn:hover { box-shadow:0 0 10px rgba(78,245,138,0.4); }
 
-.back-btn:hover {
-  box-shadow:0 0 10px rgba(78,245,138,0.4);
-}
-
-/* CENTER LOGO */
 .nav-center {
   position:absolute;
   left:50%;
   transform:translateX(-50%);
   pointer-events:none;
 }
-
 .logo {
   font-size:44px;
   font-weight:900;
@@ -79,7 +61,6 @@ body {
 .logo-white { color:#fff; text-shadow:0 0 12px rgba(255,255,255,0.45); }
 .logo-green { color:#4ef58a; text-shadow:0 0 18px #4ef58a; }
 
-/* RIGHT MENU */
 .nav-right {
   margin-left:auto;
   display:flex;
@@ -87,8 +68,6 @@ body {
   gap:28px;
   padding-right:40px;
 }
-
-/* Balance pill */
 .balance-pill {
   background:#0d1117;
   padding:8px 22px;
@@ -100,8 +79,6 @@ body {
   text-shadow:0 0 6px #4ef58a;
   box-shadow:0 0 8px rgba(78,245,138,0.2);
 }
-
-/* Icon buttons */
 .icon-btn svg {
   width:28px;
   height:28px;
@@ -111,7 +88,6 @@ body {
   opacity:0.85;
   transition:0.2s ease;
 }
-
 .icon-btn:hover svg {
   opacity:1;
   filter:drop-shadow(0 0 8px #4ef58a);
@@ -125,11 +101,11 @@ body {
   .nav-right { padding-right:20px; gap:20px; }
   .icon-btn svg { width:24px; height:24px; }
   .back-btn { width:28px; height:28px; }
+  .hero h1 { font-size:36px; text-align:center; }
+  .filters, .stats, .products { margin:20px; padding:0; }
 }
 
-/* ---------------------------------------------------
-   ANNOUNCEMENT
---------------------------------------------------- */
+/* ANNOUNCEMENT */
 .announcement-section { display:flex; justify-content:center; margin-top:10px; }
 .announcement {
   font-size:18px;
@@ -169,6 +145,7 @@ body {
   background:#0f131a;
   border:1px solid rgba(255,255,255,0.06);
   cursor:pointer;
+  transition: all 0.25s ease;
 }
 .filter.active,
 .filter:hover {
@@ -186,6 +163,50 @@ body {
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
   gap:28px;
+}
+
+/* CARD STYLE UPDATE */
+.card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 0 18px rgba(78,245,138,0.08);
+  transition: 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+}
+.card:hover {
+  box-shadow: 0 0 22px rgba(78,245,138,0.4);
+  transform: translateY(-4px);
+}
+.card img {
+  width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+  border-radius: 10px;
+  margin-bottom: 12px;
+}
+.card h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 10px 0 6px;
+}
+.card .tag {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: #4ef58a;
+  color: black;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(78,245,138,0.7);
 }
 
 /* CART BUTTON */
@@ -214,7 +235,6 @@ footer { text-align:center; margin:40px 0; color:#8b92a1; }
 .scroll-fade.visible { opacity:1; transform:translateY(0); }
 
 .fade-in-up { animation:fadeInUp 0.7s ease forwards; }
-
 @keyframes fadeInUp {
   from { opacity:0; transform:translateY(20px); }
   to { opacity:1; transform:translateY(0); }
