@@ -6,7 +6,10 @@ body {
   font-family:"Inter",sans-serif;
 }
 
-/* NAVBAR — POLISHED VERSION */
+/* ---------------------------------------------------
+   NAVBAR — FINAL POLISHED VERSION
+--------------------------------------------------- */
+
 .nav {
   width: 100%;
   display: flex;
@@ -18,61 +21,64 @@ body {
 .nav-inner {
   width: 100%;
   max-width: 1400px;
-  padding: 22px 40px;
+  padding: 36px 60px;   /* more height to match TamedBlox */
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
 }
 
-/* Center logo perfectly */
+/* Centered logo */
 .nav-center {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
+  pointer-events: none;
 }
 
 .logo {
-  font-size: 34px;
-  font-weight: 800;
-  letter-spacing: 1px;
+  font-size: 44px;     /* bigger, premium */
+  font-weight: 900;
+  transform: translateY(3px); /* visually centered */
+  letter-spacing: 1.5px;
 }
 .logo-white {
-  color: #ffffff;
-  text-shadow: 0 0 10px rgba(255,255,255,0.45);
+  color: #fff;
+  text-shadow: 0 0 12px rgba(255,255,255,0.45);
 }
 .logo-green {
   color: #4ef58a;
-  text-shadow: 0 0 15px #4ef58a;
+  text-shadow: 0 0 18px #4ef58a;
 }
 
-/* Right-side menu */
+/* Right user section */
 .nav-right {
   margin-left: auto;
   display: flex;
   align-items: center;
-  gap: 22px;
+  gap: 28px;            /* cleaner spacing */
+  padding-right: 40px;  /* pulls icons inward */
 }
 
 /* Balance pill */
 .balance-pill {
   background: #0d1117;
-  padding: 7px 18px;
+  padding: 8px 22px;
   border-radius: 50px;
-  border: 1px solid rgba(78,245,138,0.35);
+  border: 1px solid rgba(78,245,138,0.25);
   color: #4ef58a;
   font-weight: 600;
   font-size: 15px;
-  text-shadow: 0 0 10px #4ef58a;
-  box-shadow: 0 0 12px rgba(78,245,138,0.25);
+  text-shadow: 0 0 6px #4ef58a;
+  box-shadow: 0 0 8px rgba(78,245,138,0.2);
 }
 
 /* Icon buttons */
 .icon-btn svg {
-  width: 26px;
-  height: 26px;
+  width: 28px;
+  height: 28px;
   stroke: #4ef58a;
-  stroke-width: 2;
+  stroke-width: 2.2;
   fill: none;
   opacity: 0.85;
   transition: 0.2s ease;
@@ -83,15 +89,19 @@ body {
   filter: drop-shadow(0 0 8px #4ef58a);
 }
 
-/* Responsive navbar */
+/* Mobile adjustments */
 @media (max-width: 700px) {
   .logo {
-    font-size: 28px;
+    font-size: 34px;
   }
 
-  .balance-pill {
-    padding: 6px 14px;
-    font-size: 14px;
+  .nav-inner {
+    padding: 26px 28px;
+  }
+
+  .nav-right {
+    gap: 20px;
+    padding-right: 10px;
   }
 
   .icon-btn svg {
@@ -100,7 +110,9 @@ body {
   }
 }
 
-/* ANNOUNCEMENT */
+/* ---------------------------------------------------
+   ANNOUNCEMENT
+--------------------------------------------------- */
 .announcement-section { display:flex; justify-content:center; margin-top:10px; }
 .announcement {
   font-size:18px;
@@ -116,15 +128,15 @@ body {
 /* HERO */
 .hero { padding:40px 60px; }
 .hero h1 { font-size:48px; font-weight:800; }
-.hero span { color:#4ef58a; text-shadow:0 0 12px #4ef58a; }
+.hero span { color:#4ef58a; text-shadow:0 0 14px #4ef58a; }
 
 /* SEARCH */
 .search-box {
   margin:0 auto;
-  margin-top:20px;
+  margin-top:22px;
   max-width:900px;
   background:#0d1117;
-  padding:14px 20px;
+  padding:16px 20px;
   border-radius:14px;
   border:1px solid rgba(255,255,255,0.06);
 }
@@ -157,12 +169,6 @@ body {
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
   gap:28px;
-}
-
-/* REVIEWS CARDS */
-.review-card:hover {
-  transform:translateY(-4px);
-  box-shadow:0 0 20px rgba(78,245,138,0.3);
 }
 
 /* FOOTER */
