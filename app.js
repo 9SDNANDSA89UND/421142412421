@@ -2,7 +2,31 @@
 // PRODUCT DATA (EMPTY FOR NOW)
 // ===============================
 
-const products = []; // You will add items later
+const products = [
+  {
+    name: "Mystic Blade",
+    rarity: "God",
+    price: 12.99,
+    oldPrice: 19.99,
+    stock: 3,
+    image: "https://via.placeholder.com/300x200?text=Mystic+Blade"
+  },
+  {
+    name: "Shadow Cloak",
+    rarity: "Secret",
+    price: 8.49,
+    oldPrice: 12.00,
+    stock: 5,
+    image: "https://via.placeholder.com/300x200?text=Shadow+Cloak"
+  },
+  {
+    name: "OG Emblem",
+    rarity: "OG",
+    price: 4.20,
+    stock: 9,
+    image: "https://via.placeholder.com/300x200?text=OG+Emblem"
+  }
+];
 
 
 
