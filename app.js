@@ -53,7 +53,7 @@ function renderProducts(list) {
   list.forEach(product => {
     const card = document.createElement("div");
     card.className = "card scroll-fade";
-    card.setAttribute("data-rarity", product.rarity.toLowerCase()); // 🎨 rarity class
+    card.setAttribute("data-rarity", product.rarity.toLowerCase());
 
     card.innerHTML = `
       <span class="tag">${product.rarity}</span>
@@ -71,7 +71,7 @@ function renderProducts(list) {
     grid.appendChild(card);
   });
 
-  // Fade animation
+  // Animation
   setTimeout(() => {
     document.querySelectorAll(".scroll-fade").forEach(el => {
       el.classList.add("visible");
