@@ -74,6 +74,7 @@ body {
   background: none;
   border: none;
   cursor: pointer;
+  position: relative;
 }
 
 .icon-btn svg {
@@ -89,6 +90,28 @@ body {
 .icon-btn:hover svg {
   opacity: 1;
   filter: drop-shadow(0 0 8px #4ef58a);
+}
+
+/* CART NOTIFICATION DOT */
+.cart-dot {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  width: 12px;
+  height: 12px;
+  background: #ff3b3b;
+  border-radius: 50%;
+  display: none;
+  box-shadow: 0 0 6px rgba(255,0,0,0.7);
+}
+
+.cart-dot.show {
+  animation: popIn 0.25s ease;
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.4); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 /* ANNOUNCEMENT */
@@ -307,7 +330,7 @@ footer {
   color:#8b92a1;
 }
 
-/* SCROLL FADE */
+/* FADE ANIMATION */
 .scroll-fade { opacity:0; transform:translateY(20px); transition:0.7s ease; }
 .scroll-fade.visible { opacity:1; transform:translateY(0); }
 
@@ -356,6 +379,50 @@ footer {
 
 .cart-overlay.show { display: block; }
 
+/* QUANTITY BUTTON */
+.qty-btn {
+  width: 26px;
+  height: 26px;
+  font-size: 18px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  background: #4ef58a;
+  color: black;
+  font-weight: 900;
+  transition: 0.15s ease;
+}
+
+.qty-btn:hover {
+  background: #6aff9f;
+}
+
+/* CHECKOUT BUTTON */
+.checkout-btn {
+  width: 100%;
+  padding: 14px 0;
+  background: #4ef58a;
+  color: black;
+  font-size: 17px;
+  font-weight: 800;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 10px;
+  box-shadow: 0 0 15px rgba(78,245,138,0.5);
+  transition: 0.2s ease;
+}
+
+.checkout-btn:hover {
+  background: #66ff9c;
+  box-shadow: 0 0 20px rgba(102,255,156,0.7);
+  transform: translateY(-2px);
+}
+
+.checkout-btn:active {
+  transform: scale(0.97);
+}
+
 /* TOAST NOTIFICATION */
 .toast {
   position: fixed;
@@ -372,7 +439,7 @@ footer {
   transition: 0.3s ease;
   z-index: 99999;
 
-  /* NEON FONT STYLE */
+  /* NEON STYLE */
   font-size: 17px;
   font-weight: 800;
   letter-spacing: 0.3px;
@@ -394,44 +461,4 @@ footer {
   0% { transform: scale(1); box-shadow: 0 0 12px rgba(78,245,138,0.4); }
   50% { transform: scale(1.03); box-shadow: 0 0 22px rgba(78,245,138,0.7); }
   100% { transform: scale(1); box-shadow: 0 0 12px rgba(78,245,138,0.4); }
-}
-
-/* QTY BUTTON */
-.qty-btn {
-  width: 26px;
-  height: 26px;
-  font-size: 18px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  background: #4ef58a;
-  color: black;
-  font-weight: 900;
-  transition: 0.15s ease;
-}
-
-.qty-btn:hover {
-  background: #6aff9f;
-}
-
-/* CART NOTIFICATION DOT */
-.cart-dot {
-  position: absolute;
-  top: -3px;
-  right: -3px;
-  width: 12px;
-  height: 12px;
-  background: #ff3b3b;
-  border-radius: 50%;
-  display: none;
-  box-shadow: 0 0 6px rgba(255,0,0,0.7);
-}
-
-.cart-dot.show {
-  animation: popIn 0.25s ease;
-}
-
-@keyframes popIn {
-  0% { transform: scale(0.4); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
 }
