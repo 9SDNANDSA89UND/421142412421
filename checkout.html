@@ -1,103 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Checkout - TamedBlox</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout – TamedBlox</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
-<body style="padding:40px;">
 
-  <h1 style="text-align:center;margin-bottom:20px;">Checkout</h1>
+<body>
 
-  <div id="cartSummary" style="
-    max-width:600px;
-    margin:0 auto;
-    background:#0d1117;
-    padding:20px;
-    border-radius:12px;
-    border:1px solid rgba(255,255,255,0.08);
-    box-shadow:0 0 20px rgba(78,245,138,0.1);
-  ">
-    <h2>Your Order</h2>
-    <div id="cartItems"></div>
+  <!-- NAVBAR -->
+  <nav class="nav">
+    <div class="nav-inner">
 
-    <h3 id="totalPrice" style="margin-top:20px;"></h3>
+      <div class="nav-left">
+        <button class="icon-btn">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="7" r="4"></circle>
+            <path d="M4 22c0-4 4-7 8-7s8 3 8 7"></path>
+          </svg>
+        </button>
+      </div>
 
-    <button onclick="startPayment()" class="checkout-btn" style="margin-top:20px;">
-      Pay with Stripe
-    </button>
+      <div class="nav-center">
+        <div class="logo">
+          <span class="logo-white">TAMED</span><span class="logo-green">BLOX</span>
+        </div>
+      </div>
+
+      <div class="nav-right">
+        <div class="balance-pill">Balance: £0.00</div>
+
+        <button id="cartBtn" class="icon-btn">
+          <svg viewBox="0 0 24 24">
+            <path d="M6 6h15l-2 12H8L6 6z"></path>
+            <circle cx="9" cy="20" r="1"></circle>
+            <circle cx="18" cy="20" r="1"></circle>
+          </svg>
+          <div id="cartDot" class="cart-dot"></div>
+        </button>
+      </div>
+
+    </div>
+  </nav>
+
+  <!-- ANNOUNCEMENT (Marquee) -->
+  <div class="announcement-section">
+    <div class="announcement marquee">
+      <span>
+        ⚡ Instant Delivery • Secure Checkout • 500+ Orders Delivered • Trusted by 100+ Players • 24/7 Support •
+      </span>
+    </div>
   </div>
 
-<script>
-// Load cart from localStorage and render summary
-function loadCart() {
-  const cart = JSON.parse(localStorage.getItem("cart")) || [];
-  const cartItemsDiv = document.getElementById("cartItems");
+  <!-- MAIN CHECKOUT CONTENT -->
+  <section style="max-width:600px;margin:40px auto;padding:20px;background:#0d1117;border-radius:14px;border:1px solid rgba(255,255,255,0.08);box-shadow:0 0 20px rgba(78,245,138,0.1);">
+    <h2 style="text-align:center;margin-bottom:20px;">Your Order</h2>
 
-  if (cart.length === 0) {
-    cartItemsDiv.innerHTML = "<p>Your cart is empty.</p>";
-    document.getElementById("totalPrice").innerText = "";
-    return;
-  }
+    <div id="cartItems"></div>
 
-  let html = "";
-  let total = 0;
+    <h3 id="totalPrice" style="margin-top:20px;font-size:20px;color:#4ef58a;text-align:right;"></h3>
 
-  cart.forEach(item => {
-    total += item.price * item.qty;
+    <button onclick="startPayment()" class="checkout-btn" style="margin-top:25px;">
+      Pay with Stripe
+    </button>
+  </section>
 
-    html += `
-      <div style="display:flex;justify-content:space-between;margin:8px 0;">
-        <span>${item.name} × ${item.qty}</span>
-        <span>£${(item.price * item.qty).toFixed(2)}</span>
-      </div>
-    `;
-  });
+  <!-- CART DRAWER -->
+  <div id="cartDrawer" class="cart-drawer">
+    <div class="drawer-header">
+      <h2>Your Cart</h2>
+      <button id="closeDrawer" class="close-drawer">×</button>
+    </div>
 
-  cartItemsDiv.innerHTML = html;
-  document.getElementById("totalPrice").innerText =
-    "Total: £" + total.toFixed(2);
-}
+    <div id="drawerContent"></div>
+  </div>
 
-loadCart();
+  <div id="cartOverlay" class="cart-overlay"></div>
 
-// Start Stripe Payment
-async function startPayment() {
-  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  <!-- SCRIPTS -->
+  <script src="app.js"></script>
+  <script src="drawer.js"></script>
 
-  if (cart.length === 0) {
-    alert("Your cart is empty.");
-    return;
-  }
+  <script>
+    function loadCheckoutCart() {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const cartDiv = document.getElementById("cartItems");
 
-  try {
-    const res = await fetch("https://website-5eml.onrender.com/pay/create-checkout-session", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ cart })
-    });
+      if (cart.length === 0) {
+        cartDiv.innerHTML = "<p>Your cart is empty.</p>";
+        document.getElementById("totalPrice").innerText = "";
+        return;
+      }
 
-    if (!res.ok) {
-      console.error("Backend error:", res.status, res.statusText);
-      alert("Payment error (backend " + res.status + ").");
-      return;
+      let html = "";
+      let total = 0;
+
+      cart.forEach(item => {
+        total += item.price * item.qty;
+
+        html += `
+          <div style="display:flex;justify-content:space-between;margin:10px 0;">
+            <span>${item.name}</span>
+            <span>£${(item.price * item.qty).toFixed(2)}</span>
+          </div>
+        `;
+      });
+
+      cartDiv.innerHTML = html;
+      document.getElementById("totalPrice").innerText = "Total: £" + total.toFixed(2);
     }
 
-    const data = await res.json();
+    loadCheckoutCart();
 
-    if (data.url) {
-      window.location.href = data.url; // Redirect to Stripe Checkout
-    } else {
-      console.error("No URL in response:", data);
-      alert("Payment error: no checkout URL received.");
+    async function startPayment() {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+      if (cart.length === 0) {
+        alert("Your cart is empty.");
+        return;
+      }
+
+      try {
+        const res = await fetch("https://website-5eml.onrender.com/pay/create-checkout-session", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ cart })
+        });
+
+        if (!res.ok) {
+          alert("Payment error: " + res.status);
+          return;
+        }
+
+        const data = await res.json();
+        if (data.url) {
+          localStorage.removeItem("cart");
+          window.location.href = data.url;
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Network error.");
+      }
     }
-  } catch (err) {
-    console.error("Fetch error:", err);
-    alert("Network error starting payment.");
-  }
-}
-</script>
+  </script>
 
 </body>
 </html>
