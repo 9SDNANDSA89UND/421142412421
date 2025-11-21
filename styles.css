@@ -185,96 +185,119 @@ body {
   text-align: center;
 }
 
-/* PRODUCTS */
+/* =============================== */
+/* FIXED RECTANGLE PRODUCT GRID */
+/* =============================== */
+
 .products { padding:40px 60px; }
+
 .product-grid {
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-  gap:28px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 260px));
+  justify-content: center;
+  gap: 28px;
 }
 
-/* PRODUCT CARD */
+/* PRODUCT CARD (fixed shape) */
 .card {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255,255,255,0.03);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255,255,255,0.06);
   border-radius: 16px;
-  padding: 20px 22px 26px;
-  box-shadow: 0 0 18px rgba(78,245,138,0.08);
-  transition: 0.3s ease;
+  padding: 16px;
+  height: 280px; /* FIXED HEIGHT */
+  width: 260px;  /* FIXED WIDTH */
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
+  box-shadow: 0 0 18px rgba(78,245,138,0.08);
+  transition: 0.3s ease;
   position: relative;
   overflow: hidden;
 }
+
 .card:hover {
   transform: translateY(-4px);
   box-shadow: 0 0 25px rgba(78,245,138,0.3);
 }
+
 .card img {
   width: 100%;
-  height: 180px;
+  height: 120px; /* LOWER HEIGHT */
   object-fit: contain;
-  margin-bottom: 14px;
-  border-radius: 8px;
+  margin-bottom: 8px;
 }
-.card h3 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
-.card p { font-size: 14px; color: #8b92a1; margin-bottom: 14px; }
+
+.card h3 {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.card p {
+  font-size: 13px;
+  color: #8b92a1;
+  margin-bottom: 10px;
+}
+
 .card .price-box {
-  display: flex; justify-content: center; align-items: baseline; gap: 10px; margin-bottom: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 6px;
 }
-.card .price { color: #4ef58a; font-weight: 700; font-size: 18px; text-shadow: 0 0 8px rgba(78,245,138,0.6); }
-.card .old-price { color: #8b92a1; font-size: 14px; text-decoration: line-through; }
-.card .stock { font-size: 13px; color: #8b92a1; margin-bottom: 18px; }
+
+.card .price {
+  color: #4ef58a;
+  font-weight: 700;
+  font-size: 17px;
+  text-shadow: 0 0 8px rgba(78,245,138,0.6);
+}
+
+.card .old-price {
+  color: #8b92a1;
+  font-size: 13px;
+  text-decoration: line-through;
+}
+
+.card .stock {
+  font-size: 12px;
+  color: #8b92a1;
+  margin-bottom: 10px;
+}
 
 /* TAG */
 .card .tag {
   position: absolute;
-  top: 14px;
-  left: 14px;
+  top: 10px;
+  left: 10px;
   background: #4ef58a;
   color: black;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
-  padding: 5px 10px;
+  padding: 4px 8px;
   border-radius: 6px;
   box-shadow: 0 0 8px rgba(78,245,138,0.5);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-/* RARITY COLORS */
-.card[data-rarity="god"] .tag {
-  background: linear-gradient(90deg, #ffdd57, #ffc300);
-  color: black;
-  box-shadow: 0 0 12px rgba(255, 208, 0, 0.8);
-}
-.card[data-rarity="secret"] .tag {
-  background: linear-gradient(90deg, #a259ff, #8c52ff);
-  color: white;
-  box-shadow: 0 0 12px rgba(162, 89, 255, 0.8);
-}
-.card[data-rarity="og"] .tag {
-  background: linear-gradient(90deg, #4ef58a, #40e87c);
-  color: black;
-  box-shadow: 0 0 10px rgba(78,245,138,0.8);
 }
 
 /* BUY BUTTON */
 .buy-btn {
   background: #4ef58a;
   border: none;
-  padding: 12px 0;
+  padding: 10px 0;
   border-radius: 8px;
   color: black;
   font-weight: 700;
-  font-size: 16px;
+  font-size: 14px;
   cursor: pointer;
   width: 100%;
   transition: 0.25s ease;
+  margin-top: auto;
 }
+
 .buy-btn:hover {
   background: #5fff96;
   box-shadow: 0 0 14px rgba(78,245,138,0.6);
@@ -282,21 +305,17 @@ body {
 }
 
 /* FOOTER */
-footer { text-align:center; margin:40px 0; color:#8b92a1; }
-
-/* ANIMATIONS */
-.scroll-fade { opacity:0; transform:translateY(20px); transition:0.7s ease; }
-.scroll-fade.visible { opacity:1; transform:translateY(0); }
-.fade-in-up { animation:fadeInUp 0.7s ease forwards; }
-@keyframes fadeInUp {
-  from { opacity:0; transform:translateY(20px); }
-  to { opacity:1; transform:translateY(0); }
+footer {
+  text-align:center;
+  margin:40px 0;
+  color:#8b92a1;
 }
 
-/* =============================== */
-/* CART DRAWER (NEW) */
-/* =============================== */
+/* FADE ANIMATIONS */
+.scroll-fade { opacity:0; transform:translateY(20px); transition:0.7s ease; }
+.scroll-fade.visible { opacity:1; transform:translateY(0); }
 
+/* DRAWER */
 .cart-drawer {
   position: fixed;
   top: 0;
