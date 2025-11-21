@@ -1,5 +1,6 @@
 /* ===============================
-   PRODUCT DATA
+   PRODUCT DATA (FRONTEND ONLY)
+   Used for UI display, NOT for pricing
 =============================== */
 const products = [
   {
@@ -28,6 +29,41 @@ const products = [
 ];
 
 /* ===============================
+   NEW STACKING TOAST NOTIFICATIONS
+=============================== */
+
+// Create container once:
+let toastContainer = document.querySelector(".toast-container");
+if (!toastContainer) {
+  toastContainer = document.createElement("div");
+  toastContainer.className = "toast-container";
+  document.body.appendChild(toastContainer);
+}
+
+function showToast(message) {
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.innerText = message;
+
+  toastContainer.appendChild(toast);
+
+  // enter animation
+  setTimeout(() => {
+    toast.classList.add("show");
+  }, 50);
+
+  // auto-remove after 3 seconds
+  setTimeout(() => {
+    toast.classList.remove("show");
+    toast.classList.add("hide");
+
+    setTimeout(() => {
+      toast.remove();
+    }, 300);
+  }, 3000);
+}
+
+/* ===============================
    CART SYSTEM
 =============================== */
 
@@ -36,9 +72,9 @@ let cart = JSON.parse(localStorage.getItem("cart")) || [];
 function saveCart() {
   localStorage.setItem("cart", JSON.stringify(cart));
   updateCartDrawer();
+  updateCartDot();
 }
 
-/* Add item OR increase qty */
 function addToCart(productName) {
   const item = products.find(p => p.name === productName);
   if (!item) return;
@@ -51,35 +87,12 @@ function addToCart(productName) {
     cart.push({
       name: item.name,
       price: item.price,
-      image: item.image,
       qty: 1
     });
   }
 
   saveCart();
   showToast(`${item.name} added to cart`);
-  animateAdd(productName);
-}
-
-/* Quantity buttons */
-function increaseQty(name) {
-  const item = cart.find(i => i.name === name);
-  if (!item) return;
-
-  item.qty++;
-  saveCart();
-}
-
-function decreaseQty(name) {
-  const item = cart.find(i => i.name === name);
-  if (!item) return;
-
-  item.qty--;
-  if (item.qty <= 0) {
-    cart = cart.filter(i => i.name !== name);
-  }
-
-  saveCart();
 }
 
 /* ===============================
@@ -99,49 +112,10 @@ function updateCartDot() {
 }
 
 /* ===============================
-   TOAST NOTIFICATION
-=============================== */
-function showToast(msg) {
-  const toast = document.createElement("div");
-  toast.className = "toast";
-  toast.innerHTML = msg;
-  document.body.appendChild(toast);
-
-  setTimeout(() => toast.classList.add("show"), 30);
-  setTimeout(() => {
-    toast.classList.remove("show");
-    setTimeout(() => toast.remove(), 300);
-  }, 2000);
-}
-
-/* ===============================
-   CARD PULSE ANIMATION
-=============================== */
-function animateAdd(productName) {
-  document.querySelectorAll(".card h3").forEach(h3 => {
-    if (h3.innerText === productName) {
-      const card = h3.closest(".card");
-      card.classList.add("pulse");
-      setTimeout(() => card.classList.remove("pulse"), 500);
-    }
-  });
-}
-
-/* ===============================
-   CHECKOUT BUTTON
-=============================== */
-function goToCheckout() {
-  if (cart.length === 0) return;
-  window.location.href = "checkout.html";  // ← Change this if needed
-}
-
-/* ===============================
-   CART DRAWER CONTENT
+   UPDATE CART DRAWER (WITHOUT QTY DISPLAY)
 =============================== */
 function updateCartDrawer() {
   const drawerContent = document.getElementById("drawerContent");
-
-  updateCartDot();
 
   if (cart.length === 0) {
     drawerContent.innerHTML = `<p style="color:#8b92a1;">Your cart is empty.</p>`;
@@ -156,17 +130,9 @@ function updateCartDrawer() {
 
     html += `
       <div style="display:flex;align-items:center;margin-bottom:18px;gap:12px;">
-        <img src="${item.image}" style="width:60px;height:60px;border-radius:6px;object-fit:contain;">
-        
         <div style="flex:1;">
           <div style="font-weight:600;">${item.name}</div>
           <div style="color:#4ef58a;font-weight:700;">£${item.price}</div>
-
-          <div style="display:flex;align-items:center;gap:8px;margin-top:6px;">
-            <button class="qty-btn" onclick="decreaseQty('${item.name}')">−</button>
-            <span style="font-size:16px;">${item.qty}</span>
-            <button class="qty-btn" onclick="increaseQty('${item.name}')">+</button>
-          </div>
         </div>
       </div>
     `;
@@ -184,6 +150,13 @@ function updateCartDrawer() {
   `;
 
   drawerContent.innerHTML = html;
+}
+
+/* ===============================
+   CHECKOUT REDIRECT
+=============================== */
+function goToCheckout() {
+  window.location.href = "checkout.html";
 }
 
 /* ===============================
@@ -241,5 +214,6 @@ document.querySelectorAll(".filter").forEach(btn => {
   });
 });
 
-/* Load cart on startup */
+/* Load cart + dot on startup */
 updateCartDrawer();
+updateCartDot();
