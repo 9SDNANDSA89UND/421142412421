@@ -67,6 +67,7 @@ function saveCart() {
   updateCartDot();
 }
 
+/* ADD TO CART */
 function addToCart(name) {
   const product = products.find(p => p.name === name);
   if (!product) return;
@@ -87,9 +88,7 @@ function addToCart(name) {
   showToast(`${product.name} added to cart`);
 }
 
-/* ============================
-   CART DOT
-============================ */
+/* CART DOT */
 function updateCartDot() {
   const dot = document.getElementById("cartDot");
   if (!dot) return;
@@ -106,16 +105,6 @@ function updateCartDot() {
 /* ============================
    CART DRAWER FUNCTIONS
 ============================ */
-function openCart() {
-  document.getElementById("cartDrawer").classList.add("open");
-  document.getElementById("cartOverlay").classList.add("show");
-}
-
-function closeCart() {
-  document.getElementById("cartDrawer").classList.remove("open");
-  document.getElementById("cartOverlay").classList.remove("show");
-}
-
 function updateCartDrawer() {
   const drawer = document.getElementById("drawerContent");
 
@@ -135,10 +124,10 @@ function updateCartDrawer() {
         <div style="font-weight:600; margin-bottom:3px">${item.name}</div>
         <div style="color:#4ef58a; font-weight:700">£${item.price}</div>
 
-        <div style="margin-top:8px; display:flex; gap:8px;">
+        <div style="margin-top:10px; display:flex; gap:8px;">
           <button class="qty-btn" onclick="changeQty('${item.name}', -1)">−</button>
           <button class="qty-btn" onclick="changeQty('${item.name}', 1)">+</button>
-          <button class="qty-btn" style="background:#ff4747;color:white;" onclick="removeItem('${item.name}')">×</button>
+          <button class="qty-btn remove" onclick="removeItem('${item.name}')">×</button>
         </div>
       </div>
     `;
@@ -149,12 +138,14 @@ function updateCartDrawer() {
     <div style="font-size:18px;font-weight:700;color:#4ef58a;margin-bottom:12px;">
       Total: £${total.toFixed(2)}
     </div>
+
     <button class="checkout-btn" onclick="goToCheckout()">Proceed to Checkout</button>
   `;
 
   drawer.innerHTML = html;
 }
 
+/* CHANGE QTY */
 function changeQty(name, amount) {
   const item = cart.find(i => i.name === name);
   if (!item) return;
@@ -168,14 +159,25 @@ function changeQty(name, amount) {
   saveCart();
 }
 
+/* REMOVE ITEM */
 function removeItem(name) {
   cart = cart.filter(i => i.name !== name);
   saveCart();
 }
 
-/* ============================
-   CHECKOUT
-============================ */
+/* OPEN CART */
+function openCart() {
+  document.getElementById("cartDrawer").classList.add("open");
+  document.getElementById("cartOverlay").classList.add("show");
+}
+
+/* CLOSE CART */
+function closeCart() {
+  document.getElementById("cartDrawer").classList.remove("open");
+  document.getElementById("cartOverlay").classList.remove("show");
+}
+
+/* GO TO CHECKOUT */
 function goToCheckout() {
   window.location.href = "checkout.html";
 }
@@ -185,8 +187,6 @@ function goToCheckout() {
 ============================ */
 function renderProducts(list) {
   const grid = document.getElementById("productGrid");
-  if (!grid) return;
-
   grid.innerHTML = "";
 
   list.forEach(product => {
@@ -198,11 +198,14 @@ function renderProducts(list) {
       <img src="${product.image}">
       <h3>${product.name}</h3>
       <p>Instant delivery • Trusted seller</p>
+
       <div class="price-box">
         <span class="price">£${product.price}</span>
         ${product.oldPrice ? `<span class="old-price">£${product.oldPrice}</span>` : ""}
       </div>
+
       <div class="stock">${product.stock} left</div>
+
       <button class="buy-btn" onclick="addToCart('${product.name}')">Buy</button>
     `;
 
@@ -217,16 +220,12 @@ function renderProducts(list) {
 }
 
 /* ============================
-   FILTERS
+   SEARCH FUNCTIONALITY
 ============================ */
-document.querySelectorAll(".filter")?.forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll(".filter").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-
-    const f = btn.textContent.toLowerCase();
-    renderProducts(f === "all" ? products : products.filter(p => p.rarity.toLowerCase() === f));
-  });
+document.getElementById("searchInput")?.addEventListener("input", (e) => {
+  const value = e.target.value.toLowerCase();
+  const filtered = products.filter(p => p.name.toLowerCase().includes(value));
+  renderProducts(filtered);
 });
 
 /* ============================
@@ -235,3 +234,7 @@ document.querySelectorAll(".filter")?.forEach(btn => {
 renderProducts(products);
 updateCartDrawer();
 updateCartDot();
+
+document.getElementById("cartBtn")?.addEventListener("click", openCart);
+document.getElementById("closeDrawer")?.addEventListener("click", closeCart);
+document.getElementById("cartOverlay")?.addEventListener("click", closeCart);
