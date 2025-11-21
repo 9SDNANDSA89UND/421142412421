@@ -164,7 +164,7 @@ body {
   cursor: pointer;
   font-weight: 600;
   font-size: 14px;
-  transition: all 0.25s ease;
+  transition: 0.25s ease;
 }
 .filter.active,
 .filter:hover {
@@ -195,7 +195,7 @@ body {
   gap: 28px;
 }
 
-/* PRODUCT CARD — SLIGHTLY LONGER VERSION */
+/* PRODUCT CARD */
 .card {
   background: rgba(255,255,255,0.03);
   backdrop-filter: blur(12px);
@@ -307,7 +307,7 @@ footer {
   color:#8b92a1;
 }
 
-/* FADE */
+/* SCROLL FADE */
 .scroll-fade { opacity:0; transform:translateY(20px); transition:0.7s ease; }
 .scroll-fade.visible { opacity:1; transform:translateY(0); }
 
@@ -326,9 +326,7 @@ footer {
   padding: 20px;
 }
 
-.cart-drawer.open {
-  right: 0;
-}
+.cart-drawer.open { right: 0; }
 
 .drawer-header {
   display: flex;
@@ -356,11 +354,9 @@ footer {
   z-index: 9998;
 }
 
-.cart-overlay.show {
-  display: block;
-}
+.cart-overlay.show { display: block; }
 
-/* TOAST NOTIFICATIONS */
+/* TOAST NOTIFICATION */
 .toast {
   position: fixed;
   top: 20px;
@@ -375,6 +371,13 @@ footer {
   transform: translateY(-15px);
   transition: 0.3s ease;
   z-index: 99999;
+
+  /* NEON FONT STYLE */
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  text-shadow: 0 0 12px rgba(78,245,138,0.8);
+  font-family: "Inter", sans-serif;
 }
 
 .toast.show {
@@ -382,7 +385,7 @@ footer {
   transform: translateY(0);
 }
 
-/* CARD PULSE ANIMATION */
+/* CARD PULSE */
 .pulse {
   animation: pulseAnim 0.4s ease;
 }
@@ -393,7 +396,7 @@ footer {
   100% { transform: scale(1); box-shadow: 0 0 12px rgba(78,245,138,0.4); }
 }
 
-/* QUANTITY BUTTONS */
+/* QTY BUTTON */
 .qty-btn {
   width: 26px;
   height: 26px;
