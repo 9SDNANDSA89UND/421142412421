@@ -22,8 +22,7 @@ body {
 .nav-inner {
   width: 100%;
   max-width: 1400px;
-  /* thinner navbar */
-  padding: 8px 28px;
+  padding: 8px 28px; /* thinner navbar */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -50,6 +49,7 @@ body {
 .logo-white { color: #fff; text-shadow: 0 0 12px rgba(255,255,255,0.35); }
 .logo-green { color: #4ef58a; text-shadow: 0 0 18px #4ef58a; }
 
+/* ICON BUTTON */
 .icon-btn {
   background: none;
   border: none;
@@ -106,34 +106,41 @@ body {
   100% { transform: scale(1); opacity: 1; }
 }
 
-/* ANNOUNCEMENT */
+/* ===============================
+   ANNOUNCEMENT BAR (THIN + CLEAN)
+================================= */
 .announcement-section {
+  max-width: 900px;
+  margin: 10px auto 0;
+  padding: 0;
   display: flex;
   justify-content: center;
-  margin-top: 14px;
-  max-width: 1000px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .announcement {
-  padding: 8px 20px;
-  border-radius: 10px;
+  padding: 4px 12px;
+  font-size: 13px;
+  line-height: 1.2;
+  height: 26px;                 /* thin bar */
   background: rgba(78,245,138,0.07);
   border: 1px solid rgba(78,245,138,0.3);
+  border-radius: 10px;
   color: #4ef58a;
   text-shadow: 0 0 8px #4ef58a;
-  font-size: 16px;
-  width: 100%;
+  display: flex;
+  align-items: center;
   overflow: hidden;
 }
 
 /* MARQUEE */
 .marquee span {
   display: inline-block;
+  white-space: nowrap;
   padding-left: 100%;
   animation: marqueeScroll 14s linear infinite;
+  line-height: 26px;
 }
+
 @keyframes marqueeScroll {
   0% { transform: translateX(0%); }
   100% { transform: translateX(-100%); }
@@ -187,7 +194,7 @@ body {
   gap: 28px;
 }
 
-/* PRODUCT CARD (new premium version) */
+/* PRODUCT CARD */
 .card {
   background: rgba(15, 20, 25, 0.55);
   backdrop-filter: blur(14px);
@@ -211,7 +218,6 @@ body {
   border-color: rgba(78,245,138,0.45);
 }
 
-/* SQUARE IMAGE — CLEAN, NO WHITE LINE */
 .card img {
   width: 100%;
   aspect-ratio: 1 / 1;
@@ -221,7 +227,7 @@ body {
   background: #000;
 }
 
-/* BADGE CONTAINER */
+/* BADGES */
 .card-badges {
   position: absolute;
   top: 12px;
@@ -230,7 +236,6 @@ body {
   gap: 8px;
 }
 
-/* RARITY TAG */
 .tag {
   padding: 4px 10px;
   font-size: 11px;
@@ -239,56 +244,42 @@ body {
   text-transform: uppercase;
 }
 
-/* RARITY COLORS */
 .tag-god { background: #f6d66a; color: black; box-shadow: 0 0 10px rgba(246,214,106,0.9); }
 .tag-secret { background: #b56cff; color: black; box-shadow: 0 0 12px rgba(181,108,255,0.95); }
 .tag-og { background: #4ef5d8; color: black; box-shadow: 0 0 12px rgba(78,245,216,0.9); }
 
-/* DISCOUNT TAG (dynamic) */
+/* DISCOUNT TAG */
 .discount-tag {
   padding: 4px 10px;
   font-size: 11px;
   font-weight: 800;
   border-radius: 8px;
-  text-transform: uppercase;
   color: black;
 }
+.discount-green { background: #8dff71; }
+.discount-yellow { background: #ffe66d; }
+.discount-orange { background: #ffb856; }
+.discount-red { background: #ff5e5e; }
 
-/* DISCOUNT COLORS */
-.discount-green { background: #8dff71; box-shadow: 0 0 10px rgba(141,255,113,0.8); }
-.discount-yellow { background: #ffe66d; box-shadow: 0 0 10px rgba(255,230,109,0.7); }
-.discount-orange { background: #ffb856; box-shadow: 0 0 10px rgba(255,186,86,0.8); }
-.discount-red { background: #ff5e5e; box-shadow: 0 0 10px rgba(255,94,94,0.8); }
-
-/* TITLE */
+/* PRICE */
 .card h3 {
   font-size: 16px;
   font-weight: 800;
   margin-top: 12px;
   text-align: center;
   line-height: 1.2;
-  max-width: 95%;
-  word-wrap: break-word;
 }
-
-/* REMOVE STOCK */
-.stock { display: none !important; }
-
-/* PRICE BOX */
 .price-box {
   margin-top: 10px;
   display: flex;
   align-items: baseline;
   gap: 8px;
 }
-
 .price {
   color: #4ef58a;
   font-size: 18px;
   font-weight: 900;
-  text-shadow: 0 0 8px rgba(78,245,138,0.6);
 }
-
 .old-price {
   color: #7a828c;
   font-size: 13px;
@@ -306,156 +297,90 @@ body {
   color: black;
   font-size: 15px;
   font-weight: 800;
-  cursor: pointer;
-  transition: 0.2s ease;
   box-shadow: 0 0 15px rgba(78,245,138,0.4);
+  cursor: pointer;
 }
-
 .buy-btn:hover {
   opacity: 0.95;
   transform: translateY(-2px);
-  box-shadow: 0 0 22px rgba(78,245,138,0.8);
 }
 
-/* TOASTS */
-.toast-container {
-  position:fixed;
-  top:25px;
-  right:25px;
-  z-index:99999;
-}
-.toast {
-  background:rgba(13,17,23,0.92);
-  padding:14px 22px;
-  border-radius:10px;
-  color:#4ef58a;
-  opacity:0;
-  transform:translateX(35px);
-  transition:.3s;
-}
-.toast.show {
-  opacity:1;
-  transform:translateX(0);
-}
-
-/* FADE */
-.scroll-fade { opacity:0; transform:translateY(20px); transition:0.7s; }
-.scroll-fade.visible { opacity:1; transform:translateY(0); }
-
-/* ============================
-   CART DRAWER
-============================ */
+/* CART DRAWER */
 .cart-drawer {
   position: fixed;
   top: 0;
   right: -420px;
   width: 360px;
-  max-width: 100%;
   height: 100vh;
   background: #05080b;
   border-left: 1px solid rgba(255,255,255,0.06);
-  box-shadow: -8px 0 25px rgba(0,0,0,0.7);
-  z-index: 60;
   padding: 18px 20px;
   display: flex;
   flex-direction: column;
   transition: right 0.3s ease;
+  z-index: 100;
 }
-
 .cart-drawer.open {
   right: 0;
 }
 
 .drawer-header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 18px;
-}
-
-.drawer-header h2 {
-  font-size: 22px;
-  font-weight: 800;
 }
 
 .close-drawer {
   background: transparent;
   border: none;
   font-size: 26px;
-  line-height: 1;
+  color: white;
   cursor: pointer;
-  color: #ffffff;
-  opacity: 0.75;
 }
 
-.close-drawer:hover {
-  opacity: 1;
-}
-
-/* Drawer content area */
-#drawerContent {
-  flex: 1;
-  overflow-y: auto;
-  padding-right: 4px;
-  font-size: 14px;
-}
-
-/* Overlay behind drawer */
+/* OVERLAY */
 .cart-overlay {
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.55);
   opacity: 0;
   pointer-events: none;
-  z-index: 55;
-  transition: opacity 0.25s ease;
+  transition: opacity .25s;
+  z-index: 90;
 }
-
 .cart-overlay.show {
   opacity: 1;
   pointer-events: auto;
 }
 
-/* Quantity / remove buttons inside cart */
+/* QTY BUTTONS */
 .qty-btn {
   padding: 4px 10px;
   border-radius: 6px;
   border: 1px solid rgba(255,255,255,0.15);
   background: rgba(13,17,23,0.9);
-  color: #ffffff;
+  color: white;
   cursor: pointer;
   font-size: 13px;
 }
-
-.qty-btn:hover {
-  background: rgba(78,245,138,0.12);
-  border-color: rgba(78,245,138,0.6);
-}
-
 .qty-btn.remove {
   border-color: rgba(255,94,94,0.7);
 }
 
-.qty-btn.remove:hover {
-  background: rgba(255,94,94,0.15);
-}
-
-/* Checkout button shared style */
+/* CHECKOUT BUTTON */
 .checkout-btn {
   width: 100%;
   padding: 12px 0;
   border-radius: 10px;
-  border: none;
   background: linear-gradient(90deg,#4ef58a,#37d769);
+  border: none;
   color: #050608;
-  font-weight: 800;
   font-size: 15px;
+  font-weight: 800;
   cursor: pointer;
-  box-shadow: 0 0 15px rgba(78,245,138,0.4);
 }
 
-.checkout-btn:hover {
-  opacity: 0.95;
-  transform: translateY(-1px);
-  box-shadow: 0 0 22px rgba(78,245,138,0.8);
-}
+/* SCROLL FADE */
+.scroll-fade { opacity:0; transform:translateY(20px); transition:.7s; }
+.scroll-fade.visible { opacity:1; transform:translateY(0); }
