@@ -81,7 +81,23 @@ function decreaseQty(name) {
 }
 
 /* ===============================
-   NOTIFICATION (TOAST)
+   CART NOTIFICATION DOT
+=============================== */
+function updateCartDot() {
+  const cartDot = document.getElementById("cartDot");
+  if (!cartDot) return;
+
+  if (cart.length > 0) {
+    cartDot.style.display = "block";
+    cartDot.classList.add("show");
+    setTimeout(() => cartDot.classList.remove("show"), 250);
+  } else {
+    cartDot.style.display = "none";
+  }
+}
+
+/* ===============================
+   TOAST NOTIFICATION
 =============================== */
 function showToast(msg) {
   const toast = document.createElement("div");
@@ -100,8 +116,7 @@ function showToast(msg) {
    ADD-TO-CART PULSE ANIMATION
 =============================== */
 function animateAdd(productName) {
-  const cards = document.querySelectorAll(".card h3");
-  cards.forEach(h3 => {
+  document.querySelectorAll(".card h3").forEach(h3 => {
     if (h3.innerText === productName) {
       const card = h3.closest(".card");
       card.classList.add("pulse");
@@ -115,6 +130,8 @@ function animateAdd(productName) {
 =============================== */
 function updateCartDrawer() {
   const drawerContent = document.getElementById("drawerContent");
+
+  updateCartDot(); // 🔴 Update notification dot
 
   if (cart.length === 0) {
     drawerContent.innerHTML = `<p style="color:#8b92a1;">Your cart is empty.</p>`;
