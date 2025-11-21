@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TamedBlox</title>
+  <title>TamedBlox – Home</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 
@@ -13,9 +13,8 @@
   <nav class="nav">
     <div class="nav-inner">
 
-      <!-- PROFILE ICON -->
       <div class="nav-left">
-        <button class="icon-btn">
+        <button class="icon-btn" id="profileBtn">
           <svg viewBox="0 0 24 24">
             <circle cx="12" cy="7" r="4"></circle>
             <path d="M4 22c0-4 4-7 8-7s8 3 8 7"></path>
@@ -23,20 +22,19 @@
         </button>
       </div>
 
-      <!-- CENTER LOGO -->
       <div class="nav-center">
         <div class="logo">
           <span class="logo-white">TAMED</span><span class="logo-green">BLOX</span>
         </div>
       </div>
 
-      <!-- RIGHT ICONS -->
       <div class="nav-right">
-        <div class="balance-pill">Balance: £0.00</div>
+        <div class="balance-pill" id="balanceDisplay">Balance: £0.00</div>
 
         <button id="cartBtn" class="icon-btn">
           <svg viewBox="0 0 24 24">
-            <path d="M3 3h2l3 12h11l3-8H6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M3 3h2l3 12h11l3-8H6"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
             <circle cx="9" cy="20" r="2"></circle>
             <circle cx="18" cy="20" r="2"></circle>
           </svg>
@@ -47,24 +45,24 @@
     </div>
   </nav>
 
-  <!-- ANNOUNCEMENT MARQUEE -->
+  <!-- ANNOUNCEMENT -->
   <div class="announcement-section">
     <div class="announcement marquee">
-      <span>
-        ⚡ Instant Delivery • Secure Checkout • 500+ Orders Delivered • Trusted by 100+ Players • 24/7 Support •
-      </span>
+      <span>Instant Delivery • Trusted Seller • 100% Secure Checkout • 24/7 Support</span>
     </div>
   </div>
 
   <!-- HERO -->
-  <section class="hero scroll-fade">
-    <h1>Premium <span>Game Items</span> Delivered Instantly</h1>
-  </section>
+  <section class="hero">
+    <h1>Premium In-Game Items. Delivered <span>Instantly.</span></h1>
+    <p class="hero-sub">
+      TamedBlox provides fast, secure delivery on every purchase — trusted by over 100+ players.
+    </p>
 
-  <!-- SEARCH BAR -->
-  <div class="search-box scroll-fade">
-    <input id="searchInput" type="text" placeholder="Search items..." />
-  </div>
+    <div class="search-box">
+      <input id="searchInput" type="text" placeholder="Search items...">
+    </div>
+  </section>
 
   <!-- PRODUCTS -->
   <section class="products">
@@ -83,7 +81,9 @@
 
   <div id="cartOverlay" class="cart-overlay"></div>
 
+  <!-- SCRIPTS -->
   <script src="app.js"></script>
   <script src="drawer.js" type="module"></script>
+
 </body>
 </html>
