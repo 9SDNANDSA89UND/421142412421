@@ -41,7 +41,6 @@ body {
   transform: translateX(-50%);
 }
 
-/* LOGO */
 .logo {
   font-size: 42px;
   font-weight: 900;
@@ -50,7 +49,6 @@ body {
 .logo-white { color: #fff; text-shadow: 0 0 12px rgba(255,255,255,0.35); }
 .logo-green { color: #4ef58a; text-shadow: 0 0 18px #4ef58a; }
 
-/* ICON BUTTONS */
 .icon-btn {
   background: none;
   border: none;
@@ -86,35 +84,12 @@ body {
   display: none;
 }
 
-.cart-dot.show {
-  animation: popDot 0.28s ease;
-}
-
-@keyframes popDot {
-  0% { transform: scale(0.3); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-/* BALANCE */
-.balance-pill {
-  background: #0d1117;
-  padding: 8px 18px;
-  border-radius: 50px;
-  border: 1px solid rgba(78,245,138,0.25);
-  color: #4ef58a;
-  font-weight: 600;
-  font-size: 15px;
-  text-shadow: 0 0 6px #4ef58a;
-  box-shadow: 0 0 8px rgba(78,245,138,0.18);
-}
-
 /* ANNOUNCEMENT */
 .announcement-section {
   display: flex;
   justify-content: center;
   margin-top: 18px;
 }
-
 .announcement {
   padding: 8px 20px;
   border-radius: 10px;
@@ -123,10 +98,6 @@ body {
   color: #4ef58a;
   text-shadow: 0 0 8px #4ef58a;
   font-size: 16px;
-  font-weight: 500;
-  overflow: hidden;
-  white-space: nowrap;
-  position: relative;
 }
 
 /* MARQUEE */
@@ -135,7 +106,6 @@ body {
   padding-left: 100%;
   animation: marqueeScroll 14s linear infinite;
 }
-
 @keyframes marqueeScroll {
   0% { transform: translateX(0%); }
   100% { transform: translateX(-100%); }
@@ -228,46 +198,44 @@ body {
   position: absolute;
   top: 12px;
   left: 12px;
-  padding: 4px 10px;
+  padding: 4px 12px;
   font-size: 11px;
   font-weight: 800;
   border-radius: 8px;
   text-transform: uppercase;
 }
 
-/* GOD = GOLD */
 .tag-god {
   background: #f6d66a;
   color: black;
   box-shadow: 0 0 10px rgba(246,214,106,0.9);
 }
 
-/* SECRET = PURPLE */
 .tag-secret {
   background: #b56cff;
   color: black;
   box-shadow: 0 0 12px rgba(181,108,255,0.95);
 }
 
-/* OG = CYAN */
 .tag-og {
   background: #4ef5d8;
   color: black;
   box-shadow: 0 0 12px rgba(78,245,216,0.9);
 }
 
-/* TEXT CONTENT */
+/* FIX TITLE TEXT TO FIT */
 .card h3 {
-  font-size: 19px;
+  font-size: 17px;
   font-weight: 800;
   margin-top: 12px;
+  text-align: center;
+  line-height: 1.2;
+  max-width: 95%;
+  word-wrap: break-word;
 }
 
-.card p {
-  color: #96a0ad;
-  font-size: 13px;
-  margin-top: 4px;
-}
+/* REMOVE STOCK TEXT */
+.stock { display: none !important; }
 
 /* PRICE BOX */
 .price-box {
@@ -288,12 +256,6 @@ body {
   color: #7a828c;
   font-size: 13px;
   text-decoration: line-through;
-}
-
-.stock {
-  margin-top: 6px;
-  font-size: 12px;
-  color: #7f8b99;
 }
 
 /* BUY BUTTON */
@@ -338,7 +300,6 @@ body {
   right:25px;
   z-index:99999;
 }
-
 .toast {
   background: rgba(13,17,23,0.92);
   padding:14px 22px;
@@ -349,11 +310,7 @@ body {
   transform:translateX(35px);
   transition:.3s;
 }
-
-.toast.show {
-  opacity:1;
-  transform:translateX(0);
-}
+.toast.show { opacity:1; transform:translateX(0); }
 
 /* FADE */
 .scroll-fade { opacity:0; transform:translateY(20px); transition:0.7s; }
