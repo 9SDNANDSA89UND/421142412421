@@ -30,6 +30,7 @@ const products = [
 /* ===============================
    CART SYSTEM
 =============================== */
+
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
 function saveCart() {
@@ -64,6 +65,7 @@ function addToCart(productName) {
 function increaseQty(name) {
   const item = cart.find(i => i.name === name);
   if (!item) return;
+
   item.qty++;
   saveCart();
 }
@@ -113,7 +115,7 @@ function showToast(msg) {
 }
 
 /* ===============================
-   ADD-TO-CART PULSE ANIMATION
+   CARD PULSE ANIMATION
 =============================== */
 function animateAdd(productName) {
   document.querySelectorAll(".card h3").forEach(h3 => {
@@ -126,12 +128,20 @@ function animateAdd(productName) {
 }
 
 /* ===============================
+   CHECKOUT BUTTON
+=============================== */
+function goToCheckout() {
+  if (cart.length === 0) return;
+  window.location.href = "checkout.html";  // ← Change this if needed
+}
+
+/* ===============================
    CART DRAWER CONTENT
 =============================== */
 function updateCartDrawer() {
   const drawerContent = document.getElementById("drawerContent");
 
-  updateCartDot(); // 🔴 Update notification dot
+  updateCartDot();
 
   if (cart.length === 0) {
     drawerContent.innerHTML = `<p style="color:#8b92a1;">Your cart is empty.</p>`;
@@ -164,9 +174,13 @@ function updateCartDrawer() {
 
   html += `
     <hr style="border-color:rgba(255,255,255,0.1);margin:15px 0;">
-    <div style="font-size:18px;font-weight:700;color:#4ef58a;">
+    <div style="font-size:18px;font-weight:700;color:#4ef58a;margin-bottom:12px;">
       Total: £${total.toFixed(2)}
     </div>
+
+    <button class="checkout-btn" onclick="goToCheckout()">
+      Proceed to Checkout
+    </button>
   `;
 
   drawerContent.innerHTML = html;
