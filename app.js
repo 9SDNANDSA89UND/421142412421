@@ -1,6 +1,3 @@
-// ===============================
-// PRODUCT DATA
-// ===============================
 const products = [
   {
     name: "Mystic Blade",
@@ -8,45 +5,31 @@ const products = [
     price: 12.99,
     oldPrice: 19.99,
     stock: 3,
-    image: "https://via.placeholder.com/300x200?text=Mystic+Blade"
+    image: "https://via.placeholder.com/300x200"
   },
   {
     name: "Shadow Cloak",
     rarity: "Secret",
     price: 8.49,
-    oldPrice: 12.00,
+    oldPrice: 12.0,
     stock: 5,
-    image: "https://via.placeholder.com/300x200?text=Shadow+Cloak"
+    image: "https://via.placeholder.com/300x200"
   },
   {
     name: "OG Emblem",
     rarity: "OG",
-    price: 4.20,
+    price: 4.2,
     stock: 9,
-    image: "https://via.placeholder.com/300x200?text=OG+Emblem"
+    image: "https://via.placeholder.com/300x200"
   }
 ];
 
-
-// ===============================
-// RENDER PRODUCTS
-// ===============================
 function renderProducts(list) {
   const grid = document.getElementById("productGrid");
   grid.innerHTML = "";
 
-  if (list.length === 0) {
-    grid.innerHTML = `
-      <div style="
-        grid-column: 1 / -1;
-        text-align: center;
-        color: #8b92a1;
-        padding: 40px 0;
-        font-size: 18px;
-      ">
-        No items available yet.
-      </div>
-    `;
+  if (!list.length) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:#8b92a1;padding:40px 0;">No items available yet.</div>`;
     return;
   }
 
@@ -57,7 +40,7 @@ function renderProducts(list) {
 
     card.innerHTML = `
       <span class="tag">${product.rarity}</span>
-      <img src="${product.image}" alt="${product.name}" />
+      <img src="${product.image}" />
       <h3>${product.name}</h3>
       <p>Instant delivery • Trusted seller</p>
       <div class="price-box">
@@ -71,36 +54,21 @@ function renderProducts(list) {
     grid.appendChild(card);
   });
 
-  // Animation
   setTimeout(() => {
-    document.querySelectorAll(".scroll-fade").forEach(el => {
-      el.classList.add("visible");
-    });
-  }, 100);
+    document.querySelectorAll(".scroll-fade").forEach(el =>
+      el.classList.add("visible")
+    );
+  }, 80);
 }
 
+renderProducts(products);
 
-// ===============================
-// FILTER SYSTEM
-// ===============================
-const filterButtons = document.querySelectorAll(".filter");
-filterButtons.forEach(btn => {
+document.querySelectorAll(".filter").forEach(btn => {
   btn.addEventListener("click", () => {
-    filterButtons.forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".filter").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
 
-    const filter = btn.textContent.toLowerCase();
-    if (filter === "all") {
-      renderProducts(products);
-    } else {
-      const filtered = products.filter(p => p.rarity.toLowerCase() === filter);
-      renderProducts(filtered);
-    }
+    const f = btn.textContent.toLowerCase();
+    renderProducts(f === "all" ? products : products.filter(p => p.rarity.toLowerCase() === f));
   });
 });
-
-
-// ===============================
-// INITIAL LOAD
-// ===============================
-renderProducts(products);
