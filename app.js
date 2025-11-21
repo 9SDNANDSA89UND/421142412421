@@ -37,7 +37,7 @@ function saveCart() {
   updateCartDrawer();
 }
 
-/* Add to cart with quantity */
+/* Add item OR increase qty */
 function addToCart(productName) {
   const item = products.find(p => p.name === productName);
   if (!item) return;
@@ -56,10 +56,62 @@ function addToCart(productName) {
   }
 
   saveCart();
+  showToast(`${item.name} added to cart`);
+  animateAdd(productName);
+}
+
+/* Quantity buttons */
+function increaseQty(name) {
+  const item = cart.find(i => i.name === name);
+  if (!item) return;
+  item.qty++;
+  saveCart();
+}
+
+function decreaseQty(name) {
+  const item = cart.find(i => i.name === name);
+  if (!item) return;
+
+  item.qty--;
+  if (item.qty <= 0) {
+    cart = cart.filter(i => i.name !== name);
+  }
+
+  saveCart();
 }
 
 /* ===============================
-   UPDATE CART DRAWER
+   NOTIFICATION (TOAST)
+=============================== */
+function showToast(msg) {
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.innerHTML = msg;
+  document.body.appendChild(toast);
+
+  setTimeout(() => toast.classList.add("show"), 30);
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => toast.remove(), 300);
+  }, 2000);
+}
+
+/* ===============================
+   ADD-TO-CART PULSE ANIMATION
+=============================== */
+function animateAdd(productName) {
+  const cards = document.querySelectorAll(".card h3");
+  cards.forEach(h3 => {
+    if (h3.innerText === productName) {
+      const card = h3.closest(".card");
+      card.classList.add("pulse");
+      setTimeout(() => card.classList.remove("pulse"), 500);
+    }
+  });
+}
+
+/* ===============================
+   CART DRAWER CONTENT
 =============================== */
 function updateCartDrawer() {
   const drawerContent = document.getElementById("drawerContent");
@@ -76,21 +128,19 @@ function updateCartDrawer() {
     total += item.price * item.qty;
 
     html += `
-      <div style="display:flex;align-items:center;margin-bottom:15px;gap:12px;">
+      <div style="display:flex;align-items:center;margin-bottom:18px;gap:12px;">
         <img src="${item.image}" style="width:60px;height:60px;border-radius:6px;object-fit:contain;">
+        
         <div style="flex:1;">
           <div style="font-weight:600;">${item.name}</div>
           <div style="color:#4ef58a;font-weight:700;">£${item.price}</div>
-          <div style="color:#8b92a1;font-size:14px;">Qty: ${item.qty}</div>
+
+          <div style="display:flex;align-items:center;gap:8px;margin-top:6px;">
+            <button class="qty-btn" onclick="decreaseQty('${item.name}')">−</button>
+            <span style="font-size:16px;">${item.qty}</span>
+            <button class="qty-btn" onclick="increaseQty('${item.name}')">+</button>
+          </div>
         </div>
-        <button onclick="removeFromCart('${item.name}')" style="
-          background:#ff5555;
-          border:none;
-          padding:6px 10px;
-          border-radius:6px;
-          color:white;
-          cursor:pointer;
-        ">X</button>
       </div>
     `;
   });
@@ -105,18 +155,12 @@ function updateCartDrawer() {
   drawerContent.innerHTML = html;
 }
 
-function removeFromCart(name) {
-  cart = cart.filter(item => item.name !== name);
-  saveCart();
-}
-
 /* ===============================
    RENDER PRODUCTS
 =============================== */
 function renderProducts(list) {
   const grid = document.getElementById("productGrid");
   if (!grid) return;
-
   grid.innerHTML = "";
 
   list.forEach(product => {
@@ -140,14 +184,12 @@ function renderProducts(list) {
     grid.appendChild(card);
   });
 
-  /* Buy Button Events */
   document.querySelectorAll(".buy-btn").forEach(btn => {
     btn.addEventListener("click", () => {
       addToCart(btn.getAttribute("data-name"));
     });
   });
 
-  /* Animation */
   setTimeout(() => {
     document.querySelectorAll(".scroll-fade").forEach(el =>
       el.classList.add("visible")
@@ -157,9 +199,7 @@ function renderProducts(list) {
 
 renderProducts(products);
 
-/* ===============================
-   FILTER SYSTEM
-=============================== */
+/* FILTER SYSTEM */
 document.querySelectorAll(".filter").forEach(btn => {
   btn.addEventListener("click", () => {
     document.querySelectorAll(".filter").forEach(b => b.classList.remove("active"));
@@ -170,5 +210,5 @@ document.querySelectorAll(".filter").forEach(btn => {
   });
 });
 
-/* Load cart into drawer on startup */
+/* Load cart on startup */
 updateCartDrawer();
