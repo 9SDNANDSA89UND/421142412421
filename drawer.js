@@ -6,6 +6,7 @@ const closeDrawer = document.getElementById("closeDrawer");
 cartBtn.addEventListener("click", () => {
   cartDrawer.classList.add("open");
   cartOverlay.classList.add("show");
+  updateCartDrawer(); // refresh contents
 });
 
 closeDrawer.addEventListener("click", () => {
@@ -17,4 +18,3 @@ cartOverlay.addEventListener("click", () => {
   cartDrawer.classList.remove("open");
   cartOverlay.classList.remove("show");
 });
-
