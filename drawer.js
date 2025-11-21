@@ -1,6 +1,6 @@
 /* ============================
-   CART DRAWER CONTROLS
-   (Matches Option 2 layout + new styles.css)
+   CART DRAWER CONTROLS (FINAL)
+   Works with updated styles + app.js
 ============================ */
 
 // OPEN CART
@@ -25,7 +25,7 @@ export function closeCart() {
   }
 }
 
-// CLICK LISTENERS
+// EVENT LISTENERS
 document.addEventListener("DOMContentLoaded", () => {
   const cartBtn = document.getElementById("cartBtn");
   const closeBtn = document.getElementById("closeDrawer");
