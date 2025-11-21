@@ -1,7 +1,6 @@
-/* ===============================
-   PRODUCT DATA (FRONTEND ONLY)
-   Used for UI display, NOT for pricing
-=============================== */
+/* ============================
+   PRODUCT LIST (front-end only)
+============================ */
 const products = [
   {
     name: "Mystic Blade",
@@ -28,12 +27,11 @@ const products = [
   }
 ];
 
-/* ===============================
-   NEW STACKING TOAST NOTIFICATIONS
-=============================== */
-
-// Create container once:
+/* ============================
+   NEW STACKING TOAST SYSTEM
+============================ */
 let toastContainer = document.querySelector(".toast-container");
+
 if (!toastContainer) {
   toastContainer = document.createElement("div");
   toastContainer.className = "toast-container";
@@ -47,26 +45,20 @@ function showToast(message) {
 
   toastContainer.appendChild(toast);
 
-  // enter animation
   setTimeout(() => {
     toast.classList.add("show");
-  }, 50);
+  }, 20);
 
-  // auto-remove after 3 seconds
   setTimeout(() => {
     toast.classList.remove("show");
     toast.classList.add("hide");
-
-    setTimeout(() => {
-      toast.remove();
-    }, 300);
+    setTimeout(() => toast.remove(), 300);
   }, 3000);
 }
 
-/* ===============================
+/* ============================
    CART SYSTEM
-=============================== */
-
+============================ */
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
 function saveCart() {
@@ -75,50 +67,60 @@ function saveCart() {
   updateCartDot();
 }
 
-function addToCart(productName) {
-  const item = products.find(p => p.name === productName);
-  if (!item) return;
+function addToCart(name) {
+  const product = products.find(p => p.name === name);
+  if (!product) return;
 
-  const existing = cart.find(c => c.name === item.name);
+  const existing = cart.find(item => item.name === name);
 
   if (existing) {
     existing.qty += 1;
   } else {
     cart.push({
-      name: item.name,
-      price: item.price,
+      name: product.name,
+      price: product.price,
       qty: 1
     });
   }
 
   saveCart();
-  showToast(`${item.name} added to cart`);
+  showToast(`${product.name} added to cart`);
 }
 
-/* ===============================
-   CART NOTIFICATION DOT
-=============================== */
+/* ============================
+   CART DOT
+============================ */
 function updateCartDot() {
-  const cartDot = document.getElementById("cartDot");
-  if (!cartDot) return;
+  const dot = document.getElementById("cartDot");
+  if (!dot) return;
 
   if (cart.length > 0) {
-    cartDot.style.display = "block";
-    cartDot.classList.add("show");
-    setTimeout(() => cartDot.classList.remove("show"), 250);
+    dot.style.display = "block";
+    dot.classList.add("show");
+    setTimeout(() => dot.classList.remove("show"), 200);
   } else {
-    cartDot.style.display = "none";
+    dot.style.display = "none";
   }
 }
 
-/* ===============================
-   UPDATE CART DRAWER (WITHOUT QTY DISPLAY)
-=============================== */
+/* ============================
+   CART DRAWER FUNCTIONS
+============================ */
+function openCart() {
+  document.getElementById("cartDrawer").classList.add("open");
+  document.getElementById("cartOverlay").classList.add("show");
+}
+
+function closeCart() {
+  document.getElementById("cartDrawer").classList.remove("open");
+  document.getElementById("cartOverlay").classList.remove("show");
+}
+
 function updateCartDrawer() {
-  const drawerContent = document.getElementById("drawerContent");
+  const drawer = document.getElementById("drawerContent");
 
   if (cart.length === 0) {
-    drawerContent.innerHTML = `<p style="color:#8b92a1;">Your cart is empty.</p>`;
+    drawer.innerHTML = `<p style="color:#8b92a1;">Your cart is empty.</p>`;
     return;
   }
 
@@ -129,10 +131,14 @@ function updateCartDrawer() {
     total += item.price * item.qty;
 
     html += `
-      <div style="display:flex;align-items:center;margin-bottom:18px;gap:12px;">
-        <div style="flex:1;">
-          <div style="font-weight:600;">${item.name}</div>
-          <div style="color:#4ef58a;font-weight:700;">£${item.price}</div>
+      <div style="margin-bottom:18px;">
+        <div style="font-weight:600; margin-bottom:3px">${item.name}</div>
+        <div style="color:#4ef58a; font-weight:700">£${item.price}</div>
+
+        <div style="margin-top:8px; display:flex; gap:8px;">
+          <button class="qty-btn" onclick="changeQty('${item.name}', -1)">−</button>
+          <button class="qty-btn" onclick="changeQty('${item.name}', 1)">+</button>
+          <button class="qty-btn" style="background:#ff4747;color:white;" onclick="removeItem('${item.name}')">×</button>
         </div>
       </div>
     `;
@@ -143,38 +149,53 @@ function updateCartDrawer() {
     <div style="font-size:18px;font-weight:700;color:#4ef58a;margin-bottom:12px;">
       Total: £${total.toFixed(2)}
     </div>
-
-    <button class="checkout-btn" onclick="goToCheckout()">
-      Proceed to Checkout
-    </button>
+    <button class="checkout-btn" onclick="goToCheckout()">Proceed to Checkout</button>
   `;
 
-  drawerContent.innerHTML = html;
+  drawer.innerHTML = html;
 }
 
-/* ===============================
-   CHECKOUT REDIRECT
-=============================== */
+function changeQty(name, amount) {
+  const item = cart.find(i => i.name === name);
+  if (!item) return;
+
+  item.qty += amount;
+
+  if (item.qty <= 0) {
+    cart = cart.filter(i => i.name !== name);
+  }
+
+  saveCart();
+}
+
+function removeItem(name) {
+  cart = cart.filter(i => i.name !== name);
+  saveCart();
+}
+
+/* ============================
+   CHECKOUT
+============================ */
 function goToCheckout() {
   window.location.href = "checkout.html";
 }
 
-/* ===============================
+/* ============================
    RENDER PRODUCTS
-=============================== */
+============================ */
 function renderProducts(list) {
   const grid = document.getElementById("productGrid");
   if (!grid) return;
+
   grid.innerHTML = "";
 
   list.forEach(product => {
     const card = document.createElement("div");
     card.className = "card scroll-fade";
-    card.setAttribute("data-rarity", product.rarity.toLowerCase());
 
     card.innerHTML = `
       <span class="tag">${product.rarity}</span>
-      <img src="${product.image}" />
+      <img src="${product.image}">
       <h3>${product.name}</h3>
       <p>Instant delivery • Trusted seller</p>
       <div class="price-box">
@@ -182,29 +203,23 @@ function renderProducts(list) {
         ${product.oldPrice ? `<span class="old-price">£${product.oldPrice}</span>` : ""}
       </div>
       <div class="stock">${product.stock} left</div>
-      <button class="buy-btn" data-name="${product.name}">Buy</button>
+      <button class="buy-btn" onclick="addToCart('${product.name}')">Buy</button>
     `;
 
     grid.appendChild(card);
   });
 
-  document.querySelectorAll(".buy-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      addToCart(btn.getAttribute("data-name"));
-    });
-  });
-
   setTimeout(() => {
-    document.querySelectorAll(".scroll-fade").forEach(el =>
-      el.classList.add("visible")
-    );
-  }, 80);
+    document.querySelectorAll(".scroll-fade").forEach(el => {
+      el.classList.add("visible");
+    });
+  }, 100);
 }
 
-renderProducts(products);
-
-/* FILTER SYSTEM */
-document.querySelectorAll(".filter").forEach(btn => {
+/* ============================
+   FILTERS
+============================ */
+document.querySelectorAll(".filter")?.forEach(btn => {
   btn.addEventListener("click", () => {
     document.querySelectorAll(".filter").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
@@ -214,6 +229,9 @@ document.querySelectorAll(".filter").forEach(btn => {
   });
 });
 
-/* Load cart + dot on startup */
+/* ============================
+   INITIAL LOAD
+============================ */
+renderProducts(products);
 updateCartDrawer();
 updateCartDot();
