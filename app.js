@@ -1,6 +1,5 @@
 /* ============================
    PRODUCT LIST (FRONT-END DATA)
-   Add oldPrice to trigger discount badge
 ============================ */
 const products = [
   {
@@ -122,17 +121,6 @@ function removeItem(name) {
   saveCart();
 }
 
-/* CART DRAWER */
-function openCart() {
-  document.getElementById("cartDrawer").classList.add("open");
-  document.getElementById("cartOverlay").classList.add("show");
-}
-
-function closeCart() {
-  document.getElementById("cartDrawer").classList.remove("open");
-  document.getElementById("cartOverlay").classList.remove("show");
-}
-
 /* ============================
    UPDATE CART DRAWER CONTENT
 ============================ */
@@ -237,7 +225,3 @@ document.getElementById("searchInput")?.addEventListener("input", (e) => {
 renderProducts(products);
 updateCartDrawer();
 updateCartDot();
-
-document.getElementById("cartBtn")?.addEventListener("click", openCart);
-document.getElementById("closeDrawer")?.addEventListener("click", closeCart);
-document.getElementById("cartOverlay")?.addEventListener("click", closeCart);
