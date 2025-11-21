@@ -7,7 +7,7 @@ const closeDrawer = document.getElementById("closeDrawer");
 cartBtn.addEventListener("click", () => {
   cartDrawer.classList.add("open");
   cartOverlay.classList.add("show");
-  updateCartDrawer(); // refresh cart items on open
+  updateCartDrawer();
 });
 
 /* CLOSE DRAWER (X BUTTON) */
