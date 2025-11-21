@@ -222,20 +222,40 @@ body {
   background: #0004;
 }
 
+/* RARITY COLORS */
 .tag {
   position: absolute;
   top: 12px;
   left: 12px;
-  background: #4ef58a;
-  color: black;
-  font-size: 11px;
   padding: 4px 10px;
+  font-size: 11px;
   font-weight: 800;
   border-radius: 8px;
   text-transform: uppercase;
-  box-shadow: 0 0 10px rgba(78,245,138,0.8);
 }
 
+/* GOD = GOLD */
+.tag-god {
+  background: #f6d66a;
+  color: black;
+  box-shadow: 0 0 10px rgba(246,214,106,0.9);
+}
+
+/* SECRET = PURPLE */
+.tag-secret {
+  background: #b56cff;
+  color: black;
+  box-shadow: 0 0 12px rgba(181,108,255,0.95);
+}
+
+/* OG = CYAN */
+.tag-og {
+  background: #4ef5d8;
+  color: black;
+  box-shadow: 0 0 12px rgba(78,245,216,0.9);
+}
+
+/* Title */
 .card h3 {
   font-size: 19px;
   font-weight: 800;
@@ -248,6 +268,7 @@ body {
   margin-top: 4px;
 }
 
+/* PRICE BOX */
 .price-box {
   margin-top: 10px;
   display: flex;
@@ -274,7 +295,7 @@ body {
   color: #7f8b99;
 }
 
-/* BUY BUTTON (UPGRADED) */
+/* BUY BUTTON */
 .buy-btn {
   margin-top: auto;
   width: 100%;
