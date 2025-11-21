@@ -1,23 +1,51 @@
-const cartBtn = document.getElementById("cartBtn");
-const cartDrawer = document.getElementById("cartDrawer");
-const cartOverlay = document.getElementById("cartOverlay");
-const closeDrawer = document.getElementById("closeDrawer");
+/* ============================
+   CART DRAWER CONTROLS
+   (Matches Option 2 layout + new styles.css)
+============================ */
 
-/* OPEN DRAWER */
-cartBtn.addEventListener("click", () => {
-  cartDrawer.classList.add("open");
-  cartOverlay.classList.add("show");
-  updateCartDrawer();
-});
+// OPEN CART
+export function openCart() {
+  const drawer = document.getElementById("cartDrawer");
+  const overlay = document.getElementById("cartOverlay");
 
-/* CLOSE DRAWER (X BUTTON) */
-closeDrawer.addEventListener("click", () => {
-  cartDrawer.classList.remove("open");
-  cartOverlay.classList.remove("show");
-});
+  if (drawer && overlay) {
+    drawer.classList.add("open");
+    overlay.classList.add("show");
+  }
+}
 
-/* CLOSE DRAWER BY CLICKING OVERLAY */
-cartOverlay.addEventListener("click", () => {
-  cartDrawer.classList.remove("open");
-  cartOverlay.classList.remove("show");
+// CLOSE CART
+export function closeCart() {
+  const drawer = document.getElementById("cartDrawer");
+  const overlay = document.getElementById("cartOverlay");
+
+  if (drawer && overlay) {
+    drawer.classList.remove("open");
+    overlay.classList.remove("show");
+  }
+}
+
+// CLICK LISTENERS
+document.addEventListener("DOMContentLoaded", () => {
+  const cartBtn = document.getElementById("cartBtn");
+  const closeBtn = document.getElementById("closeDrawer");
+  const overlay = document.getElementById("cartOverlay");
+
+  if (cartBtn) {
+    cartBtn.addEventListener("click", () => {
+      openCart();
+    });
+  }
+
+  if (closeBtn) {
+    closeBtn.addEventListener("click", () => {
+      closeCart();
+    });
+  }
+
+  if (overlay) {
+    overlay.addEventListener("click", () => {
+      closeCart();
+    });
+  }
 });
