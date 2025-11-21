@@ -30,12 +30,14 @@
   </div>
 
 <script>
+// Load cart from localStorage and render summary
 function loadCart() {
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
   const cartItemsDiv = document.getElementById("cartItems");
 
   if (cart.length === 0) {
     cartItemsDiv.innerHTML = "<p>Your cart is empty.</p>";
+    document.getElementById("totalPrice").innerText = "";
     return;
   }
 
@@ -54,7 +56,7 @@ function loadCart() {
   });
 
   cartItemsDiv.innerHTML = html;
-  document.getElementById("totalPrice").innerText = 
+  document.getElementById("totalPrice").innerText =
     "Total: £" + total.toFixed(2);
 }
 
@@ -64,18 +66,35 @@ loadCart();
 async function startPayment() {
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-  const res = await fetch("https://tamedblox.com/pay/create-checkout-session", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ cart })
-  });
+  if (cart.length === 0) {
+    alert("Your cart is empty.");
+    return;
+  }
 
-  const data = await res.json();
+  try {
+    const res = await fetch("https://website-5eml.onrender.com/pay/create-checkout-session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ cart })
+    });
 
-  if (data.url) {
-    window.location.href = data.url; // Stripe Checkout
-  } else {
-    alert("Payment error");
+    if (!res.ok) {
+      console.error("Backend error:", res.status, res.statusText);
+      alert("Payment error (backend " + res.status + ").");
+      return;
+    }
+
+    const data = await res.json();
+
+    if (data.url) {
+      window.location.href = data.url; // Redirect to Stripe Checkout
+    } else {
+      console.error("No URL in response:", data);
+      alert("Payment error: no checkout URL received.");
+    }
+  } catch (err) {
+    console.error("Fetch error:", err);
+    alert("Network error starting payment.");
   }
 }
 </script>
