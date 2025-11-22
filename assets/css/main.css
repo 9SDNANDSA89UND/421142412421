@@ -214,9 +214,8 @@ a {
 }
 
 /* ==========================================
-   NEW PREMIUM CART DRAWER (GREEN THEME)
+   NEW PREMIUM CART DRAWER
 ========================================== */
-
 .cart-drawer {
   width: 390px;
   position: fixed;
@@ -363,7 +362,7 @@ a {
   margin-bottom: 12px;
 }
 
-/* BUY BUTTON — NOW GREEN */
+/* BUY Button */
 .checkout-btn {
   width: 100%;
   padding: 16px;
@@ -412,9 +411,8 @@ a {
 }
 
 /* ==========================================
-   ⭐ IMPORTANT FIXES FOR BUTTON CLICK ISSUES
+   IMPORTANT FIXES FOR BUTTON CLICK ISSUES
 ========================================== */
-
 footer,
 .footer,
 #footer {
@@ -435,9 +433,8 @@ footer,
 }
 
 /* ==========================================
-   ⭐ FIX: CART OVERLAY CLOSING NOT WORKING
+   FIX: CART OVERLAY CLOSING
 ========================================== */
-
 .cart-overlay {
   position: fixed;
   inset: 0;
@@ -449,4 +446,18 @@ footer,
 
 .cart-drawer {
   z-index: 9999 !important;
+}
+
+/* ==========================================
+   ⭐ FLY-TO-CART IMAGE ANIMATION (NEW)
+========================================== */
+.fly-img {
+  position: fixed;
+  width: 80px;
+  height: 80px;
+  border-radius: 12px;
+  object-fit: cover;
+  pointer-events: none;
+  z-index: 20000;
+  transition: transform 0.9s cubic-bezier(.2,.85,.4,1), opacity 0.9s ease;
 }
