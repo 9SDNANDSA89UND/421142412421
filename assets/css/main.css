@@ -162,7 +162,6 @@ button {
   animation: marqueeScroll 14s linear infinite;
 }
 
-/* NEW THEMED PILL */
 .marquee-pill {
   font-family: 'Poppins', sans-serif;
   font-size: 13px;
@@ -171,14 +170,10 @@ button {
   border-radius: 8px;
   white-space: nowrap;
   color: #d7fbe6;
-
   background: rgba(16,24,32,0.75);
   border: 1px solid rgba(78,245,138,0.35);
-
-  box-shadow:
-    0 0 6px rgba(78,245,138,0.28),
-    inset 0 0 6px rgba(78,245,138,0.18);
-
+  box-shadow: 0 0 6px rgba(78,245,138,0.28),
+              inset 0 0 6px rgba(78,245,138,0.18);
   letter-spacing: 0.2px;
   backdrop-filter: blur(4px);
 }
@@ -208,6 +203,11 @@ button {
 .footer-brand {
   font-size: 26px;
   font-weight: 900;
+}
+
+.footer-green {
+  color: #4ef58a;
+  text-shadow: 0 0 10px #4ef58a, 0 0 20px #4ef58a;
 }
 
 .footer-text {
@@ -252,7 +252,6 @@ button {
   cursor: pointer;
 }
 
-/* Cart item layout */
 .cart-item {
   padding: 14px 0;
   border-bottom: 1px solid rgba(255,255,255,0.08);
@@ -270,7 +269,6 @@ button {
   margin-bottom: 10px;
 }
 
-/* Quantity row */
 .cart-qty-row {
   display: flex;
   align-items: center;
@@ -309,7 +307,6 @@ button {
   font-weight: 700;
 }
 
-/* Cart total */
 .cart-total-line {
   font-size: 20px;
   font-weight: 900;
@@ -319,7 +316,6 @@ button {
   border-top: 1px solid rgba(255,255,255,0.2);
 }
 
-/* Checkout button */
 .checkout-btn {
   width: 100%;
   padding: 16px;
@@ -335,7 +331,6 @@ button {
   opacity: 0.92;
 }
 
-/* Utilities */
 .hidden {
   display: none !important;
 }
