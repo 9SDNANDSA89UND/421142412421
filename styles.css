@@ -209,7 +209,8 @@ body {
 
 .card img {
   width: 100%;
-  height: 170px;
+  aspect-ratio: 1 / 1;   /* SQUARE FIX */
+  height: auto;          /* SQUARE FIX */
   border-radius: 14px;
   object-fit: cover;
   background: #0f141a;
@@ -277,35 +278,30 @@ body {
   color: black;
 }
 
-/* GREEN DISCOUNT */
 .discount-green {
   background: #8dff71;
   box-shadow: 0 0 8px rgba(141,255,113,0.65),
               0 0 16px rgba(141,255,113,0.35);
 }
 
-/* YELLOW DISCOUNT */
 .discount-yellow {
   background: #ffe66d;
   box-shadow: 0 0 8px rgba(255,230,109,0.65),
               0 0 16px rgba(255,230,109,0.35);
 }
 
-/* ORANGE DISCOUNT */
 .discount-orange {
   background: #ffb856;
   box-shadow: 0 0 8px rgba(255,184,86,0.65),
               0 0 16px rgba(255,184,86,0.35);
 }
 
-/* RED DISCOUNT */
 .discount-red {
   background: #ff5e5e;
   box-shadow: 0 0 8px rgba(255,94,94,0.65),
               0 0 16px rgba(255,94,94,0.35);
 }
 
-/* Optional hover boost */
 .discount-tag:hover {
   transform: translateY(-1px);
   box-shadow: 0 0 12px currentColor,
