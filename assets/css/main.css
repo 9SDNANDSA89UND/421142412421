@@ -367,8 +367,8 @@ a {
 .checkout-btn {
   width: 100%;
   padding: 16px;
-  background: #4ef58a; /* GREEN */
-  color: #0b0f14;      /* dark text for contrast */
+  background: #4ef58a;
+  color: #0b0f14;
 
   border-radius: 12px;
   font-size: 17px;
@@ -432,4 +432,21 @@ footer,
 .modern-modal.hidden {
   pointer-events: none !important;
   opacity: 0 !important;
+}
+
+/* ==========================================
+   ⭐ FIX: CART OVERLAY CLOSING NOT WORKING
+========================================== */
+
+.cart-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: none;
+  z-index: 9000 !important;
+  pointer-events: auto !important;
+}
+
+.cart-drawer {
+  z-index: 9999 !important;
 }
