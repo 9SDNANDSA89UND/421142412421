@@ -43,31 +43,9 @@ function getDiscountClass(percent) {
 }
 
 /* =========================================
-   TOASTS
+   🚫 REMOVED TOAST SYSTEM
+   (No more "Added to cart" notifications)
 ========================================= */
-
-let toastContainer = null;
-
-function setupToasts() {
-  toastContainer = document.createElement("div");
-  toastContainer.className = "toast-container";
-  document.body.appendChild(toastContainer);
-}
-
-function showToast(msg) {
-  const toast = document.createElement("div");
-  toast.className = "toast";
-  toast.innerText = msg;
-
-  toastContainer.appendChild(toast);
-
-  setTimeout(() => toast.classList.add("show"), 20);
-
-  setTimeout(() => {
-    toast.classList.remove("show");
-    setTimeout(() => toast.remove(), 300);
-  }, 2500);
-}
 
 /* =========================================
    PRODUCT RENDERING
@@ -94,7 +72,7 @@ function renderProducts(list) {
           ${discountHTML}
         </div>
 
-        <img src="${p.image}" alt="${p.name}">
+        <img src="${p.image}" alt="${p.name}" class="product-img">
         <h3>${p.name}</h3>
 
         <div class="price-box">
@@ -102,7 +80,9 @@ function renderProducts(list) {
           ${p.oldPrice ? `<span class="old-price">£${p.oldPrice}</span>` : ""}
         </div>
 
-        <button class="buy-btn" onclick="addToCart('${p.name}')">Add to Cart</button>
+        <button class="buy-btn" onclick="addToCart('${p.name}', this)">
+          Add to Cart
+        </button>
       </div>
     `;
   });
@@ -124,15 +104,18 @@ function setupSearch() {
 }
 
 /* =========================================
-   CART SYSTEM (connects to cart.js)
+   CART SYSTEM (fly animation)
 ========================================= */
 
-function addToCart(name) {
+function addToCart(name, btn) {
   const product = products.find(p => p.name === name);
   if (!product) return;
 
-  window.Cart.addItem(product);
-  showToast(`${product.name} added to cart`);
+  const card = btn.closest(".card");
+  const img = card.querySelector(".product-img");
+
+  // ⭐ Fly animation + add item
+  window.Cart.addItem(product, img);
 }
 
 /* =========================================
@@ -140,7 +123,6 @@ function addToCart(name) {
 ========================================= */
 
 function initApp() {
-  setupToasts();
   renderProducts(products);
   setupSearch();
 
@@ -150,4 +132,3 @@ function initApp() {
 }
 
 document.addEventListener("DOMContentLoaded", initApp);
-
