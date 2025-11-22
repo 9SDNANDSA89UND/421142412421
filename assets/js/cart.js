@@ -26,9 +26,40 @@ window.Cart = {
   },
 
   /* -----------------------------
-     ADD ITEM
+     ⭐ FLY TO CART ANIMATION
   ----------------------------- */
-  addItem(product) {
+  flyToCart(imgSrc, startElement) {
+    const cartIcon = document.getElementById("cartBtn");
+    if (!cartIcon || !startElement) return;
+
+    const startRect = startElement.getBoundingClientRect();
+    const endRect = cartIcon.getBoundingClientRect();
+
+    const flyImg = document.createElement("img");
+    flyImg.src = imgSrc;
+    flyImg.className = "fly-img";
+
+    flyImg.style.left = startRect.left + "px";
+    flyImg.style.top = startRect.top + "px";
+
+    document.body.appendChild(flyImg);
+
+    requestAnimationFrame(() => {
+      flyImg.style.transform = `
+        translate(${endRect.left - startRect.left}px, 
+                  ${endRect.top - startRect.top}px)
+        scale(0.2)
+      `;
+      flyImg.style.opacity = "0";
+    });
+
+    setTimeout(() => flyImg.remove(), 900);
+  },
+
+  /* -----------------------------
+     ADD ITEM + FLY ANIMATION
+  ----------------------------- */
+  addItem(product, clickedElement = null) {
     const existing = this.items.find(i => i.name === product.name);
 
     if (existing) {
@@ -43,6 +74,11 @@ window.Cart = {
     }
 
     this.save();
+
+    /* ⭐ Trigger Animation */
+    if (clickedElement) {
+      this.flyToCart(product.image, clickedElement);
+    }
   },
 
   /* -----------------------------
