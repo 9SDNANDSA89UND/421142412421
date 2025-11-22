@@ -4,7 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TamedBlox – Home</title>
-  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Main styles -->
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Reviews styling (new separate file) -->
+  <link rel="stylesheet" href="reviews.css">
 </head>
 
 <body>
@@ -45,7 +50,7 @@
     </div>
   </nav>
 
-  <!-- ANNOUNCEMENT (fixed marquee) -->
+  <!-- ANNOUNCEMENT -->
   <div class="announcement-section">
     <div class="announcement">
       <div class="marquee">
@@ -74,13 +79,13 @@
     <div id="productGrid" class="product-grid"></div>
   </section>
 
-  <!-- REVIEWS SECTION -->
+  <!-- REVIEWS (NEW) -->
   <section class="reviews-section">
     <h2 class="reviews-title">What Our Customers Say</h2>
 
     <div class="reviews-row">
 
-      <!-- 5-Star -->
+      <!-- Review 1 -->
       <div class="review-card">
         <div class="review-stars">
           <span class="star full">★</span>
@@ -89,11 +94,11 @@
           <span class="star full">★</span>
           <span class="star full">★</span>
         </div>
-        <p class="review-text">“Super fast delivery! Got my item in under 5 seconds. Absolutely insane service.”</p>
+        <p class="review-text">“Super fast delivery! Got my item in under 5 seconds. Insane service.”</p>
         <div class="review-author">— A*** M.</div>
       </div>
 
-      <!-- 4.8-Star -->
+      <!-- Review 2 -->
       <div class="review-card">
         <div class="review-stars">
           <span class="star full">★</span>
@@ -102,11 +107,11 @@
           <span class="star full">★</span>
           <span class="star half">★</span>
         </div>
-        <p class="review-text">“Reliable, cheap and instant. I’ve bought 4 times now and everything was perfect.”</p>
+        <p class="review-text">“Reliable and cheap. Bought multiple times, always perfect.”</p>
         <div class="review-author">— R**** T.</div>
       </div>
 
-      <!-- 4.2-Star -->
+      <!-- Review 3 -->
       <div class="review-card">
         <div class="review-stars">
           <span class="star full">★</span>
@@ -115,7 +120,7 @@
           <span class="star full">★</span>
           <span class="star empty">★</span>
         </div>
-        <p class="review-text">“Honestly the best experience I’ve had buying in-game items. Highly recommended.”</p>
+        <p class="review-text">“Best experience I’ve had buying in-game items. Recommended.”</p>
         <div class="review-author">— S** D.</div>
       </div>
 
@@ -133,7 +138,7 @@
 
   <div id="cartOverlay" class="cart-overlay"></div>
 
-  <!-- SCRIPTS -->
+  <!-- JS -->
   <script src="app.js"></script>
   <script src="drawer.js" type="module"></script>
 
