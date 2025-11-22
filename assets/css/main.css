@@ -1,15 +1,21 @@
-/* Fully fixed main.css for slim marquee + restored UI */
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
+/* ============ GLOBAL RESET ============ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 body {
   background: #0b0f14;
-  font-family: Arial, sans-serif;
   color: #e5e7eb;
+  font-family: Arial, sans-serif;
   overflow-x: hidden;
 }
 
-a { text-decoration: none; color: inherit; }
+a {
+  color: inherit;
+  text-decoration: none;
+}
 
 .container {
   max-width: 1250px;
@@ -17,38 +23,61 @@ a { text-decoration: none; color: inherit; }
   padding: 0 20px;
 }
 
-/* NAVBAR */
+/* ============ LOGO FIX ============ */
+
+.logo {
+  font-size: 26px;
+  font-weight: 900;
+  user-select: none;
+}
+
+.logo-white {
+  color: #ffffff;
+}
+
+.logo-green {
+  color: #4ef58a;
+}
+
+.glow-green {
+  text-shadow: 0 0 10px #4ef58a, 0 0 20px #4ef58a;
+}
+
+/* ============ NAVBAR ============ */
+
 .nav {
   width: 100%;
+  padding: 12px 0;
   background: #0f141a;
   border-bottom: 1px solid rgba(78,245,138,0.18);
-  padding: 12px 0;
   position: sticky;
   top: 0;
   z-index: 999;
 }
 
 .nav-inner {
-  position: relative;
+  width: 100%;
   display: flex;
-  align-items: center;
   justify-content: center;
+  position: relative;
 }
 
 .nav-center {
-  width: 100%;
   text-align: center;
+  width: 100%;
 }
 
 .nav-right {
   position: absolute;
   right: 20px;
+  top: 50%;
   display: flex;
-  align-items: center;
   gap: 12px;
+  transform: translateY(-50%);
 }
 
-/* BUTTONS FIXED */
+/* ============ BUTTONS ============ */
+
 button {
   border: none;
   outline: none;
@@ -61,21 +90,23 @@ button {
   border-radius: 10px;
   font-weight: 700;
   cursor: pointer;
+  transition: 0.15s;
 }
 
 .auth-btn:hover {
-  opacity: 0.9;
+  opacity: 0.85;
 }
 
 /* CART BUTTON */
+
 .icon-btn {
   width: 44px;
   height: 44px;
-  background: rgba(255,255,255,0.06);
   border-radius: 10px;
+  background: rgba(255,255,255,0.06);
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   cursor: pointer;
 }
 
@@ -85,7 +116,9 @@ button {
   stroke: #ffffff;
 }
 
-.cart-btn { position: relative; }
+.cart-btn {
+  position: relative;
+}
 
 .cart-dot {
   position: absolute;
@@ -95,15 +128,16 @@ button {
   height: 9px;
   background: #4ef58a;
   border-radius: 50%;
-  display: none;
   box-shadow: 0 0 8px #4ef58a;
+  display: none;
 }
 
-/* PREMIUM SLIM MARQUEE */
+/* ============ PREMIUM SLIM MARQUEE ============ */
+
 .marquee {
   width: 100%;
   overflow: hidden;
-  padding: 6px 0;               /* <-- SLIM HEIGHT */
+  padding: 6px 0;
   background: rgba(78,245,138,0.05);
   border-bottom: 1px solid rgba(78,245,138,0.2);
 }
@@ -113,15 +147,15 @@ button {
   gap: 30px;
   padding-left: 100%;
   animation: marqueeScroll 12s linear infinite;
-  align-items: center;          /* keeps pills vertically centered */
+  align-items: center;
 }
 
-/* Slim premium pills */
+/* Slim modern pills */
 .marquee-pill {
   font-family: 'Poppins', sans-serif;
   font-size: 13px;
   font-weight: 600;
-  padding: 5px 14px;            /* <-- smaller height */
+  padding: 5px 14px;
   border-radius: 30px;
   white-space: nowrap;
   color: #fff;
@@ -132,31 +166,29 @@ button {
 }
 
 @keyframes marqueeScroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-100%); }
+  from { transform: translateX(0); }
+  to   { transform: translateX(-100%); }
 }
 
-/* FOOTER */
+/* ============ FOOTER ============ */
+
 .footer {
-  margin-top: 80px;
   padding: 40px 0;
+  margin-top: 80px;
   background: #0f141a;
   border-top: 1px solid rgba(78,245,138,0.18);
 }
 
 .footer-inner {
+  text-align: center;
   max-width: 1250px;
   margin: auto;
-  text-align: center;
-  padding: 0 20px;
 }
 
 .footer-brand {
   font-size: 26px;
   font-weight: 900;
   margin-bottom: 12px;
-  display: inline-block;
-  letter-spacing: 0 !important;
 }
 
 .footer-text {
@@ -164,7 +196,8 @@ button {
   font-size: 14px;
 }
 
-/* CART DRAWER FIX */
+/* ============ CART DRAWER FIX ============ */
+
 .cart-drawer {
   width: 360px;
   position: fixed;
@@ -172,21 +205,22 @@ button {
   right: -360px;
   height: 100vh;
   background: #0f141a;
-  border-left: 1px solid rgba(78,245,138,0.18);
-  transition: 0.3s;
   padding: 25px;
-  z-index: 300;
+  border-left: 1px solid rgba(78,245,138,0.18);
+  transition: 0.3s ease;
+  z-index: 9999;
 }
 
-.cart-drawer.open { right: 0; }
+.cart-drawer.open {
+  right: 0;
+}
 
 .cart-overlay {
   position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
+  inset: 0;
   background: rgba(0,0,0,0.5);
   display: none;
-  z-index: 250;
+  z-index: 9998;
 }
 
 .close-drawer {
@@ -194,15 +228,14 @@ button {
   color: white;
   font-size: 26px;
   cursor: pointer;
-  margin-bottom: 15px;
 }
 
-/* Checkout & total formatting */
+/* Drawer totals */
 .cart-total {
   font-size: 20px;
   font-weight: 900;
+  margin: 20px 0 12px;
   color: #4ef58a;
-  margin: 20px 0 12px 0;
 }
 
 .checkout-btn {
@@ -214,7 +247,12 @@ button {
   font-weight: 800;
   cursor: pointer;
 }
-.checkout-btn:hover { opacity: 0.9; }
 
-/* Hidden utility */
-.hidden { display: none !important; }
+.checkout-btn:hover {
+  opacity: 0.9;
+}
+
+/* Utility */
+.hidden {
+  display: none !important;
+}
