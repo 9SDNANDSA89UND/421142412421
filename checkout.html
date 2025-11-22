@@ -30,11 +30,11 @@
 
       <div class="nav-right">
 
-        <!-- LOGIN & SIGNUP BUTTONS -->
+        <!-- LOGIN + SIGNUP BUTTONS -->
         <button id="openLogin" class="auth-btn">Login</button>
         <button id="openSignup" class="auth-btn">Sign Up</button>
 
-        <!-- CART BTN -->
+        <!-- CART -->
         <button id="cartBtn" class="icon-btn">
           <svg viewBox="0 0 24 24">
             <path d="M3 3h2l3 12h11l3-8H6"
@@ -62,7 +62,7 @@
     </div>
   </div>
 
-  <!-- CHECKOUT CARD -->
+  <!-- CHECKOUT BOX -->
   <section class="premium-checkout">
 
     <h2 class="checkout-title">Checkout</h2>
@@ -92,11 +92,6 @@
     </div>
 
     <button onclick="startPayment()" class="secure-btn">
-      <svg width="20" height="20" viewBox="0 0 24 24" style="margin-right:8px;">
-        <path fill="#000" d="M12 1a5 5 0 0 1 5 5v3h1a2 2 0 0 1 
-        2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V11a2 2 0 0 1 
-        2-2h1V6a5 5 0 0 1 5-5m3 8V6a3 3 0 0 0-6 0v3h6Z"/>
-      </svg>
       Pay with Stripe
     </button>
 
@@ -124,44 +119,31 @@
 
       const item = cart[0];
 
-      document.getElementById("checkoutItemName").innerText = item.name;
-      document.getElementById("checkoutItemName2").innerText = item.name;
-      document.getElementById("checkoutItemQty").innerText = item.qty;
-      document.getElementById("checkoutItemPrice").innerText = "£" + item.price.toFixed(2);
-      document.getElementById("totalPrice").innerText = "£" + (item.price * item.qty).toFixed(2);
+      checkoutItemName.innerText = item.name;
+      checkoutItemName2.innerText = item.name;
+      checkoutItemQty.innerText = item.qty;
+      checkoutItemPrice.innerText = "£" + item.price.toFixed(2);
+      totalPrice.innerText = "£" + (item.price * item.qty).toFixed(2);
 
-      document.getElementById("checkoutItemImage").src =
-        item.image || "https://via.placeholder.com/120";
+      checkoutItemImage.src = item.image || "https://via.placeholder.com/120";
     }
 
     loadCheckoutCart();
 
     async function startPayment() {
       const cart = JSON.parse(localStorage.getItem("cart")) || [];
-      if (!cart.length) {
-        alert("Your cart is empty.");
-        return;
-      }
+      if (!cart.length) return alert("Cart empty");
 
-      try {
-        const res = await fetch("https://website-5eml.onrender.com/pay/create-checkout-session", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ cart })
-        });
+      const res = await fetch("https://website-5eml.onrender.com/pay/create-checkout-session", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ cart })
+      });
 
-        if (!res.ok) {
-          alert("Payment error. Please try again.");
-          return;
-        }
-
-        const data = await res.json();
-        if (data.url) {
-          localStorage.removeItem("cart");
-          window.location.href = data.url;
-        }
-      } catch (e) {
-        alert("Network error. Please try again.");
+      const data = await res.json();
+      if (data.url) {
+        localStorage.removeItem("cart");
+        window.location.href = data.url;
       }
     }
   </script>
