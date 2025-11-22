@@ -382,8 +382,7 @@ body {
 .star.full {
   color: #4ef58a;
   text-shadow: 0 0 8px rgba(78,245,138,0.6);
-}
-
+   
 .star.half {
   color: rgba(78,245,138,0.5);
   text-shadow: 0 0 3px rgba(78,245,138,0.3);
@@ -394,7 +393,7 @@ body {
 }
 
 /* ============================
-   CHECKOUT
+   CHECKOUT PAGE
 ============================ */
 .premium-checkout {
   max-width: 480px;
@@ -471,7 +470,7 @@ body {
 }
 
 /* ============================
-   MODALS
+   MODALS (BASE)
 ============================ */
 .modal {
   position: fixed;
@@ -545,8 +544,40 @@ body {
 }
 
 /* ============================
-   VALIDATION HINTS
+   MODERN SIGN-UP UI
 ============================ */
+
+.modern-modal {
+  padding: 35px;
+  width: 400px;
+  font-family: "Inter", sans-serif;
+}
+
+.field-label {
+  text-align: left;
+  font-size: 13px;
+  color: #d4d8e0;
+  margin-top: 15px;
+}
+
+.modern-input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 6px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  font-size: 15px;
+  color: white;
+  transition: 0.2s;
+}
+
+.modern-input:focus {
+  border-color: #4ef58a;
+  box-shadow: 0 0 8px rgba(78,245,138,0.4);
+}
+
+/* HINT TEXT */
 .modal-hint {
   font-size: 12px;
   margin: 5px 0 0;
@@ -560,6 +591,53 @@ body {
 
 .invalid {
   color: #ff4d4d !important;
+}
+
+/* USERNAME SUGGESTIONS */
+.suggestion-box {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.suggestion-box span {
+  padding: 6px 10px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.suggestion-box span:hover {
+  background: rgba(78,245,138,0.15);
+}
+
+/* CAPTCHA */
+.captcha-box {
+  margin-top: 20px;
+  padding: 10px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  font-family: monospace;
+  letter-spacing: 2px;
+  font-size: 18px;
+}
+
+.refresh-btn {
+  border: none;
+  background: transparent;
+  color: #4ef58a;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.full-btn {
+  width: 100%;
+  margin-top: 20px;
 }
 
 /* ============================
