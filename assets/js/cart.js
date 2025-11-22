@@ -26,7 +26,7 @@ window.Cart = {
   },
 
   /* -----------------------------
-     ⭐ FLY TO CART ANIMATION
+     ⭐ FLY TO CART ANIMATION + BOUNCE + PARTICLES
   ----------------------------- */
   flyToCart(imgSrc, startElement) {
     const cartIcon = document.getElementById("cartBtn");
@@ -44,6 +44,23 @@ window.Cart = {
 
     document.body.appendChild(flyImg);
 
+    /* ⭐ PARTICLE TRAIL */
+    let particleInterval = setInterval(() => {
+      const particle = document.createElement("div");
+      particle.className = "fly-particle";
+      particle.style.left = flyImg.getBoundingClientRect().left + "px";
+      particle.style.top = flyImg.getBoundingClientRect().top + "px";
+      document.body.appendChild(particle);
+
+      requestAnimationFrame(() => {
+        particle.style.opacity = "0";
+        particle.style.transform = "scale(0.2)";
+      });
+
+      setTimeout(() => particle.remove(), 500);
+    }, 45);
+
+    /* ⭐ Start the fly animation */
     requestAnimationFrame(() => {
       flyImg.style.transform = `
         translate(${endRect.left - startRect.left}px, 
@@ -53,7 +70,19 @@ window.Cart = {
       flyImg.style.opacity = "0";
     });
 
-    setTimeout(() => flyImg.remove(), 900);
+    /* ⭐ BOUNCE ON IMPACT */
+    setTimeout(() => {
+      cartIcon.style.animation = "cartBounce 0.35s ease";
+      setTimeout(() => {
+        cartIcon.style.animation = "";
+      }, 350);
+    }, 850);
+
+    /* Clean up */
+    setTimeout(() => {
+      clearInterval(particleInterval);
+      flyImg.remove();
+    }, 900);
   },
 
   /* -----------------------------
