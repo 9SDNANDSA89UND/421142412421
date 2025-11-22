@@ -1,1 +1,245 @@
+/* ============================
+   GLOBAL RESET
+============================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #0b0f14;
+  font-family: Arial, sans-serif;
+  color: #e5e7eb;
+  overflow-x: hidden;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* ============================
+   CONTAINERS
+============================ */
+.container {
+  max-width: 1250px;
+  margin: auto;
+  padding: 0 20px;
+}
+
+/* ============================
+   NAVBAR
+============================ */
+.nav {
+  width: 100%;
+  background: #0f141a;
+  border-bottom: 1px solid rgba(78,245,138,0.18);
+  padding: 12px 0;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+}
+
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1250px;
+  margin: auto;
+  padding: 0 20px;
+}
+
+.icon-btn {
+  width: 44px;
+  height: 44px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 10px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.icon-btn svg {
+  width: 22px;
+  height: 22px;
+  stroke: #ffffff;
+}
+
+.logo {
+  font-weight: 900;
+  font-size: 24px;
+}
+
+.logo-white { color: white; }
+.logo-green { color: #4ef58a; }
+
+/* ============================
+   AUTH BUTTONS
+============================ */
+.auth-btn {
+  background: #4ef58a;
+  color: #0a0a0a;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 800;
+  margin-left: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.auth-btn:hover {
+  opacity: 0.85;
+}
+
+/* ============================
+   ANNOUNCEMENT BAR
+============================ */
+.announcement-section {
+  width: 100%;
+  background: #4ef58a10;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(78,245,138,0.2);
+}
+
+.marquee {
+  overflow: hidden;
+}
+
+.marquee-inner {
+  display: flex;
+  gap: 40px;
+  white-space: nowrap;
+  animation: marquee 16s linear infinite;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ============================
+   FOOTER
+============================ */
+.footer {
+  margin-top: 80px;
+  padding: 40px 0;
+  background: #0f141a;
+  border-top: 1px solid rgba(78,245,138,0.18);
+}
+
+.footer-inner {
+  max-width: 1250px;
+  margin: auto;
+  text-align: center;
+  padding: 0 20px;
+}
+
+.footer-brand {
+  font-size: 26px;
+  font-weight: 900;
+  margin-bottom: 12px;
+}
+
+.footer-text {
+  color: #aeb6c1;
+  font-size: 14px;
+}
+
+/* ============================
+   CART DOT
+============================ */
+.cart-dot {
+  width: 10px;
+  height: 10px;
+  background: #4ef58a;
+  border-radius: 50%;
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: none;
+}
+
+/* ============================
+   CART DRAWER
+============================ */
+.cart-drawer {
+  width: 360px;
+  position: fixed;
+  top: 0;
+  right: -360px;
+  height: 100vh;
+  background: #0f141a;
+  border-left: 1px solid rgba(78,245,138,0.18);
+  transition: 0.3s;
+  padding: 20px;
+  z-index: 300;
+}
+
+.cart-drawer.open {
+  right: 0;
+}
+
+.cart-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  z-index: 250;
+}
+
+.close-drawer {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+/* ============================
+   CHECKOUT PAGE
+============================ */
+.premium-checkout {
+  max-width: 520px;
+  margin: 60px auto;
+  background: rgba(15,20,28,0.5);
+  padding: 26px;
+  border-radius: 16px;
+  border: 1px solid rgba(78,245,138,0.2);
+}
+
+.checkout-title {
+  font-size: 28px;
+  font-weight: 900;
+  margin-bottom: 20px;
+}
+
+.secure-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(90deg, #4ef58a, #2ccf62);
+  font-size: 16px;
+  font-weight: 900;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.secure-btn:hover {
+  opacity: 0.9;
+}
+
+/* ============================
+   UTILITIES
+============================ */
+.hidden { display: none !important; }
+
+.mt-20 { margin-top: 20px; }
+.mt-40 { margin-top: 40px; }
 
