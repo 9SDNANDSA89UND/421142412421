@@ -8,21 +8,21 @@ const products = [
     rarity: "God",
     price: 12.99,
     oldPrice: 19.99,
-    image: "https://via.placeholder.com/300"
+    image: "https://static.wikia.nocookie.net/stealabr/images/5/58/Strawberryelephant.png/revision/latest?cb=20250830235735"
   },
   {
     name: "Shadow Cloak",
     rarity: "Secret",
     price: 8.49,
     oldPrice: 12.0,
-    image: "https://via.placeholder.com/300"
+    image: "https://static.wikia.nocookie.net/stealabr/images/5/58/Strawberryelephant.png/revision/latest?cb=20250830235735"
   },
   {
     name: "OG Emblem",
     rarity: "OG",
     price: 4.2,
     oldPrice: null,
-    image: "https://via.placeholder.com/300"
+    image: "https://static.wikia.nocookie.net/stealabr/images/5/58/Strawberryelephant.png/revision/latest?cb=20250830235735"
   }
 ];
 
