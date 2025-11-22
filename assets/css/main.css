@@ -1,11 +1,6 @@
-/* ============================
-   GLOBAL RESET
-============================ */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+/* Updated main.css merging previous content and fixes */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
   background: #0b0f14;
@@ -14,23 +9,15 @@ body {
   overflow-x: hidden;
 }
 
-a {
-  text-decoration: none;
-  color: inherit;
-}
+a { text-decoration: none; color: inherit; }
 
-/* ============================
-   CONTAINERS
-============================ */
 .container {
   max-width: 1250px;
   margin: auto;
   padding: 0 20px;
 }
 
-/* ============================
-   NAVBAR
-============================ */
+/* NAVBAR */
 .nav {
   width: 100%;
   background: #0f141a;
@@ -42,12 +29,23 @@ a {
 }
 
 .nav-inner {
+  position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  max-width: 1250px;
-  margin: auto;
-  padding: 0 20px;
+  justify-content: center;
+}
+
+.nav-center {
+  width: 100%;
+  text-align: center;
+}
+
+.nav-right {
+  position: absolute;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .icon-btn {
@@ -68,17 +66,10 @@ a {
   stroke: #ffffff;
 }
 
-.logo {
-  font-weight: 900;
-  font-size: 24px;
-}
-
+.logo { font-weight: 900; font-size: 24px; }
 .logo-white { color: white; }
 .logo-green { color: #4ef58a; }
 
-/* ============================
-   AUTH BUTTONS
-============================ */
 .auth-btn {
   background: #4ef58a;
   color: #0a0a0a;
@@ -86,86 +77,66 @@ a {
   border: none;
   border-radius: 10px;
   font-weight: 800;
-  margin-left: 10px;
   cursor: pointer;
-  transition: 0.2s;
 }
 
-.auth-btn:hover {
-  opacity: 0.85;
+.cart-btn { position: relative; }
+
+.cart-dot {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 10px;
+  height: 10px;
+  background: #4ef58a;
+  border-radius: 50%;
+  display: none;
+  box-shadow: 0 0 8px #4ef58a;
 }
 
-/* ============================
-   ANNOUNCEMENT BAR
-============================ */
+/* Announcement bar */
 .announcement-section {
   width: 100%;
   background: #4ef58a10;
   padding: 10px 0;
   border-bottom: 1px solid rgba(78,245,138,0.2);
 }
-
-.marquee {
-  overflow: hidden;
-}
-
+.marquee { overflow: hidden; }
 .marquee-inner {
   display: flex;
   gap: 40px;
   white-space: nowrap;
   animation: marquee 16s linear infinite;
 }
-
 @keyframes marquee {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
 
-/* ============================
-   FOOTER
-============================ */
+/* FOOTER */
 .footer {
   margin-top: 80px;
   padding: 40px 0;
   background: #0f141a;
   border-top: 1px solid rgba(78,245,138,0.18);
 }
-
 .footer-inner {
   max-width: 1250px;
   margin: auto;
   text-align: center;
   padding: 0 20px;
 }
-
 .footer-brand {
   font-size: 26px;
   font-weight: 900;
   margin-bottom: 12px;
 }
-
 .footer-text {
   color: #aeb6c1;
   font-size: 14px;
 }
 
-/* ============================
-   CART DOT
-============================ */
-.cart-dot {
-  width: 10px;
-  height: 10px;
-  background: #4ef58a;
-  border-radius: 50%;
-  position: absolute;
-  top: 4px;
-  right: 4px;
-  display: none;
-}
-
-/* ============================
-   CART DRAWER
-============================ */
+/* CART DRAWER */
 .cart-drawer {
   width: 360px;
   position: fixed;
@@ -178,10 +149,7 @@ a {
   padding: 20px;
   z-index: 300;
 }
-
-.cart-drawer.open {
-  right: 0;
-}
+.cart-drawer.open { right: 0; }
 
 .cart-overlay {
   position: fixed;
@@ -200,9 +168,7 @@ a {
   cursor: pointer;
 }
 
-/* ============================
-   CHECKOUT PAGE
-============================ */
+/* CHECKOUT */
 .premium-checkout {
   max-width: 520px;
   margin: 60px auto;
@@ -211,7 +177,6 @@ a {
   border-radius: 16px;
   border: 1px solid rgba(78,245,138,0.2);
 }
-
 .checkout-title {
   font-size: 28px;
   font-weight: 900;
@@ -228,18 +193,6 @@ a {
   font-weight: 900;
   margin-top: 20px;
   cursor: pointer;
-  transition: 0.2s;
 }
 
-.secure-btn:hover {
-  opacity: 0.9;
-}
-
-/* ============================
-   UTILITIES
-============================ */
 .hidden { display: none !important; }
-
-.mt-20 { margin-top: 20px; }
-.mt-40 { margin-top: 40px; }
-
