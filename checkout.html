@@ -30,7 +30,7 @@
 
       <div class="nav-right">
 
-        <!-- LOGIN + SIGNUP BUTTONS -->
+        <!-- LOGIN + SIGNUP -->
         <button id="openLogin" class="auth-btn">Login</button>
         <button id="openSignup" class="auth-btn">Sign Up</button>
 
@@ -91,9 +91,7 @@
       </div>
     </div>
 
-    <button onclick="startPayment()" class="secure-btn">
-      Pay with Stripe
-    </button>
+    <button onclick="startPayment()" class="secure-btn">Pay with Stripe</button>
 
   </section>
 
@@ -108,44 +106,56 @@
 
   <div id="cartOverlay" class="cart-overlay"></div>
 
+  <!-- LOGIN MODAL -->
+  <div id="loginModal" class="modal hidden">
+    <div class="modal-box">
+      <h2 class="modal-title">Login</h2>
+      <input id="loginEmail" type="email" class="modal-input" placeholder="Email">
+      <input id="loginPassword" type="password" class="modal-input" placeholder="Password">
+      <button id="loginSubmit" class="modal-btn">Login</button>
+      <p id="loginError" class="modal-error"></p>
+      <button class="modal-close" onclick="closeModal('loginModal')">×</button>
+    </div>
+  </div>
+
+  <!-- SIGNUP MODAL -->
+  <div id="signupModal" class="modal hidden">
+    <div class="modal-box">
+      <h2 class="modal-title">Sign Up</h2>
+      <input id="signupUsername" type="text" class="modal-input" placeholder="Username">
+      <input id="signupEmail" type="email" class="modal-input" placeholder="Email">
+      <input id="signupPassword" type="password" class="modal-input" placeholder="Password">
+      <button id="signupSubmit" class="modal-btn">Create Account</button>
+      <p id="signupError" class="modal-error"></p>
+      <button class="modal-close" onclick="closeModal('signupModal')">×</button>
+    </div>
+  </div>
+
   <!-- JS -->
   <script src="app.js"></script>
   <script src="drawer.js" type="module"></script>
+
+  <!-- MODAL JS -->
+  <script>
+    function openModal(id) { document.getElementById(id).classList.remove("hidden"); }
+    function closeModal(id) { document.getElementById(id).classList.add("hidden"); }
+
+    openLogin.onclick = () => openModal("loginModal");
+    openSignup.onclick = () => openModal("signupModal");
+  </script>
 
   <script>
     function loadCheckoutCart() {
       const cart = JSON.parse(localStorage.getItem("cart")) || [];
       if (!cart.length) return;
-
-      const item = cart[0];
-
-      checkoutItemName.innerText = item.name;
-      checkoutItemName2.innerText = item.name;
-      checkoutItemQty.innerText = item.qty;
-      checkoutItemPrice.innerText = "£" + item.price.toFixed(2);
-      totalPrice.innerText = "£" + (item.price * item.qty).toFixed(2);
-
-      checkoutItemImage.src = item.image || "https://via.placeholder.com/120";
+      checkoutItemName.innerText = cart[0].name;
+      checkoutItemName2.innerText = cart[0].name;
+      checkoutItemQty.innerText = cart[0].qty;
+      checkoutItemPrice.innerText = "£" + cart[0].price.toFixed(2);
+      totalPrice.innerText = "£" + (cart[0].price * cart[0].qty).toFixed(2);
+      checkoutItemImage.src = cart[0].image;
     }
-
     loadCheckoutCart();
-
-    async function startPayment() {
-      const cart = JSON.parse(localStorage.getItem("cart")) || [];
-      if (!cart.length) return alert("Cart empty");
-
-      const res = await fetch("https://website-5eml.onrender.com/pay/create-checkout-session", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ cart })
-      });
-
-      const data = await res.json();
-      if (data.url) {
-        localStorage.removeItem("cart");
-        window.location.href = data.url;
-      }
-    }
   </script>
 
 </body>
