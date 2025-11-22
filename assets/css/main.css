@@ -214,38 +214,7 @@ a {
 }
 
 /* ==========================================
-   OLD CART DRAWER (still here but overridden later)
-========================================== */
-.cart-drawer {
-  width: 360px;
-  position: fixed;
-  top: 0;
-  right: -360px;
-  height: 100vh;
-
-  background: #0f141a;
-  padding: 30px;
-
-  border-left: 1px solid rgba(78,245,138,0.18);
-  transition: 0.3s ease;
-
-  z-index: 9999;
-}
-
-.cart-drawer.open {
-  right: 0;
-}
-
-.cart-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.55);
-  display: none;
-  z-index: 9998;
-}
-
-/* ==========================================
-   NEW CART DRAWER (UPGRADED STYLE)
+   NEW PREMIUM CART DRAWER (GREEN THEME)
 ========================================== */
 
 .cart-drawer {
@@ -336,7 +305,7 @@ a {
   font-size: 15px;
 }
 
-/* Quantity */
+/* Quantity Controls */
 .cart-qty-controls {
   display: flex;
   flex-direction: column;
@@ -379,7 +348,7 @@ a {
   background: rgba(255,60,60,0.35) !important;
 }
 
-/* Footer */
+/* Footer Section */
 .cart-footer {
   margin-top: 20px;
   padding-top: 16px;
@@ -394,23 +363,47 @@ a {
   margin-bottom: 12px;
 }
 
+/* BUY BUTTON — NOW GREEN */
 .checkout-btn {
   width: 100%;
   padding: 16px;
-  background: #ec155a;
-  border: none;
+  background: #4ef58a; /* GREEN */
+  color: #0b0f14;      /* dark text for contrast */
 
   border-radius: 12px;
-  color: white;
   font-size: 17px;
   font-weight: 900;
 
   cursor: pointer;
+  border: none;
   transition: 0.2s ease;
 }
 
 .checkout-btn:hover {
-  opacity: 0.85;
+  opacity: 0.92;
+}
+
+/* ==========================================
+   CHECKOUT PAGE BUTTON FIX
+========================================== */
+.secure-btn {
+  width: 100%;
+  padding: 16px;
+
+  background: #4ef58a; /* GREEN */
+  color: #0b0f14;
+
+  border-radius: 12px;
+  font-size: 17px;
+  font-weight: 900;
+
+  border: none;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.secure-btn:hover {
+  opacity: 0.92;
 }
 
 /* Utility */
