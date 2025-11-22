@@ -25,43 +25,47 @@ a {
   padding: 0 20px;
 }
 
-
 /* ==========================================
    LOGO
 ========================================== */
-
 .logo {
-  font-size: 28px;
+  font-size: 26px;
   font-weight: 900;
-  color: #fff;
   user-select: none;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.logo-white {
+  color: #ffffff;
 }
 
 .logo-green {
   color: #4ef58a;
-  text-shadow: 0 0 8px #4ef58a, 0 0 15px #4ef58a;
 }
 
+.glow-green {
+  text-shadow: 0 0 10px #4ef58a, 0 0 20px #4ef58a;
+}
 
 /* ==========================================
    NAVBAR
 ========================================== */
-
 .nav {
   width: 100%;
   background: #0f141a;
   border-bottom: 1px solid rgba(78,245,138,0.18);
+  padding: 12px 0;
   position: sticky;
   top: 0;
   z-index: 999;
-  padding: 14px 0;
 }
 
 .nav-inner {
   width: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
   position: relative;
 }
 
@@ -72,17 +76,16 @@ a {
 
 .nav-right {
   position: absolute;
-  right: 22px;
+  right: 20px;
+  top: 50%;
   display: flex;
   gap: 12px;
-  align-items: center;
+  transform: translateY(-50%);
 }
 
-
 /* ==========================================
-   NAVBAR BUTTONS (OPTION A — RECTANGULAR)
+   NAVBAR BUTTONS (RECTANGULAR)
 ========================================== */
-
 .nav-rect-btn {
   display: flex;
   align-items: center;
@@ -103,10 +106,11 @@ a {
   transition: 0.18s ease;
 }
 
-.nav-rect-btn i {
+.nav-rect-btn svg {
   width: 18px;
   height: 18px;
-  stroke-width: 2.3;
+  stroke: currentColor;
+  pointer-events: none;
 }
 
 .nav-rect-btn:hover {
@@ -126,13 +130,12 @@ a {
   background: rgba(78,245,138,0.22);
 }
 
+/* CART BUTTON */
 .nav-cart {
   position: relative;
   padding: 10px 14px;
 }
 
-
-/* Cart dot */
 .cart-dot {
   position: absolute;
   top: -3px;
@@ -148,41 +151,43 @@ a {
     0 0 20px #4ef58a;
 }
 
-
 /* ==========================================
-   PREMIUM MARQUEE
+   PREMIUM NEON MARQUEE
 ========================================== */
-
 .marquee {
   width: 100%;
   overflow: hidden;
-  padding: 5px 0;
-  background: rgba(14,18,24,0.95);
-  border-bottom: 1px solid rgba(78,245,138,0.15);
+  padding: 4px 0;
+
+  background: rgba(15,20,26,0.9);
+  border-bottom: 1px solid rgba(78,245,138,0.12);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
 }
 
 .marquee-inner {
   display: inline-flex;
-  gap: 24px;
+  gap: 22px;
   padding-left: 100%;
-  animation: marqueeScroll 14s linear infinite;
   align-items: center;
+  animation: marqueeScroll 14s linear infinite;
 }
 
 .marquee-pill {
-  background: rgba(16,24,32,0.75);
-  border: 1px solid rgba(78,245,138,0.35);
-  box-shadow:
-    0 0 6px rgba(78,245,138,0.25),
-    inset 0 0 6px rgba(78,245,138,0.15);
+  font-family: "Poppins", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
 
   padding: 6px 16px;
   border-radius: 8px;
   white-space: nowrap;
-  font-family: "Poppins", sans-serif;
-  font-size: 13px;
-  font-weight: 600;
   color: #d7fbe6;
+
+  background: rgba(16,24,32,0.75);
+  border: 1px solid rgba(78,245,138,0.35);
+
+  box-shadow:
+    0 0 6px rgba(78,245,138,0.28),
+    inset 0 0 6px rgba(78,245,138,0.18);
 }
 
 @keyframes marqueeScroll {
@@ -190,11 +195,9 @@ a {
   100% { transform: translateX(-100%); }
 }
 
-
 /* ==========================================
    FOOTER
 ========================================== */
-
 .footer {
   margin-top: 80px;
   padding: 40px 0;
@@ -204,8 +207,8 @@ a {
 
 .footer-inner {
   max-width: 1250px;
-  margin: auto;
   text-align: center;
+  margin: auto;
 }
 
 .footer-brand {
@@ -215,28 +218,18 @@ a {
 
 .footer-green {
   color: #4ef58a;
-  text-shadow: 0 0 8px #4ef58a, 0 0 18px #4ef58a;
+  text-shadow: 0 0 10px #4ef58a, 0 0 20px #4ef58a;
 }
 
 .footer-text {
-  margin-top: 6px;
-  font-size: 14px;
   color: #aeb6c1;
+  font-size: 14px;
+  margin-top: 6px;
 }
-
 
 /* ==========================================
    CART DRAWER
 ========================================== */
-
-.cart-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.55);
-  display: none;
-  z-index: 9998;
-}
-
 .cart-drawer {
   width: 360px;
   position: fixed;
@@ -245,29 +238,36 @@ a {
   height: 100vh;
 
   background: #0f141a;
-  border-left: 1px solid rgba(78,245,138,0.18);
-  padding: 26px;
-  z-index: 9999;
+  padding: 25px;
 
-  transition: 0.32s ease;
+  border-left: 1px solid rgba(78,245,138,0.18);
+  transition: 0.3s ease;
+  z-index: 9999;
 }
 
 .cart-drawer.open {
   right: 0;
 }
 
+.cart-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  z-index: 9998;
+}
+
 .close-drawer {
   background: transparent;
-  font-size: 28px;
-  color: #fff;
+  color: white;
+  font-size: 26px;
   cursor: pointer;
 }
 
-
-/* Cart item */
+/* Cart Item */
 .cart-item {
   padding: 14px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.07);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
 .cart-item-title {
@@ -276,18 +276,17 @@ a {
 }
 
 .cart-item-price {
-  font-size: 16px;
   color: #4ef58a;
   font-weight: 900;
+  font-size: 16px;
   margin-bottom: 10px;
 }
 
-
-/* Quantity controls */
+/* Quantity Row */
 .cart-qty-row {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .qty-btn {
@@ -298,6 +297,7 @@ a {
   border-radius: 8px;
   color: white;
   font-size: 18px;
+  font-weight: 900;
   cursor: pointer;
 }
 
@@ -311,7 +311,7 @@ a {
 }
 
 .qty-remove:hover {
-  background: #ff5555;
+  background: #ff5050;
 }
 
 .qty-display {
@@ -321,37 +321,33 @@ a {
   font-weight: 700;
 }
 
-
 /* Total */
 .cart-total-line {
-  margin: 20px 0;
-  padding-top: 10px;
-  border-top: 1px solid rgba(255,255,255,0.2);
-
-  color: #4ef58a;
   font-size: 20px;
   font-weight: 900;
+  color: #4ef58a;
+  margin: 18px 0;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,0.2);
 }
 
-
-/* Checkout button */
+/* Checkout Button */
 .checkout-btn {
   width: 100%;
   padding: 16px;
   background: #4ef58a;
   color: #000;
-  border-radius: 12px;
+  border-radius: 14px;
   font-weight: 900;
   font-size: 17px;
   cursor: pointer;
 }
 
 .checkout-btn:hover {
-  opacity: 0.9;
+  opacity: 0.92;
 }
 
-
-/* Utilities */
+/* Hidden Utility */
 .hidden {
   display: none !important;
 }
