@@ -104,24 +104,10 @@ body {
   display: none;
 }
 
-/* ============================
-   ANNOUNCEMENT BAR
-============================ */
-.announcement-section {
-  max-width: 750px;
-  margin: 12px auto 0;
-}
 
-.announcement {
-  padding: 4px 12px;
-  background: rgba(78, 245, 138, 0.08);
-  border: 1px solid rgba(78,245,138,0.3);
-  border-radius: 10px;
-  text-align: center;
-  color: #4ef58a;
-  font-size: 13px;
-  overflow: hidden;
-}
+
+
+
 
 /* ============================
    HERO SECTION
@@ -563,6 +549,33 @@ body {
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 /* === FIXED MARQUEE (bar stays still) === */
+
+
+
+
+.marquee {
+  display: inline-flex;
+  white-space: nowrap;
+  gap: 60px;
+  animation: marquee-scroll 8s linear infinite;
+}
+
+.announcement span {
+  font-family: 'Press Start 2P', monospace !important;
+  font-size: 12px !important;
+  color: #4ef58a;
+}
+
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+
+/* === PRESS START FONT === */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+/* === FIXED MARQUEE (bar stays still) === */
 .announcement-section {
   max-width: 600px !important;
   margin: 20px auto !important;
@@ -574,8 +587,8 @@ body {
   border-radius: 20px;
   overflow: hidden;
   padding: 4px 0;
-  text-align: left;
   position: relative;
+  height: 20px;
 }
 
 .marquee {
@@ -589,6 +602,7 @@ body {
   font-family: 'Press Start 2P', monospace !important;
   font-size: 12px !important;
   color: #4ef58a;
+  line-height: 20px;
 }
 
 @keyframes marquee-scroll {
