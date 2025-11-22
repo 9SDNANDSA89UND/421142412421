@@ -1,30 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CosmicBay</title>
+    <title>CosmicItems</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
-
-    <!-- NAVBAR -->
     <nav class="nav">
         <div class="nav-inner">
-
             <div class="nav-left">
-                <button class="icon-btn" onclick="toggleDrawer()">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
                 <span class="balance-pill">£0.00</span>
             </div>
 
             <div class="nav-center">
                 <div class="logo">
-                    <span class="logo-white">Cosmic</span><span class="logo-green">Bay</span>
+                    <span class="logo-white">Cosmic</span><span class="logo-green">Items</span>
                 </div>
             </div>
 
@@ -38,23 +29,15 @@
                     <div id="cart-dot" class="cart-dot"></div>
                 </button>
             </div>
-
         </div>
     </nav>
 
-
-    <!-- FIXED MARQUEE (Corrected) -->
     <div class="announcement-section">
         <div class="announcement">
-            <div class="marquee">
-                <span>Instant Delivery • Trusted Seller • 100% Secure Checkout • 24/7 Support •</span>
-                <span>Instant Delivery • Trusted Seller • 100% Secure Checkout • 24/7 Support •</span>
-            </div>
+            Instant delivery • Trusted seller
         </div>
     </div>
 
-
-    <!-- HERO -->
     <section class="hero">
         <h1>Discover <span>Auras</span>, <span>Powers</span>, Items & More</h1>
         <p class="hero-sub">Secure checkout • Trusted sellers • Instant delivery</p>
@@ -63,14 +46,10 @@
         </div>
     </section>
 
-
-    <!-- PRODUCT GRID -->
     <section class="products">
         <div class="product-grid" id="productGrid"></div>
     </section>
 
-
-    <!-- CART DRAWER -->
     <div id="cartDrawer" class="cart-drawer">
         <div class="drawer-header">
             <h3>Your Cart</h3>
@@ -85,12 +64,9 @@
         </div>
     </div>
 
-
-    <!-- TOASTS -->
     <div id="toast-container" class="toast-container"></div>
 
     <script src="app.js"></script>
     <script src="drawer.js"></script>
-
 </body>
 </html>
