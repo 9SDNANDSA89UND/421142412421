@@ -35,8 +35,18 @@
   position: relative;
   z-index: 1;
 
+  /* hide alt text if image fails */
   color: transparent;
   font-size: 0;
+}
+
+/* PRODUCT NAME — CENTERED & CLEANER */
+.card h3 {
+  text-align: center;
+  font-size: 17px;
+  margin-top: 6px;
+  margin-bottom: 4px;
+  width: 100%;
 }
 
 /* BADGES */
