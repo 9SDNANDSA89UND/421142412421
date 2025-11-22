@@ -32,26 +32,13 @@ a {
   font-size: 26px;
   font-weight: 900;
   user-select: none;
-  display: flex;
-  gap: 4px;
-  align-items: center;
 }
 
-.logo-white {
-  color: #ffffff;
-}
-
-.logo-green {
-  color: #4ef58a;
-}
+.logo-white { color: #ffffff; }
+.logo-green { color: #4ef58a; }
 
 .glow-green {
   text-shadow: 0 0 10px #4ef58a, 0 0 20px #4ef58a;
-}
-
-/* Remove old left logo elements */
-.nav-left, .old-logo, header .logo-container {
-  display: none !important;
 }
 
 /* ==========================================
@@ -61,7 +48,7 @@ a {
   width: 100%;
   background: #0f141a;
   border-bottom: 1px solid rgba(78,245,138,0.18);
-  padding: 12px 0;
+  padding: 14px 0;
   position: sticky;
   top: 0;
   z-index: 999;
@@ -71,31 +58,25 @@ a {
   width: 100%;
   display: flex;
   justify-content: center;
+  align-items: center;
   position: relative;
 }
 
 .nav-center {
-  display: flex;
-  justify-content: center;
+  text-align: center;
   width: 100%;
-  pointer-events: none;
-}
-
-.nav-center .logo {
-  pointer-events: auto;
 }
 
 .nav-right {
   position: absolute;
   right: 20px;
-  top: 50%;
   display: flex;
   gap: 12px;
-  transform: translateY(-50%);
+  align-items: center;
 }
 
 /* ==========================================
-   NAVBAR BUTTONS (RECTANGULAR)
+   NAV BUTTONS (NEW PREMIUM STYLE)
 ========================================== */
 .nav-rect-btn {
   display: flex;
@@ -103,50 +84,47 @@ a {
   gap: 8px;
 
   padding: 10px 16px;
-  height: 42px;
+  border-radius: 14px;
 
   background: rgba(255,255,255,0.05);
   border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 8px;
-
-  color: #e5e7eb;
-  font-size: 14px;
-  font-weight: 600;
 
   cursor: pointer;
-  transition: 0.18s ease;
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+
+  backdrop-filter: blur(4px);
+  transition: 0.18s;
+}
+
+.nav-rect-btn:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.nav-accent-btn {
+  background: rgba(78,245,138,0.18);
+  border-color: rgba(78,245,138,0.4);
+}
+
+.nav-accent-btn:hover {
+  background: rgba(78,245,138,0.28);
+}
+
+/* Cart button special */
+.nav-cart {
+  width: 48px;
+  padding: 10px;
+  justify-content: center;
 }
 
 .nav-rect-btn svg {
   width: 18px;
   height: 18px;
-  stroke: currentColor;
-  pointer-events: none !important;
+  stroke: white;
 }
 
-.nav-rect-btn:hover {
-  border-color: #4ef58a;
-  color: #4ef58a;
-  box-shadow:
-    0 0 8px rgba(78,245,138,0.4),
-    inset 0 0 6px rgba(78,245,138,0.2);
-}
-
-.nav-accent-btn {
-  background: rgba(78,245,138,0.15);
-  border-color: rgba(78,245,138,0.4);
-}
-
-.nav-accent-btn:hover {
-  background: rgba(78,245,138,0.22);
-}
-
-/* CART BUTTON */
-.nav-cart {
-  position: relative;
-  padding: 10px 14px;
-}
-
+/* Cart dot */
 .cart-dot {
   position: absolute;
   top: -3px;
@@ -156,23 +134,18 @@ a {
   background: #4ef58a;
   border-radius: 50%;
   display: none;
-
-  box-shadow:
-    0 0 10px #4ef58a,
-    0 0 20px #4ef58a;
+  box-shadow: 0 0 10px #4ef58a;
 }
 
 /* ==========================================
-   PREMIUM NEON MARQUEE
+   PREMIUM MARQUEE
 ========================================== */
 .marquee {
   width: 100%;
   overflow: hidden;
-  padding: 4px 0;
-
-  background: rgba(15,20,26,0.9);
-  border-bottom: 1px solid rgba(78,245,138,0.12);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  padding: 6px 0;
+  background: rgba(15,20,26,0.85);
+  border-bottom: 1px solid rgba(78,245,138,0.15);
 }
 
 .marquee-inner {
@@ -180,7 +153,7 @@ a {
   gap: 22px;
   padding-left: 100%;
   align-items: center;
-  animation: marqueeScroll 14s linear infinite;
+  animation: marqueeScroll 15s linear infinite;
 }
 
 .marquee-pill {
@@ -189,16 +162,18 @@ a {
   font-weight: 600;
 
   padding: 6px 16px;
-  border-radius: 8px;
-  white-space: nowrap;
-  color: #d7fbe6;
+  border-radius: 10px;
 
   background: rgba(16,24,32,0.75);
   border: 1px solid rgba(78,245,138,0.35);
+  color: #d7fbe6;
 
   box-shadow:
     0 0 6px rgba(78,245,138,0.28),
-    inset 0 0 6px rgba(78,245,138,0.18);
+    inset 0 0 6px rgba(78,245,138,0.15);
+
+  white-space: nowrap;
+  backdrop-filter: blur(5px);
 }
 
 @keyframes marqueeScroll {
@@ -223,13 +198,13 @@ a {
 }
 
 .footer-brand {
-  font-size: 26px;
+  font-size: 28px;
   font-weight: 900;
 }
 
 .footer-green {
   color: #4ef58a;
-  text-shadow: 0 0 10px #4ef58a, 0 0 20px #4ef58a;
+  text-shadow: 0 0 10px #4ef58a;
 }
 
 .footer-text {
@@ -239,7 +214,7 @@ a {
 }
 
 /* ==========================================
-   CART DRAWER
+   CART DRAWER — MODERN PREMIUM STYLE
 ========================================== */
 .cart-drawer {
   width: 360px;
@@ -249,10 +224,11 @@ a {
   height: 100vh;
 
   background: #0f141a;
-  padding: 25px;
+  padding: 30px;
 
   border-left: 1px solid rgba(78,245,138,0.18);
   transition: 0.3s ease;
+
   z-index: 9999;
 }
 
@@ -263,102 +239,115 @@ a {
 .cart-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0,0,0,0.55);
   display: none;
   z-index: 9998;
 }
 
 .close-drawer {
   background: transparent;
-  color: white;
-  font-size: 26px;
+  border: none;
   cursor: pointer;
+  margin-bottom: 20px;
 }
 
-/* Cart Item */
+.close-drawer svg {
+  width: 28px;
+  height: 28px;
+  stroke: white;
+}
+
+/* CART ITEMS */
 .cart-item {
-  padding: 14px 0;
+  padding: 20px 0;
   border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
 .cart-item-title {
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 800;
 }
 
 .cart-item-price {
   color: #4ef58a;
   font-weight: 900;
-  font-size: 16px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
-/* Quantity Row */
+/* Quantity Controls */
 .cart-qty-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
 }
 
 .qty-btn {
-  width: 32px;
-  height: 32px;
+  width: 38px;
+  height: 38px;
+
   background: rgba(255,255,255,0.08);
   border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 8px;
-  color: white;
-  font-size: 18px;
-  font-weight: 900;
+
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   cursor: pointer;
+  transition: 0.15s ease;
 }
 
+.qty-btn svg { stroke: white; }
+
 .qty-btn:hover {
-  background: rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.18);
 }
 
 .qty-remove {
-  background: #ff3b3b;
-  border-color: #ff3b3b;
+  background: rgba(255, 60, 60, 0.25) !important;
+  border-color: rgba(255, 60, 60, 0.4) !important;
 }
 
 .qty-remove:hover {
-  background: #ff5050;
+  background: rgba(255, 60, 60, 0.35) !important;
 }
 
 .qty-display {
-  min-width: 26px;
+  min-width: 28px;
   text-align: center;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 700;
 }
 
-/* Total */
+/* Total + Checkout */
 .cart-total-line {
   font-size: 20px;
   font-weight: 900;
   color: #4ef58a;
-  margin: 18px 0;
-  padding-top: 10px;
-  border-top: 1px solid rgba(255,255,255,0.2);
+  margin: 25px 0 18px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,0.15);
 }
 
-/* Checkout Button */
 .checkout-btn {
   width: 100%;
   padding: 16px;
   background: #4ef58a;
-  color: #000;
+  color: black;
+
   border-radius: 14px;
-  font-weight: 900;
   font-size: 17px;
+  font-weight: 900;
+
   cursor: pointer;
+  transition: 0.18s ease;
 }
 
 .checkout-btn:hover {
   opacity: 0.92;
 }
 
-/* Hidden Utility */
+/* Utility */
 .hidden {
   display: none !important;
 }
