@@ -51,7 +51,7 @@
   <!-- PRODUCT GRID -->
   <div id="productGrid" class="product-grid"></div>
 
-  <!-- CART DRAWER (automatic from navbar) -->
+  <!-- CART DRAWER (from navbar) -->
   <div id="cartDrawer" class="cart-drawer"></div>
   <div id="cartOverlay" class="cart-overlay"></div>
 
@@ -71,7 +71,7 @@
   <script>
 
     /* =========================================
-       PRODUCT LIST (TEMP DEMO)
+       PRODUCT LIST
     ========================================== */
     const products = [
       {
@@ -79,21 +79,21 @@
         rarity: "God",
         price: 12.99,
         oldPrice: 19.99,
-        image: "https://via.placeholder.com/300"
+        image: "https://static.wikia.nocookie.net/stealabr/images/5/58/Strawberryelephant.png/revision/latest?cb=20250830235735"
       },
       {
         name: "Shadow Cloak",
         rarity: "Secret",
         price: 8.49,
         oldPrice: 12,
-        image: "https://via.placeholder.com/300"
+        image: "https://static.wikia.nocookie.net/stealabr/images/5/58/Strawberryelephant.png/revision/latest?cb=20250830235735"
       },
       {
         name: "OG Emblem",
         rarity: "OG",
         price: 4.2,
         oldPrice: null,
-        image: "https://via.placeholder.com/300"
+        image: "https://static.wikia.nocookie.net/stealabr/images/5/58/Strawberryelephant.png/revision/latest?cb=20250830235735"
       }
     ];
 
@@ -174,7 +174,6 @@
       const card = btn.closest(".card");
       const img = card.querySelector(".product-img");
 
-      // Fly animation + add to cart
       Cart.addItem(product, img);
     }
 
@@ -187,6 +186,25 @@
       Cart.init();
     });
 
+  </script>
+
+  <!-- ⭐ 3D TILT SCRIPT -->
+  <script>
+    document.addEventListener("mousemove", (e) => {
+      document.querySelectorAll(".card").forEach(card => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+
+        const tiltX = (y / rect.height) * -12;
+        const tiltY = (x / rect.width) * 12;
+
+        card.style.setProperty("--tiltX", tiltX + "deg");
+        card.style.setProperty("--tiltY", tiltY + "deg");
+
+        card.setAttribute("data-tilt", "true");
+      });
+    });
   </script>
 
 </body>
