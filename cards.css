@@ -13,12 +13,16 @@
   position: relative;
   box-shadow: 0 0 10px rgba(0,0,0,0.5);
   transition: 0.25s ease;
+
+  /* GLOBAL SCALE DOWN */
+  transform: scale(0.88);
+  transform-origin: top center;
 }
 
 .card:hover {
-  transform: translateY(-6px);
+  transform: scale(0.9) translateY(-4px);
   border-color: rgba(78,245,138,0.45);
-  box-shadow: 0 12px 25px rgba(78,245,138,0.25);
+  box-shadow: 0 10px 20px rgba(78,245,138,0.25);
 }
 
 .card img {
@@ -31,7 +35,6 @@
   position: relative;
   z-index: 1;
 
-  /* FIX: Hide duplicate item name when image fails */
   color: transparent;
   font-size: 0;
 }
