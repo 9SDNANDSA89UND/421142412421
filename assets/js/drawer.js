@@ -1,41 +1,60 @@
-/* =========================================
-   CART DRAWER CONTROLS
-========================================= */
+// CART DRAWER LOGIC (Modernized)
 
-document.addEventListener("DOMContentLoaded", () => {
-  const cartBtn = document.getElementById("cartBtn");
-  const cartDrawer = document.getElementById("cartDrawer");
-  const cartOverlay = document.getElementById("cartOverlay");
-  const closeDrawerBtn = document.getElementById("closeDrawer");
+const cartDrawer = document.getElementById("cartDrawer");
+const cartOverlay = document.getElementById("cartOverlay");
+const cartBtn = document.getElementById("cartBtn");
+const closeDrawer = document.getElementById("closeDrawer");
 
-  function openDrawer() {
-    cartDrawer.classList.add("open");
-    cartOverlay.style.display = "block";
-    document.body.style.overflow = "hidden"; // disable scrolling
+function openCart() {
+  cartDrawer.classList.add("open");
+  cartOverlay.style.display = "block";
+}
+
+function closeCart() {
+  cartDrawer.classList.remove("open");
+  cartOverlay.style.display = "none";
+}
+
+if (cartBtn) cartBtn.addEventListener("click", openCart);
+if (closeDrawer) closeDrawer.addEventListener("click", closeCart);
+if (cartOverlay) cartOverlay.addEventListener("click", closeCart);
+
+/* Update Drawer Content */
+function updateCartDrawer() {
+  const drawer = document.getElementById("drawerContent");
+
+  if (!drawer) return;
+
+  if (cart.length === 0) {
+    drawer.innerHTML = `<p style="color:#9ca4b1; margin-top:20px;">Your cart is empty.</p>`;
+    return;
   }
 
-  function closeDrawer() {
-    cartDrawer.classList.remove("open");
-    cartOverlay.style.display = "none";
-    document.body.style.overflow = ""; // restore scroll
-  }
+  let html = "";
+  let total = 0;
 
-  /* OPEN */
-  cartBtn?.addEventListener("click", openDrawer);
+  cart.forEach(item => {
+    total += item.price * item.qty;
 
-  /* CLOSE BUTTON */
-  closeDrawerBtn?.addEventListener("click", closeDrawer);
+    html += `
+      <div class="cart-item">
+        <div class="cart-item-title">${item.name}</div>
+        <div class="cart-item-price">£${item.price}</div>
 
-  /* OVERLAY CLICK */
-  cartOverlay?.addEventListener("click", closeDrawer);
-
-  /* ESC KEY */
-  window.addEventListener("keydown", e => {
-    if (e.key === "Escape") closeDrawer();
+        <div class="cart-qty-row">
+          <button class="qty-btn" onclick="changeQty('${item.name}', -1)">−</button>
+          <div class="qty-display">${item.qty}</div>
+          <button class="qty-btn" onclick="changeQty('${item.name}', 1)">+</button>
+          <button class="qty-btn qty-remove" onclick="removeItem('${item.name}')">×</button>
+        </div>
+      </div>
+    `;
   });
 
-  /* Make functions globally available (for HTML onclick) */
-  window.openDrawer = openDrawer;
-  window.closeDrawer = closeDrawer;
-});
+  html += `
+    <div class="cart-total-line">Total: £${total.toFixed(2)}</div>
+    <button class="checkout-btn" onclick="goToCheckout()">Proceed to Checkout</button>
+  `;
 
+  drawer.innerHTML = html;
+}
