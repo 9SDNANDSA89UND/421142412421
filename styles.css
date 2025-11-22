@@ -81,16 +81,6 @@ body {
   filter: drop-shadow(0 0 8px #4ef58a);
 }
 
-/* BALANCE */
-.balance-pill {
-  padding: 6px 14px;
-  background: rgba(78,245,138,0.15);
-  border: 1px solid rgba(78,245,138,0.3);
-  border-radius: 10px;
-  font-weight: 600;
-  color: #4ef58a;
-}
-
 /* CART DOT */
 .cart-dot {
   position: absolute;
@@ -190,7 +180,7 @@ body {
 }
 
 /* ============================
-   PRODUCT GRID (still needed)
+   PRODUCT GRID
 ============================ */
 .products {
   padding: 30px 0 50px;
@@ -307,7 +297,7 @@ body {
 }
 
 /* ============================
-   REVIEWS SECTION (still here)
+   REVIEWS SECTION
 ============================ */
 .reviews-section {
   max-width: 1200px;
