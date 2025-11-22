@@ -12,7 +12,7 @@
 }
 
 /* ==========================================
-   SMALL PREMIUM CARD
+   SMALL PREMIUM CARD — FIXED HEIGHT
 ========================================== */
 .card {
   position: relative;
@@ -23,6 +23,12 @@
   border: 1px solid rgba(78,245,138,0.15);
   overflow: hidden;
 
+  height: 310px; /* ⭐ ALL CARDS SAME HEIGHT */
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
   transform-style: preserve-3d;
   perspective: 900px;
 
@@ -30,7 +36,7 @@
     0 0 14px rgba(78,245,138,0.06),
     inset 0 0 6px rgba(255,255,255,0.03);
 
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
   cursor: pointer;
 }
 
@@ -111,16 +117,19 @@
 }
 
 /* ==========================================
-   TITLE — SMALL
+   TITLE — FIXED HEIGHT
 ========================================== */
 .card h3 {
   font-size: 15px;
   font-weight: 800;
-  margin-bottom: 6px;
+  margin: 0;
+  height: 32px; /* ⭐ FIXED HEIGHT */
+  display: flex;
+  align-items: center;
 }
 
 /* ==========================================
-   BADGES (RARITY LEFT, DISCOUNT RIGHT)
+   BADGES — RARITY LEFT, DISCOUNT RIGHT
 ========================================== */
 .card-badges {
   width: 100%;
@@ -213,13 +222,16 @@
 }
 
 /* ==========================================
-   PRICE — SMALL
+   PRICE — FIXED HEIGHT
 ========================================== */
 .price-box {
   display: flex;
   gap: 10px;
-  align-items: baseline;
-  margin: 6px 0 12px 0;
+  align-items: center;
+
+  height: 20px; /* ⭐ FIXED HEIGHT */
+  margin-top: 6px;
+  margin-bottom: 12px;
 }
 
 .price {
