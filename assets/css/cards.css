@@ -5,14 +5,13 @@
   max-width: 1250px;
   margin: 40px auto;
   padding: 0 20px;
-
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 32px;
 }
 
 /* ==========================================
-   PRODUCT CARD (PREMIUM REWORK)
+   PRODUCT CARD (PREMIUM REWORK + 3D TILT)
 ========================================== */
 .card {
   background: rgba(15, 20, 26, 0.85);
@@ -20,20 +19,27 @@
   border-radius: 20px;
 
   padding: 20px;
-  transition: 0.25s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transform-style: preserve-3d;
+  perspective: 1000px;
 
   backdrop-filter: blur(6px);
   box-shadow:
      0 0 12px rgba(78,245,138,0.15),
      inset 0 0 10px rgba(255,255,255,0.03);
+
+  cursor: pointer;
 }
 
 .card:hover {
-  transform: translateY(-6px) scale(1.02);
-  border-color: rgba(78,245,138,0.5);
   box-shadow:
      0 0 18px rgba(78,245,138,0.35),
-     0 4px 24px rgba(0,0,0,0.4);
+     0 8px 28px rgba(0,0,0,0.5);
+}
+
+/* 3D tilt reactions */
+.card[data-tilt] {
+  transform: rotateX(var(--tiltX)) rotateY(var(--tiltY)) scale(1.03);
 }
 
 /* ==========================================
@@ -72,8 +78,14 @@
 }
 
 /* ==========================================
-   PREMIUM RARITY TAGS (NEON GRADIENT)
+   PULSING RARITY TAGS (NEON)
 ========================================== */
+@keyframes tagPulse {
+  0%   { box-shadow: 0 0 8px currentColor; }
+  50%  { box-shadow: 0 0 18px currentColor; }
+  100% { box-shadow: 0 0 8px currentColor; }
+}
+
 .tag {
   padding: 6px 16px;
   border-radius: 50px;
@@ -82,7 +94,7 @@
   color: white;
   backdrop-filter: blur(6px);
   border: 1px solid transparent;
-  box-shadow: 0 0 10px currentColor;
+  animation: tagPulse 2s ease-in-out infinite;
 }
 
 /* God – Pink/Purple neon */
@@ -170,5 +182,5 @@
 
 .buy-btn:hover {
   opacity: 0.9;
-  transform: translateY(-2px);
+  transform: translateY(-3px);
 }
