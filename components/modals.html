@@ -1,1 +1,60 @@
+<!-- MODERN LOGIN & SIGNUP MODALS -->
+
+<!-- LOGIN MODAL -->
+<div id="loginModal" class="modern-modal hidden">
+  <div class="modern-box">
+    <div class="modern-close" onclick="closeModal('loginModal')">×</div>
+
+    <h2 class="modern-title">Login</h2>
+
+    <input id="loginEmail" type="email" class="modern-input" placeholder="Email">
+    <input id="loginPassword" type="password" class="modern-input" placeholder="Password">
+
+    <button id="loginSubmit" class="modern-btn">Login</button>
+
+    <p id="loginError" class="modal-hint invalid"></p>
+  </div>
+</div>
+
+
+<!-- SIGNUP MODAL -->
+<div id="signupModal" class="modern-modal hidden">
+  <div class="modern-box">
+    <div class="modern-close" onclick="closeModal('signupModal')">×</div>
+
+    <h2 class="modern-title">Create Account</h2>
+
+    <input id="signupUsername" type="text" class="modern-input" placeholder="Username">
+    <p id="usernameCheck" class="modal-hint"></p>
+
+    <div id="usernameSuggestions"></div>
+
+    <input id="signupEmail" type="email" class="modern-input" placeholder="Email">
+    <p id="emailCheck" class="modal-hint"></p>
+
+    <input id="signupPassword" type="password" class="modern-input" placeholder="Password">
+    <p id="passwordStrength" class="modal-hint"></p>
+
+    <input id="signupPasswordConfirm" type="password" class="modern-input" placeholder="Confirm Password">
+    <p id="passwordMatch" class="modal-hint"></p>
+
+    <!-- CAPTCHA -->
+    <div style="margin-bottom:10px; display:flex; align-items:center; gap:10px;">
+      <div id="captchaText"
+        style="padding:10px 14px; background:#0d1117; border:1px solid #4ef58a60; font-weight:900; letter-spacing:2px;">
+      </div>
+      <button id="refreshCaptcha"
+        style="padding:10px 14px; background:#4ef58a; border:none; border-radius:8px; cursor:pointer; font-weight:900;">
+        ↻
+      </button>
+    </div>
+
+    <input id="captchaInput" type="text" class="modern-input" placeholder="Enter CAPTCHA">
+    <p id="captchaCheck" class="modal-hint"></p>
+
+    <button id="signupSubmit" class="modern-btn" disabled>Create Account</button>
+
+    <p id="signupError" class="modal-hint invalid"></p>
+  </div>
+</div>
 
