@@ -191,9 +191,9 @@ body {
   background: rgba(15,20,28,0.55);
   border-radius: 20px;
   border: 1px solid rgba(78,245,138,0.15);
-  padding: 16px;
-  padding-top: 32px;
-  height: 320px;         /* SHORTER CARD */
+  padding: 18px;
+  padding-top: 42px;
+  height: 380px;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -209,12 +209,11 @@ body {
 
 .card img {
   width: 100%;
-  aspect-ratio: 1 / 1;  /* SQUARE IMAGE */
-  height: auto;
+  height: 170px;
   border-radius: 14px;
   object-fit: cover;
   background: #0f141a;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   position: relative;
   z-index: 1;
   color: transparent;
@@ -268,7 +267,7 @@ body {
 }
 
 /* ============================
-   DISCOUNT GLOWS
+   DISCOUNT TAGS + GLOW
 ============================ */
 .discount-tag {
   padding: 4px 10px;
@@ -278,43 +277,58 @@ body {
   color: black;
 }
 
+/* GREEN DISCOUNT */
 .discount-green {
   background: #8dff71;
   box-shadow: 0 0 8px rgba(141,255,113,0.65),
               0 0 16px rgba(141,255,113,0.35);
 }
 
+/* YELLOW DISCOUNT */
 .discount-yellow {
   background: #ffe66d;
   box-shadow: 0 0 8px rgba(255,230,109,0.65),
               0 0 16px rgba(255,230,109,0.35);
 }
 
+/* ORANGE DISCOUNT */
 .discount-orange {
   background: #ffb856;
   box-shadow: 0 0 8px rgba(255,184,86,0.65),
               0 0 16px rgba(255,184,86,0.35);
 }
 
+/* RED DISCOUNT */
 .discount-red {
   background: #ff5e5e;
   box-shadow: 0 0 8px rgba(255,94,94,0.65),
               0 0 16px rgba(255,94,94,0.35);
 }
 
-/* TITLE */
+/* Optional hover boost */
+.discount-tag:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 12px currentColor,
+              0 0 24px currentColor;
+}
+
+/* ============================
+   TITLE + DESCRIPTION
+============================ */
 .card h3 {
-  font-size: 15px;   /* made smaller to fit short card */
+  font-size: 17px;
   font-weight: 900;
   text-align: center;
-  margin-top: 0;
+  margin-top: 2px;
   position: relative;
   z-index: 5;
 }
 
-/* DESCRIPTION */
 .card p {
-  display: none;   /* removes “Instant Delivery • Trusted Seller” */
+  font-size: 13px;
+  color: #b4bccc;
+  text-align: center;
+  margin-top: 4px;
 }
 
 /* PRICE */
@@ -340,8 +354,8 @@ body {
 /* BUY BUTTON */
 .buy-btn {
   width: 100%;
-  margin-top: 8px;
-  padding: 10px;
+  margin-top: 12px;
+  padding: 12px;
   border-radius: 12px;
   background: linear-gradient(90deg, #4ef58a, #37d769);
   border: none;
@@ -350,4 +364,195 @@ body {
   box-shadow: 0 0 18px rgba(78,245,138,0.3);
   cursor: pointer;
   transition: 0.25s;
+}
+
+.buy-btn:hover {
+  box-shadow: 0 0 26px rgba(78,245,138,0.55);
+  transform: translateY(-2px);
+}
+
+/* ============================
+   CART DRAWER + BUTTONS
+============================ */
+.cart-drawer {
+  position: fixed;
+  top: 0;
+  right: -350px;
+  width: 330px;
+  height: 100vh;
+  background: #05080b;
+  padding: 20px;
+  border-left: 1px solid rgba(255,255,255,0.06);
+  transition: 0.3s ease;
+  z-index: 100;
+}
+
+.cart-drawer.open { right: 0; }
+
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.close-drawer {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.18);
+  font-size: 20px;
+  color: white;
+  cursor: pointer;
+}
+
+.qty-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 1px solid rgba(156,164,177,0.6);
+  background: rgba(9,13,17,0.95);
+  color: #e5e7eb;
+  font-size: 16px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.qty-btn:hover {
+  border-color: #4ef58a;
+  box-shadow: 0 0 10px rgba(78,245,138,0.3);
+  transform: translateY(-1px);
+}
+
+.qty-btn.remove {
+  border-color: rgba(255,59,59,0.8);
+  color: #ff6b6b;
+}
+
+.qty-btn.remove:hover {
+  background: rgba(255,59,59,0.08);
+  box-shadow: 0 0 10px rgba(255,59,59,0.35);
+}
+
+/* ============================
+   TOAST NOTIFICATIONS
+============================ */
+.toast-container {
+  position: fixed;
+  top: 80px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 2000;
+}
+
+.toast {
+  min-width: 260px;
+  max-width: 360px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: rgba(5, 8, 11, 0.96);
+  border: 1px solid rgba(78, 245, 138, 0.5);
+  color: #f9fafb;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  transform: translateY(12px) translateX(12px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0) translateX(0);
+}
+
+/* ============================
+   CHECKOUT PAGE
+============================ */
+.premium-checkout {
+  max-width: 480px;
+  margin: 60px auto;
+  padding: 35px;
+  background: rgba(20,24,30,0.85);
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 0 35px rgba(0,0,0,0.55);
+}
+
+.checkout-title {
+  text-align: center;
+  font-size: 28px;
+  font-weight: 900;
+  margin-bottom: 24px;
+}
+
+.checkout-product-box {
+  display: flex;
+  gap: 16px;
+  padding: 15px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 14px;
+  margin-bottom: 22px;
+}
+
+.checkout-summary-table {
+  padding: 16px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  margin-bottom: 22px;
+}
+
+.checkout-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+
+.total-row {
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  font-weight: 900;
+  font-size: 18px;
+}
+
+.checkout-total-amount {
+  color: #4ef58a;
+}
+
+.secure-btn,
+.checkout-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #4ef58a, #22c55e);
+  border: none;
+  font-weight: 900;
+  font-size: 16px;
+  letter-spacing: 0.02em;
+  color: #050608;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 14px 30px rgba(78, 245, 138, 0.35);
+}
+
+.secure-btn:hover,
+.checkout-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+  box-shadow: 0 18px 40px rgba(78, 245, 138, 0.45);
+}
+
+.secure-btn:active,
+.checkout-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 8px 20px rgba(78, 245, 138, 0.3);
 }
