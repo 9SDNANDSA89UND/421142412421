@@ -1,4 +1,6 @@
-/* ============ GLOBAL RESET ============ */
+/* ==========================================
+   GLOBAL RESET
+========================================== */
 * {
   margin: 0;
   padding: 0;
@@ -23,8 +25,9 @@ a {
   padding: 0 20px;
 }
 
-/* ============ LOGO FIX ============ */
-
+/* ==========================================
+   LOGO
+========================================== */
 .logo {
   font-size: 26px;
   font-weight: 900;
@@ -40,16 +43,18 @@ a {
 }
 
 .glow-green {
-  text-shadow: 0 0 10px #4ef58a, 0 0 20px #4ef58a;
+  text-shadow: 0 0 10px #4ef58a, 0 0 18px #4ef58a;
 }
 
-/* ============ NAVBAR ============ */
+/* ==========================================
+   NAVBAR
+========================================== */
 
 .nav {
   width: 100%;
-  padding: 12px 0;
   background: #0f141a;
   border-bottom: 1px solid rgba(78,245,138,0.18);
+  padding: 12px 0;
   position: sticky;
   top: 0;
   z-index: 999;
@@ -63,8 +68,8 @@ a {
 }
 
 .nav-center {
-  text-align: center;
   width: 100%;
+  text-align: center;
 }
 
 .nav-right {
@@ -76,8 +81,9 @@ a {
   transform: translateY(-50%);
 }
 
-/* ============ BUTTONS ============ */
-
+/* ==========================================
+   BUTTONS
+========================================== */
 button {
   border: none;
   outline: none;
@@ -97,13 +103,14 @@ button {
   opacity: 0.85;
 }
 
-/* CART BUTTON */
-
+/* ==========================================
+   CART BUTTON
+========================================== */
 .icon-btn {
   width: 44px;
   height: 44px;
-  border-radius: 10px;
   background: rgba(255,255,255,0.06);
+  border-radius: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -122,17 +129,19 @@ button {
 
 .cart-dot {
   position: absolute;
-  top: 0;
-  right: 0;
-  width: 9px;
-  height: 9px;
+  top: -2px;
+  right: -2px;
+  width: 10px;
+  height: 10px;
   background: #4ef58a;
   border-radius: 50%;
-  box-shadow: 0 0 8px #4ef58a;
   display: none;
+  box-shadow: 0 0 10px #4ef58a;
 }
 
-/* ============ PREMIUM SLIM MARQUEE ============ */
+/* ==========================================
+   PREMIUM MARQUEE (Slim)
+========================================== */
 
 .marquee {
   width: 100%;
@@ -150,7 +159,6 @@ button {
   align-items: center;
 }
 
-/* Slim modern pills */
 .marquee-pill {
   font-family: 'Poppins', sans-serif;
   font-size: 13px;
@@ -159,7 +167,6 @@ button {
   border-radius: 30px;
   white-space: nowrap;
   color: #fff;
-
   background: linear-gradient(135deg, #3a2f7d, #1f2d69);
   border: 1px solid rgba(255,255,255,0.15);
   box-shadow: 0 0 8px rgba(78,245,138,0.3);
@@ -170,33 +177,37 @@ button {
   to   { transform: translateX(-100%); }
 }
 
-/* ============ FOOTER ============ */
+/* ==========================================
+   FOOTER
+========================================== */
 
 .footer {
-  padding: 40px 0;
   margin-top: 80px;
+  padding: 40px 0;
   background: #0f141a;
   border-top: 1px solid rgba(78,245,138,0.18);
 }
 
 .footer-inner {
-  text-align: center;
   max-width: 1250px;
+  text-align: center;
   margin: auto;
 }
 
 .footer-brand {
   font-size: 26px;
   font-weight: 900;
-  margin-bottom: 12px;
 }
 
 .footer-text {
   color: #aeb6c1;
   font-size: 14px;
+  margin-top: 6px;
 }
 
-/* ============ CART DRAWER FIX ============ */
+/* ==========================================
+   CART DRAWER — FULLY MODERNIZED
+========================================== */
 
 .cart-drawer {
   width: 360px;
@@ -230,29 +241,90 @@ button {
   cursor: pointer;
 }
 
-/* Drawer totals */
-.cart-total {
-  font-size: 20px;
-  font-weight: 900;
-  margin: 20px 0 12px;
-  color: #4ef58a;
+/* Cart item layout */
+.cart-item {
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
+.cart-item-title {
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.cart-item-price {
+  color: #4ef58a;
+  font-weight: 900;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+/* Quantity row */
+.cart-qty-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.qty-btn {
+  width: 32px;
+  height: 32px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 8px;
+  color: white;
+  font-size: 18px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.qty-btn:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+.qty-remove {
+  background: #ff3b3b;
+  border-color: #ff3b3b;
+}
+
+.qty-remove:hover {
+  background: #ff5050;
+}
+
+.qty-display {
+  min-width: 26px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* Cart total */
+.cart-total-line {
+  font-size: 20px;
+  font-weight: 900;
+  color: #4ef58a;
+  margin: 18px 0;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,0.2);
+}
+
+/* Checkout button */
 .checkout-btn {
   width: 100%;
-  padding: 14px;
-  border-radius: 12px;
+  padding: 16px;
   background: #4ef58a;
   color: #000;
-  font-weight: 800;
+  border-radius: 14px;
+  font-weight: 900;
+  font-size: 17px;
   cursor: pointer;
 }
 
 .checkout-btn:hover {
-  opacity: 0.9;
+  opacity: 0.92;
 }
 
-/* Utility */
+/* Utilities */
 .hidden {
   display: none !important;
 }
