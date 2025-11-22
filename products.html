@@ -51,31 +51,9 @@
   <!-- PRODUCT GRID -->
   <div id="productGrid" class="product-grid"></div>
 
-  <!-- ⭐ NEW CART DRAWER (updated) -->
-  <div id="cartDrawer" class="cart-drawer">
-
-    <div class="cart-header">
-      <h2 class="cart-title">Cart</h2>
-      <span class="cart-clear" onclick="Cart.items=[];Cart.save();">Clear Cart</span>
-    </div>
-
-    <div id="drawerContent"></div>
-
-    <div class="cart-footer">
-      <div class="cart-total-line">
-        <span>Total</span>
-        <span id="drawerTotal">£0.00</span>
-      </div>
-
-      <button class="checkout-btn" onclick="location.href='checkout.html'">
-        Buy
-      </button>
-    </div>
-
-  </div>
-
+  <!-- CART DRAWER (automatic from navbar) -->
+  <div id="cartDrawer" class="cart-drawer"></div>
   <div id="cartOverlay" class="cart-overlay"></div>
-  <!-- ⭐ END CART DRAWER -->
 
   <!-- FOOTER -->
   <div id="footer"></div>
@@ -88,6 +66,128 @@
   <script src="assets/js/cart.js"></script>
   <script src="assets/js/drawer.js"></script>
   <script src="assets/js/auth.js"></script>
+
+  <!-- ⭐ UPDATED PRODUCTS SCRIPT -->
+  <script>
+
+    /* =========================================
+       PRODUCT LIST (TEMP DEMO)
+    ========================================== */
+    const products = [
+      {
+        name: "Mystic Blade",
+        rarity: "God",
+        price: 12.99,
+        oldPrice: 19.99,
+        image: "https://via.placeholder.com/300"
+      },
+      {
+        name: "Shadow Cloak",
+        rarity: "Secret",
+        price: 8.49,
+        oldPrice: 12,
+        image: "https://via.placeholder.com/300"
+      },
+      {
+        name: "OG Emblem",
+        rarity: "OG",
+        price: 4.2,
+        oldPrice: null,
+        image: "https://via.placeholder.com/300"
+      }
+    ];
+
+    /* =========================================
+       DISCOUNTS
+    ========================================== */
+    function getDiscountPercent(price, oldPrice) {
+      if (!oldPrice || oldPrice <= price) return 0;
+      return Math.round(((oldPrice - price) / oldPrice) * 100);
+    }
+
+    function getDiscountClass(percent) {
+      if (percent > 90) return "discount-red";
+      if (percent > 50) return "discount-orange";
+      if (percent > 20) return "discount-yellow";
+      return "discount-green";
+    }
+
+    /* =========================================
+       RENDER PRODUCTS
+    ========================================== */
+    function renderProducts(list) {
+      const grid = document.getElementById("productGrid");
+      grid.innerHTML = "";
+
+      list.forEach(p => {
+        const discountPercent = getDiscountPercent(p.price, p.oldPrice);
+        const rarityClass = `tag-${p.rarity.toLowerCase()}`;
+
+        const discountHTML = discountPercent
+          ? `<span class="discount-tag ${getDiscountClass(discountPercent)}">-${discountPercent}%</span>`
+          : "";
+
+        grid.innerHTML += `
+          <div class="card">
+            <div class="card-badges">
+              <span class="tag ${rarityClass}">${p.rarity}</span>
+              ${discountHTML}
+            </div>
+
+            <img src="${p.image}" class="product-img">
+
+            <h3>${p.name}</h3>
+
+            <div class="price-box">
+              <span class="price">£${p.price}</span>
+              ${p.oldPrice ? `<span class="old-price">£${p.oldPrice}</span>` : ""}
+            </div>
+
+            <button class="buy-btn" onclick="addToCart('${p.name}', this)">
+              Add to Cart
+            </button>
+
+          </div>
+        `;
+      });
+    }
+
+    /* =========================================
+       SEARCH
+    ========================================== */
+    function setupSearch() {
+      const input = document.getElementById("searchInput");
+      input.addEventListener("input", () => {
+        const value = input.value.toLowerCase();
+        const filtered = products.filter(p => p.name.toLowerCase().includes(value));
+        renderProducts(filtered);
+      });
+    }
+
+    /* =========================================
+       ADD TO CART (ANIMATED)
+    ========================================== */
+    function addToCart(name, btn) {
+      const product = products.find(p => p.name === name);
+      if (!product) return;
+
+      const card = btn.closest(".card");
+      const img = card.querySelector(".product-img");
+
+      // Fly animation + add to cart
+      Cart.addItem(product, img);
+    }
+
+    /* =========================================
+       INIT
+    ========================================== */
+    document.addEventListener("DOMContentLoaded", () => {
+      renderProducts(products);
+      setupSearch();
+      Cart.init();
+    });
+
+  </script>
 
 </body>
 </html>
