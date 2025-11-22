@@ -172,6 +172,7 @@ function goToCheckout() {
 ============================ */
 function renderProducts(list) {
   const grid = document.getElementById("productGrid");
+  if (!grid) return;
   grid.innerHTML = "";
 
   list.forEach(p => {
@@ -222,3 +223,105 @@ document.getElementById("searchInput")?.addEventListener("input", (e) => {
 renderProducts(products);
 updateCartDrawer();
 updateCartDot();
+
+/* ============================================================
+   =============== AUTHENTICATION SYSTEM =======================
+=============================================================== */
+
+/* ========= Modal open/close ========= */
+function openModal(id) {
+  document.getElementById(id)?.classList.remove("hidden");
+}
+function closeModal(id) {
+  document.getElementById(id)?.classList.add("hidden");
+}
+
+document.getElementById("openLogin")?.addEventListener("click", () =>
+  openModal("loginModal")
+);
+document.getElementById("openSignup")?.addEventListener("click", () =>
+  openModal("signupModal")
+);
+
+/* ========= SIGNUP ========= */
+document.getElementById("signupSubmit")?.addEventListener("click", async () => {
+  const username = signupUsername.value;
+  const email = signupEmail.value;
+  const password = signupPassword.value;
+
+  const res = await fetch("https://website-5eml.onrender.com/auth/register", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ username, email, password })
+  });
+
+  const data = await res.json();
+
+  if (!data.success) {
+    signupError.innerText = data.error;
+    return;
+  }
+
+  localStorage.setItem("authToken", data.token);
+  closeModal("signupModal");
+  location.reload();
+});
+
+/* ========= LOGIN ========= */
+document.getElementById("loginSubmit")?.addEventListener("click", async () => {
+  const email = loginEmail.value;
+  const password = loginPassword.value;
+
+  const res = await fetch("https://website-5eml.onrender.com/auth/login", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ email, password })
+  });
+
+  const data = await res.json();
+
+  if (!data.success) {
+    loginError.innerText = data.error;
+    return;
+  }
+
+  localStorage.setItem("authToken", data.token);
+  closeModal("loginModal");
+  location.reload();
+});
+
+/* ========= UPDATE NAVBAR WHEN LOGGED IN ========= */
+async function refreshAuthUI() {
+  const token = localStorage.getItem("authToken");
+  if (!token) return;
+
+  const res = await fetch("https://website-5eml.onrender.com/auth/me", {
+    headers: { Authorization: "Bearer " + token }
+  });
+
+  if (!res.ok) return;
+
+  const user = await res.json();
+
+  document.getElementById("openLogin").style.display = "none";
+  document.getElementById("openSignup").style.display = "none";
+
+  const navRight = document.querySelector(".nav-right");
+
+  const accountBtn = document.createElement("button");
+  accountBtn.className = "auth-btn";
+  accountBtn.innerText = user.username || "Account";
+
+  const logoutBtn = document.createElement("button");
+  logoutBtn.className = "auth-btn";
+  logoutBtn.innerText = "Logout";
+  logoutBtn.onclick = () => {
+    localStorage.removeItem("authToken");
+    location.reload();
+  };
+
+  navRight.prepend(logoutBtn);
+  navRight.prepend(accountBtn);
+}
+
+refreshAuthUI();
