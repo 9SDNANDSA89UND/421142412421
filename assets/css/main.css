@@ -1,10 +1,6 @@
-/* Updated main.css with premium marquee, button fixes, glow, and spacing fixes */
+/* Fully fixed main.css for slim marquee + restored UI */
 
-* { 
-  margin: 0; 
-  padding: 0; 
-  box-sizing: border-box; 
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
   background: #0b0f14;
@@ -13,10 +9,7 @@ body {
   overflow-x: hidden;
 }
 
-a { 
-  text-decoration: none; 
-  color: inherit; 
-}
+a { text-decoration: none; color: inherit; }
 
 .container {
   max-width: 1250px;
@@ -32,7 +25,7 @@ a {
   padding: 12px 0;
   position: sticky;
   top: 0;
-  z-index: 200;
+  z-index: 999;
 }
 
 .nav-inner {
@@ -55,12 +48,31 @@ a {
   gap: 12px;
 }
 
+/* BUTTONS FIXED */
+button {
+  border: none;
+  outline: none;
+}
+
+.auth-btn {
+  background: #4ef58a;
+  color: #0b0f14;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.auth-btn:hover {
+  opacity: 0.9;
+}
+
+/* CART BUTTON */
 .icon-btn {
   width: 44px;
   height: 44px;
   background: rgba(255,255,255,0.06);
   border-radius: 10px;
-  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -68,73 +80,60 @@ a {
 }
 
 .icon-btn svg {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   stroke: #ffffff;
-}
-
-.logo { font-weight: 900; font-size: 24px; }
-.logo-white { color: white; }
-.logo-green { color: #4ef58a; }
-
-.glow-green {
-  text-shadow: 0 0 10px #4ef58a, 0 0 18px #4ef58a, 0 0 25px #4ef58a;
-}
-
-.auth-btn, .buy-btn, .checkout-btn {
-  cursor: pointer;
-  position: relative;
-  z-index: 20;
 }
 
 .cart-btn { position: relative; }
 
 .cart-dot {
   position: absolute;
-  top: -2px;
-  right: -2px;
-  width: 10px;
-  height: 10px;
+  top: 0;
+  right: 0;
+  width: 9px;
+  height: 9px;
   background: #4ef58a;
   border-radius: 50%;
   display: none;
   box-shadow: 0 0 8px #4ef58a;
 }
 
-/* PREMIUM MARQUEE */
+/* PREMIUM SLIM MARQUEE */
 .marquee {
   width: 100%;
   overflow: hidden;
-  padding: 10px 0;
+  padding: 6px 0;               /* <-- SLIM HEIGHT */
   background: rgba(78,245,138,0.05);
   border-bottom: 1px solid rgba(78,245,138,0.2);
-  position: relative;
-  z-index: 5;
 }
 
 .marquee-inner {
   display: inline-flex;
-  gap: 40px;
+  gap: 30px;
   padding-left: 100%;
   animation: marqueeScroll 12s linear infinite;
+  align-items: center;          /* keeps pills vertically centered */
+}
+
+/* Slim premium pills */
+.marquee-pill {
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 5px 14px;            /* <-- smaller height */
+  border-radius: 30px;
+  white-space: nowrap;
+  color: #fff;
+
+  background: linear-gradient(135deg, #3a2f7d, #1f2d69);
+  border: 1px solid rgba(255,255,255,0.15);
+  box-shadow: 0 0 8px rgba(78,245,138,0.3);
 }
 
 @keyframes marqueeScroll {
   0% { transform: translateX(0); }
   100% { transform: translateX(-100%); }
-}
-
-.marquee-pill {
-  font-family: 'Poppins', sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  padding: 8px 18px;
-  border-radius: 14px;
-  white-space: nowrap;
-  color: #fff;
-  background: linear-gradient(135deg, #3a2f7d, #1f2d69);
-  box-shadow: 0 0 10px rgba(78,245,138,0.35);
-  border: 1px solid rgba(255,255,255,0.1);
 }
 
 /* FOOTER */
@@ -165,7 +164,7 @@ a {
   font-size: 14px;
 }
 
-/* CART DRAWER */
+/* CART DRAWER FIX */
 .cart-drawer {
   width: 360px;
   position: fixed;
@@ -175,7 +174,7 @@ a {
   background: #0f141a;
   border-left: 1px solid rgba(78,245,138,0.18);
   transition: 0.3s;
-  padding: 20px;
+  padding: 25px;
   z-index: 300;
 }
 
@@ -192,38 +191,30 @@ a {
 
 .close-drawer {
   background: transparent;
-  border: none;
   color: white;
-  font-size: 22px;
+  font-size: 26px;
   cursor: pointer;
+  margin-bottom: 15px;
 }
 
-/* CHECKOUT */
-.premium-checkout {
-  max-width: 520px;
-  margin: 60px auto;
-  background: rgba(15,20,28,0.5);
-  padding: 26px;
-  border-radius: 16px;
-  border: 1px solid rgba(78,245,138,0.2);
-}
-
-.checkout-title {
-  font-size: 28px;
+/* Checkout & total formatting */
+.cart-total {
+  font-size: 20px;
   font-weight: 900;
-  margin-bottom: 20px;
+  color: #4ef58a;
+  margin: 20px 0 12px 0;
 }
 
-.secure-btn {
+.checkout-btn {
   width: 100%;
   padding: 14px;
   border-radius: 12px;
-  border: none;
-  background: linear-gradient(90deg, #4ef58a, #2ccf62);
-  font-size: 16px;
-  font-weight: 900;
-  margin-top: 20px;
+  background: #4ef58a;
+  color: #000;
+  font-weight: 800;
   cursor: pointer;
 }
+.checkout-btn:hover { opacity: 0.9; }
 
+/* Hidden utility */
 .hidden { display: none !important; }
