@@ -34,7 +34,7 @@
   cursor: pointer;
 }
 
-/* HOVER LIFT */
+/* LIFT EFFECT */
 .card:hover {
   transform: scale(1.05);
   box-shadow:
@@ -43,7 +43,7 @@
 }
 
 /* ==========================================
-   GREEN GLOW BORDER (SMALL)
+   GREEN GLOW BORDER
 ========================================== */
 .card::before {
   content: "";
@@ -64,7 +64,7 @@
 }
 
 /* ==========================================
-   SHINE SWEEP (SMALL)
+   SHINE SWEEP
 ========================================== */
 .card::after {
   content: "";
@@ -121,16 +121,32 @@
 }
 
 /* ==========================================
-   BADGES — SMALL
+   BADGES (RARITY + DISCOUNT)
 ========================================== */
 .card-badges {
-  display: flex;
-  justify-content: space-between;
+  position: relative;
+  width: 100%;
   margin-bottom: 10px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Center rarity tag */
+.tag {
+  margin: 0 auto;
+}
+
+/* Anchor discount on right */
+.card-badges .discount-tag {
+  position: absolute;
+  right: 10px;
+  top: 0;
 }
 
 /* ==========================================
-   RARITY TAGS — MINI PULSE
+   RARITY TAGS — PULSE
 ========================================== */
 @keyframes rarityPulseSmall {
   0% { box-shadow: 0 0 6px currentColor; }
@@ -147,21 +163,18 @@
   backdrop-filter: blur(3px);
 }
 
-/* God */
 .tag-god {
   background: rgba(255,0,200,0.18);
   color: #ff00ea;
   border: 1px solid rgba(255,0,200,0.45);
 }
 
-/* Secret */
 .tag-secret {
   background: rgba(0,200,255,0.18);
   color: #00c4ff;
   border: 1px solid rgba(0,200,255,0.45);
 }
 
-/* OG */
 .tag-og {
   background: rgba(255,170,0,0.18);
   color: #ffaa2b;
@@ -169,7 +182,7 @@
 }
 
 /* ==========================================
-   DISCOUNT TAG — HIGH VISIBILITY + OPTION D
+   DISCOUNT TAG — HIGH VISIBILITY + TILT
 ========================================== */
 .discount-tag {
   padding: 6px 12px;
@@ -193,7 +206,7 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* ⭐ Option D: Tilt / Pop animation on hover */
+/* Tilt animation (Option D) */
 .discount-tag:hover {
   transform: scale(1.18) rotate(3deg);
   box-shadow:
@@ -217,7 +230,6 @@
   color: #4ef58a;
 }
 
-/* Bigger old price */
 .old-price {
   font-size: 13px;
   font-weight: 700;
