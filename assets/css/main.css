@@ -76,7 +76,7 @@ a {
 }
 
 /* ==========================================
-   NAV BUTTONS (NEW PREMIUM STYLE)
+   NAV BUTTONS
 ========================================== */
 .nav-rect-btn {
   display: flex;
@@ -214,7 +214,7 @@ a {
 }
 
 /* ==========================================
-   CART DRAWER — MODERN PREMIUM STYLE
+   OLD CART DRAWER (still here but overridden later)
 ========================================== */
 .cart-drawer {
   width: 360px;
@@ -244,107 +244,173 @@ a {
   z-index: 9998;
 }
 
-.close-drawer {
-  background: transparent;
-  border: none;
+/* ==========================================
+   NEW CART DRAWER (UPGRADED STYLE)
+========================================== */
+
+.cart-drawer {
+  width: 390px;
+  position: fixed;
+  top: 0;
+  right: -390px;
+  height: 100vh;
+
+  background: #0d1117;
+  padding: 28px;
+
+  border-left: 1px solid rgba(78,245,138,0.25);
+  box-shadow: -4px 0 22px rgba(0,0,0,0.4);
+
+  transition: 0.28s ease;
+  z-index: 9999;
+}
+
+.cart-drawer.open {
+  right: 0;
+}
+
+/* Header */
+.cart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.cart-title {
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.cart-clear {
+  font-size: 14px;
+  color: #ff6b6b;
   cursor: pointer;
-  margin-bottom: 20px;
+  opacity: 0.8;
 }
 
-.close-drawer svg {
-  width: 28px;
-  height: 28px;
-  stroke: white;
+.cart-clear:hover {
+  opacity: 1;
 }
 
-/* CART ITEMS */
+/* Cart Items */
 .cart-item {
-  padding: 20px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  background: #0f141a;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+
+  padding: 14px;
+  margin-bottom: 14px;
+
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  transition: 0.25s ease;
 }
 
-.cart-item-title {
-  font-size: 18px;
+.cart-item:hover {
+  border-color: rgba(78,245,138,0.35);
+  box-shadow: 0 0 12px rgba(78,245,138,0.15);
+}
+
+.cart-img {
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.cart-info {
+  flex: 1;
+}
+
+.cart-name {
+  font-size: 16px;
   font-weight: 800;
+  margin-bottom: 4px;
 }
 
-.cart-item-price {
+.cart-price {
   color: #4ef58a;
   font-weight: 900;
-  margin-bottom: 12px;
+  font-size: 15px;
 }
 
-/* Quantity Controls */
+/* Quantity */
+.cart-qty-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .cart-qty-row {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
 }
 
 .qty-btn {
-  width: 38px;
-  height: 38px;
+  width: 32px;
+  height: 32px;
 
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.15);
-
+  background: rgba(255,255,255,0.06);
   border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.08);
+
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  font-size: 18px;
 
   cursor: pointer;
   transition: 0.15s ease;
 }
 
-.qty-btn svg { stroke: white; }
-
 .qty-btn:hover {
-  background: rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.14);
 }
 
-.qty-remove {
-  background: rgba(255, 60, 60, 0.25) !important;
-  border-color: rgba(255, 60, 60, 0.4) !important;
+.cart-remove {
+  background: rgba(255,60,60,0.25) !important;
+  border-color: rgba(255,60,60,0.4) !important;
 }
 
-.qty-remove:hover {
-  background: rgba(255, 60, 60, 0.35) !important;
+.cart-remove:hover {
+  background: rgba(255,60,60,0.35) !important;
 }
 
-.qty-display {
-  min-width: 28px;
-  text-align: center;
-  font-size: 18px;
-  font-weight: 700;
+/* Footer */
+.cart-footer {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255,255,255,0.08);
 }
 
-/* Total + Checkout */
 .cart-total-line {
-  font-size: 20px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 18px;
   font-weight: 900;
-  color: #4ef58a;
-  margin: 25px 0 18px;
-  padding-top: 12px;
-  border-top: 1px solid rgba(255,255,255,0.15);
+  margin-bottom: 12px;
 }
 
 .checkout-btn {
   width: 100%;
   padding: 16px;
-  background: #4ef58a;
-  color: black;
+  background: #ec155a;
+  border: none;
 
-  border-radius: 14px;
+  border-radius: 12px;
+  color: white;
   font-size: 17px;
   font-weight: 900;
 
   cursor: pointer;
-  transition: 0.18s ease;
+  transition: 0.2s ease;
 }
 
 .checkout-btn:hover {
-  opacity: 0.92;
+  opacity: 0.85;
 }
 
 /* Utility */
