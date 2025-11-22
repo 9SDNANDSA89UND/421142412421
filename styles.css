@@ -62,7 +62,7 @@ body {
   background: none;
   border: none;
   cursor: pointer;
-  position: relative; /* Needed for cart dot */
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -91,7 +91,7 @@ body {
   color: #4ef58a;
 }
 
-/* CART DOT (fixed) */
+/* CART DOT */
 .cart-dot {
   position: absolute;
   top: -2px;
@@ -202,6 +202,7 @@ body {
   border-radius: 20px;
   border: 1px solid rgba(78,245,138,0.15);
   padding: 18px;
+  padding-top: 42px;
   height: 380px;
   display: flex;
   flex-direction: column;
@@ -223,6 +224,8 @@ body {
   object-fit: cover;
   background: #0f141a;
   margin-bottom: 12px;
+  position: relative;
+  z-index: 1;
 }
 
 /* BADGES */
@@ -232,6 +235,7 @@ body {
   left: 12px;
   display: flex;
   gap: 6px;
+  z-index: 10;
 }
 
 .tag {
@@ -266,6 +270,8 @@ body {
   font-weight: 900;
   text-align: center;
   margin-top: 2px;
+  position: relative;
+  z-index: 5; /* FIX: stops title appearing behind badges */
 }
 
 .card p {
@@ -350,7 +356,7 @@ body {
   cursor: pointer;
 }
 
-/* CART BUTTONS (fixed) */
+/* CART BUTTONS */
 .qty-btn {
   width: 32px;
   height: 32px;
@@ -485,7 +491,7 @@ body {
   color: #4ef58a;
 }
 
-/* CHECKOUT BUTTON (updated) */
+/* CHECKOUT BUTTON */
 .secure-btn,
 .checkout-btn {
   width: 100%;
