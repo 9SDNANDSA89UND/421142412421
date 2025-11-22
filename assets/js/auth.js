@@ -1,13 +1,17 @@
 /* =========================================
    AUTH HANDLERS (FRONTEND ONLY)
-   Backend handles validation + tokens.
 ========================================= */
 
-document.addEventListener("DOMContentLoaded", () => {
+function initAuth() {
+  const loginBtn = document.getElementById("openLogin");
+  const signupBtn = document.getElementById("openSignup");
 
-  /* -------------------------
-     OPEN / CLOSE MODALS
-  ------------------------- */
+  // Navbar not loaded yet → try again
+  if (!loginBtn || !signupBtn) {
+    return setTimeout(initAuth, 50);
+  }
+
+  // OPEN / CLOSE MODALS
   window.openModal = id => {
     document.getElementById(id)?.classList.remove("hidden");
   };
@@ -16,8 +20,8 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById(id)?.classList.add("hidden");
   };
 
-  document.getElementById("openLogin")?.addEventListener("click", () => openModal("loginModal"));
-  document.getElementById("openSignup")?.addEventListener("click", () => openModal("signupModal"));
+  loginBtn.addEventListener("click", () => openModal("loginModal"));
+  signupBtn.addEventListener("click", () => openModal("signupModal"));
 
   /* -------------------------
      LOGIN SUBMIT
@@ -28,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const email = document.getElementById("loginEmail").value;
       const password = document.getElementById("loginPassword").value;
 
-      const res = await fetch("https://yourbackend.com/auth/login", {
+      const res = await fetch("https://website-5eml.onrender.com/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password })
@@ -57,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const email = document.getElementById("signupEmail").value;
       const password = document.getElementById("signupPassword").value;
 
-      const res = await fetch("https://yourbackend.com/auth/register", {
+      const res = await fetch("https://website-5eml.onrender.com/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, email, password })
@@ -105,5 +109,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-});
+  console.log("Auth initialized.");
+}
 
+// Start once DOM loads
+document.addEventListener("DOMContentLoaded", initAuth);
