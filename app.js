@@ -1,3 +1,5 @@
+document.addEventListener("DOMContentLoaded", () => {
+
 /* ============================
    PRODUCT LIST
 ============================ */
@@ -74,7 +76,7 @@ function saveCart() {
   updateCartDot();
 }
 
-function addToCart(name) {
+window.addToCart = function(name) {
   const product = products.find(p => p.name === name);
   if (!product) return;
 
@@ -100,7 +102,7 @@ function updateCartDot() {
   dot.style.display = cart.length > 0 ? "block" : "none";
 }
 
-function changeQty(name, amount) {
+window.changeQty = function(name, amount) {
   const item = cart.find(i => i.name === name);
   if (!item) return;
 
@@ -112,7 +114,7 @@ function changeQty(name, amount) {
   saveCart();
 }
 
-function removeItem(name) {
+window.removeItem = function(name) {
   cart = cart.filter(i => i.name !== name);
   saveCart();
 }
@@ -122,6 +124,7 @@ function removeItem(name) {
 ============================ */
 function updateCartDrawer() {
   const drawer = document.getElementById("drawerContent");
+  if (!drawer) return;
 
   if (cart.length === 0) {
     drawer.innerHTML = `<p style="color:#9ca4b1;">Your cart is empty.</p>`;
@@ -163,7 +166,7 @@ function updateCartDrawer() {
   drawer.innerHTML = html;
 }
 
-function goToCheckout() {
+window.goToCheckout = function() {
   window.location.href = "checkout.html";
 }
 
@@ -173,6 +176,7 @@ function goToCheckout() {
 function renderProducts(list) {
   const grid = document.getElementById("productGrid");
   if (!grid) return;
+
   grid.innerHTML = "";
 
   list.forEach(p => {
@@ -218,21 +222,12 @@ document.getElementById("searchInput")?.addEventListener("input", (e) => {
 });
 
 /* ============================
-   INITIALIZE
+   AUTH MODALS
 ============================ */
-renderProducts(products);
-updateCartDrawer();
-updateCartDot();
-
-/* ============================================================
-   =============== AUTHENTICATION SYSTEM =======================
-=============================================================== */
-
-/* ========= MODAL OPEN/CLOSE ========= */
-function openModal(id) {
+window.openModal = function(id) {
   document.getElementById(id)?.classList.remove("hidden");
 }
-function closeModal(id) {
+window.closeModal = function(id) {
   document.getElementById(id)?.classList.add("hidden");
 }
 
@@ -244,7 +239,7 @@ document.getElementById("openSignup")?.addEventListener("click", () =>
 );
 
 /* ============================
-   VALIDATION HELPERS
+   VALIDATION + SIGNUP + LOGIN
 ============================ */
 
 function validateEmail(email) {
@@ -268,10 +263,6 @@ async function checkUsernameExists(username) {
   return data.exists;
 }
 
-/* ============================
-   EXTENDED SIGNUP VALIDATION
-============================ */
-
 let canSubmitSignup = {
   username: false,
   email: false,
@@ -291,9 +282,7 @@ function updateSignupButton() {
   );
 }
 
-/* ============================
-   CAPTCHA SYSTEM
-============================ */
+/* CAPTCHA */
 function generateCaptcha() {
   const text = Math.random().toString(36).substring(2, 8).toUpperCase();
   document.getElementById("captchaText").innerText = text;
@@ -322,9 +311,7 @@ document.getElementById("captchaInput")?.addEventListener("input", (e) => {
   updateSignupButton();
 });
 
-/* ============================
-   USERNAME SUGGESTIONS
-============================ */
+/* USERNAME SUGGESTIONS */
 function generateSuggestions(base) {
   return [
     base + Math.floor(Math.random() * 90 + 10),
@@ -359,9 +346,6 @@ async function showSuggestions(base) {
   box.classList.remove("hidden");
 }
 
-/* ============================
-   USERNAME VALIDATION
-============================ */
 document.getElementById("signupUsername")?.addEventListener("input", async (e) => {
   const username = e.target.value.trim();
   const msg = document.getElementById("usernameCheck");
@@ -393,9 +377,7 @@ document.getElementById("signupUsername")?.addEventListener("input", async (e) =
   updateSignupButton();
 });
 
-/* ============================
-   EMAIL VALIDATION
-============================ */
+/* EMAIL CHECK */
 document.getElementById("signupEmail")?.addEventListener("input", (e) => {
   const email = e.target.value.trim();
   const msg = document.getElementById("emailCheck");
@@ -413,9 +395,7 @@ document.getElementById("signupEmail")?.addEventListener("input", (e) => {
   updateSignupButton();
 });
 
-/* ============================
-   PASSWORD STRENGTH
-============================ */
+/* PASSWORD STRENGTH */
 document.getElementById("signupPassword")?.addEventListener("input", (e) => {
   const pw = e.target.value;
   const msg = document.getElementById("passwordStrength");
@@ -431,9 +411,7 @@ document.getElementById("signupPassword")?.addEventListener("input", (e) => {
   updateSignupButton();
 });
 
-/* ============================
-   PASSWORD MATCH
-============================ */
+/* PASSWORD MATCH */
 document.getElementById("signupPasswordConfirm")?.addEventListener("input", (e) => {
   const pw = signupPassword.value;
   const confirm = e.target.value;
@@ -452,9 +430,7 @@ document.getElementById("signupPasswordConfirm")?.addEventListener("input", (e) 
   updateSignupButton();
 });
 
-/* ============================
-   SIGNUP SUBMIT
-============================ */
+/* SIGNUP */
 document.getElementById("signupSubmit")?.addEventListener("click", async () => {
   const username = signupUsername.value.trim();
   const email = signupEmail.value.trim();
@@ -478,9 +454,7 @@ document.getElementById("signupSubmit")?.addEventListener("click", async () => {
   location.reload();
 });
 
-/* ============================
-   LOGIN SUBMIT
-============================ */
+/* LOGIN */
 document.getElementById("loginSubmit")?.addEventListener("click", async () => {
   const email = loginEmail.value;
   const password = loginPassword.value;
@@ -504,7 +478,7 @@ document.getElementById("loginSubmit")?.addEventListener("click", async () => {
 });
 
 /* ============================
-   UPDATE NAVBAR WHEN LOGGED IN
+   UPDATE NAV WHEN LOGGED IN
 ============================ */
 async function refreshAuthUI() {
   const token = localStorage.getItem("authToken");
@@ -539,4 +513,16 @@ async function refreshAuthUI() {
   navRight.prepend(accountBtn);
 }
 
-refreshAuthUI();
+/* ============================
+   INITIALIZE EVERYTHING
+============================ */
+function init() {
+  renderProducts(products);
+  updateCartDrawer();
+  updateCartDot();
+  refreshAuthUI();
+}
+
+init();
+
+}); // DOMContentLoaded END
