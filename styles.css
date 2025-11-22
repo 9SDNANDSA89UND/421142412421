@@ -242,7 +242,7 @@ body {
   transition: 0.2s ease;
 }
 
-/* GOD TAG (yellow glow) */
+/* GOD TAG */
 .tag-god {
   background: #f6d66a;
   color: black;
@@ -250,7 +250,7 @@ body {
               0 0 16px rgba(246,214,106,0.35);
 }
 
-/* SECRET TAG (purple glow) */
+/* SECRET TAG */
 .tag-secret {
   background: #b56cff;
   color: black;
@@ -258,7 +258,7 @@ body {
               0 0 16px rgba(181,108,255,0.35);
 }
 
-/* OG TAG (cyan glow) */
+/* OG TAG */
 .tag-og {
   background: #4ef5d8;
   color: black;
@@ -266,7 +266,9 @@ body {
               0 0 16px rgba(78,245,216,0.35);
 }
 
-/* DISCOUNT BADGES */
+/* ============================
+   DISCOUNT TAGS + GLOW
+============================ */
 .discount-tag {
   padding: 4px 10px;
   border-radius: 8px;
@@ -275,7 +277,44 @@ body {
   color: black;
 }
 
-/* TITLE + DESCRIPTION */
+/* GREEN DISCOUNT */
+.discount-green {
+  background: #8dff71;
+  box-shadow: 0 0 8px rgba(141,255,113,0.65),
+              0 0 16px rgba(141,255,113,0.35);
+}
+
+/* YELLOW DISCOUNT */
+.discount-yellow {
+  background: #ffe66d;
+  box-shadow: 0 0 8px rgba(255,230,109,0.65),
+              0 0 16px rgba(255,230,109,0.35);
+}
+
+/* ORANGE DISCOUNT */
+.discount-orange {
+  background: #ffb856;
+  box-shadow: 0 0 8px rgba(255,184,86,0.65),
+              0 0 16px rgba(255,184,86,0.35);
+}
+
+/* RED DISCOUNT */
+.discount-red {
+  background: #ff5e5e;
+  box-shadow: 0 0 8px rgba(255,94,94,0.65),
+              0 0 16px rgba(255,94,94,0.35);
+}
+
+/* Optional hover boost */
+.discount-tag:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 12px currentColor,
+              0 0 24px currentColor;
+}
+
+/* ============================
+   TITLE + DESCRIPTION
+============================ */
 .card h3 {
   font-size: 17px;
   font-weight: 900;
@@ -333,7 +372,7 @@ body {
 }
 
 /* ============================
-   CART DRAWER
+   CART DRAWER + BUTTONS
 ============================ */
 .cart-drawer {
   position: fixed;
@@ -367,7 +406,6 @@ body {
   cursor: pointer;
 }
 
-/* CART BUTTONS */
 .qty-btn {
   width: 32px;
   height: 32px;
@@ -488,7 +526,6 @@ body {
   color: #4ef58a;
 }
 
-/* CHECKOUT BUTTON */
 .secure-btn,
 .checkout-btn {
   width: 100%;
