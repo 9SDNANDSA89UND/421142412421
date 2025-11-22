@@ -1,1 +1,71 @@
+/* =============================
+   REVIEW SECTION
+============================= */
+
+.reviews-section {
+  max-width: 1250px;
+  margin: 60px auto;
+  padding: 0 20px;
+}
+
+.reviews-title {
+  font-size: 26px;
+  font-weight: 900;
+  margin-bottom: 26px;
+  text-align: center;
+}
+
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+/* =============================
+   REVIEW CARD
+============================= */
+
+.review-card {
+  background: #0f141a;
+  border: 1px solid rgba(78,245,138,0.18);
+  padding: 20px;
+  border-radius: 16px;
+  transition: 0.25s;
+}
+
+.review-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 18px rgba(78,245,138,0.18);
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.review-pfp {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.review-name {
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.review-rating {
+  font-size: 15px;
+  font-weight: bold;
+  color: #4ef58a;
+}
+
+.review-body {
+  color: #cdd2d9;
+  font-size: 14px;
+  line-height: 1.4;
+}
 
