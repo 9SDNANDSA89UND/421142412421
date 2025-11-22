@@ -74,7 +74,6 @@ function saveCart() {
   updateCartDot();
 }
 
-/* ADD TO CART */
 function addToCart(name) {
   const product = products.find(p => p.name === name);
   if (!product) return;
@@ -95,14 +94,12 @@ function addToCart(name) {
   showToast(`${product.name} added to cart`);
 }
 
-/* CART DOT */
 function updateCartDot() {
   const dot = document.getElementById("cartDot");
   if (!dot) return;
   dot.style.display = cart.length > 0 ? "block" : "none";
 }
 
-/* CHANGE QTY */
 function changeQty(name, amount) {
   const item = cart.find(i => i.name === name);
   if (!item) return;
@@ -115,7 +112,6 @@ function changeQty(name, amount) {
   saveCart();
 }
 
-/* REMOVE ITEM */
 function removeItem(name) {
   cart = cart.filter(i => i.name !== name);
   saveCart();
@@ -198,14 +194,13 @@ function renderProducts(list) {
         <img src="${p.image}" alt="${p.name}">
 
         <h3>${p.name}</h3>
-        <p>Instant delivery • Trusted seller</p>
 
         <div class="price-box">
           <span class="price">£${p.price}</span>
           ${p.oldPrice ? `<span class="old-price">£${p.oldPrice}</span>` : ""}
         </div>
 
-        <button class="buy-btn" onclick="addToCart('${p.name}')">Buy</button>
+        <button class="buy-btn" onclick="addToCart('${p.name}')">Add to Cart</button>
 
       </div>
     `;
