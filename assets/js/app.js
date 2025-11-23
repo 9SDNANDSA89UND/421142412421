@@ -1,82 +1,52 @@
 /* =====================================================
-   FRONTEND CURRENCY — FINAL VERSION (v10)
-   100% works on GitHub Pages, no race conditions.
+   USD-ONLY PRICE SYSTEM — FINAL VERSION
+   Backend returns GBP -> we always convert to USD.
 ===================================================== */
 
-/* ------------------------------
-   STATIC EXCHANGE RATES
------------------------------- */
-const exchangeRates = {
-  GBP: 1,
-  USD: 1.27,
-  EUR: 1.17,
-  CAD: 1.74,
-  AUD: 1.96,
-  JPY: 187.30,
-  AED: 4.67,
-  HKD: 9.94,
-  SGD: 1.71,
-  NOK: 13.58,
-  SEK: 13.62,
-  DKK: 8.72,
-  PLN: 5.06
-};
+/* USD conversion rate (GBP -> USD) */
+const USD_RATE = 1.27;
 
-/* =====================================================
-   LOAD SAVED CURRENCY
-===================================================== */
-let userCurrency = localStorage.getItem("tamedblox_currency") || "GBP";
-
-/* =====================================================
-   CURRENCY HELPERS
-===================================================== */
-function convertPrice(amountGBP) {
-  return amountGBP * (exchangeRates[userCurrency] || 1);
+/* Convert GBP -> USD */
+function toUSD(amountGBP) {
+  return (amountGBP * USD_RATE).toFixed(2);
 }
 
-function formatPrice(amountGBP) {
+/* Format as USD */
+function formatUSD(amountGBP) {
+  const converted = amountGBP * USD_RATE;
   return new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: userCurrency
-  }).format(convertPrice(amountGBP));
+    currency: "USD"
+  }).format(converted);
 }
 
 /* =====================================================
-   CURRENCY DROPDOWN
+   PRODUCT LOADING
 ===================================================== */
-function initCurrencyDropdown() {
-  const dropdown = document.getElementById("currencySelector");
-  if (!dropdown) return;
 
-  dropdown.value = userCurrency;
-
-  dropdown.addEventListener("change", () => {
-    userCurrency = dropdown.value;
-    localStorage.setItem("tamedblox_currency", userCurrency);
-    renderProducts(products);
-  });
-}
-
-/* =====================================================
-   LOAD PRODUCTS (FROM BACKEND)
-===================================================== */
 let products = [];
 
 async function loadProducts() {
-  const res = await fetch("https://website-5eml.onrender.com/products");
-  products = await res.json();
+  try {
+    const res = await fetch("https://website-5eml.onrender.com/products");
+    products = await res.json();
 
-  products.forEach(p => {
-    p.price = Number(p.price);
-    if (p.oldPrice) p.oldPrice = Number(p.oldPrice);
-  });
+    products.forEach(p => {
+      p.price = Number(p.price);
+      if (p.oldPrice) p.oldPrice = Number(p.oldPrice);
+    });
 
-  renderProducts(products);
+    renderProducts(products);
+
+  } catch (err) {
+    console.error("❌ Failed to load products:", err);
+  }
 }
 
 /* =====================================================
-   RENDER PRODUCTS (CONVERSION APPLIED)
+   PRODUCT RENDERING (USD ONLY)
 ===================================================== */
+
 function getDiscountPercent(price, oldPrice) {
   if (!oldPrice || oldPrice <= price) return 0;
   return Math.round(((oldPrice - price) / oldPrice) * 100);
@@ -95,9 +65,7 @@ function renderProducts(list) {
       <div class="card">
 
         <div class="card-badges">
-          <span class="tag tag-${(p.rarity || "Secret").toLowerCase()}">
-            ${p.rarity || "Secret"}
-          </span>
+          <span class="tag tag-${(p.rarity || "Secret").toLowerCase()}">${p.rarity || "Secret"}</span>
           ${discount ? `<span class="discount-tag">${discount}% OFF</span>` : ""}
         </div>
 
@@ -106,12 +74,8 @@ function renderProducts(list) {
         <h3>${p.name}</h3>
 
         <div class="price-box">
-          <span class="price">${formatPrice(p.price)}</span>
-          ${
-            p.oldPrice
-              ? `<span class="old-price">${formatPrice(p.oldPrice)}</span>`
-              : ""
-          }
+          <span class="price">${formatUSD(p.price)}</span>
+          ${p.oldPrice ? `<span class="old-price">${formatUSD(p.oldPrice)}</span>` : ""}
         </div>
 
         <button class="buy-btn" onclick="addToCart('${p.name}', this)">
@@ -126,8 +90,9 @@ function renderProducts(list) {
 }
 
 /* =====================================================
-   SEARCH BAR
+   SEARCH
 ===================================================== */
+
 function setupSearch() {
   const input = document.getElementById("searchInput");
   if (!input) return;
@@ -139,26 +104,39 @@ function setupSearch() {
 }
 
 /* =====================================================
-   ADD TO CART
+   CART
 ===================================================== */
+
 function addToCart(name, btn) {
   const product = products.find(p => p.name === name);
   const img = btn.closest(".card").querySelector(".product-img");
-  window.Cart.addItem(product, img);
+
+  // Convert price to USD BEFORE sending to cart
+  const usdProduct = {
+    ...product,
+    price: Number(toUSD(product.price)),
+    oldPrice: product.oldPrice ? Number(toUSD(product.oldPrice)) : null
+  };
+
+  window.Cart.addItem(usdProduct, img);
 }
 
 /* =====================================================
    CARD TILT
 ===================================================== */
+
 function initCardTilt() {
   const cards = document.querySelectorAll(".card");
+
   cards.forEach(card => {
     card.addEventListener("mousemove", e => {
       const r = card.getBoundingClientRect();
       const x = e.clientX - r.left;
       const y = e.clientY - r.top;
+
       const rx = ((y - r.height / 2) / (r.height / 2)) * -10;
       const ry = ((x - r.width / 2) / (r.width / 2)) * 10;
+
       card.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg)`;
     });
 
@@ -169,35 +147,14 @@ function initCardTilt() {
 }
 
 /* =====================================================
-   MAIN INITIALIZER — GUARANTEED NO RACE CONDITIONS
+   MAIN INITIALIZER
 ===================================================== */
 
-document.addEventListener("DOMContentLoaded", () => {
-  // 1. Wait for navbar to fully load (GitHub Pages delay)
-  const navbarWait = setInterval(() => {
-    if (document.getElementById("currencySelector")) {
-      clearInterval(navbarWait);
+document.addEventListener("DOMContentLoaded", async () => {
+  await loadProducts();
+  setupSearch();
 
-      // Initialize dropdown FIRST
-      initCurrencyDropdown();
-
-      // THEN load products (correct currency!)
-      loadProducts();
-
-      // Setup search after loading
-      setupSearch();
-
-      // Cart
-      if (window.Cart && window.Cart.init) {
-        window.Cart.init();
-      }
-    }
-  }, 30);
-
-  // 2. Safety fallback: force rerender after everything loads
-  setTimeout(() => {
-    if (products.length > 0) {
-      renderProducts(products);
-    }
-  }, 600);
+  if (window.Cart && window.Cart.init) {
+    window.Cart.init();
+  }
 });
