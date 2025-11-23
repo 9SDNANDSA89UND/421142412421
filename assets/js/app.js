@@ -1,9 +1,28 @@
 /* =====================================================
-   CURRENCY SYSTEM — FINAL FULLY FIXED VERSION
+   CURRENCY SYSTEM — FIXED + RELIABLE VERSION
 ===================================================== */
 
 /* ------------------------------
-   LIVE EXCHANGE RATES (BASE = GBP)
+   FALLBACK EXCHANGE RATES (GBP→X)
+   Used if the API fails or rate-limits
+------------------------------ */
+const fallbackRates = {
+  USD: 1.27,
+  EUR: 1.17,
+  CAD: 1.74,
+  AUD: 1.96,
+  JPY: 187.3,
+  AED: 4.67,
+  HKD: 9.94,
+  SGD: 1.71,
+  NOK: 13.58,
+  SEK: 13.62,
+  DKK: 8.72,
+  PLN: 5.06
+};
+
+/* ------------------------------
+   LIVE EXCHANGE RATES
 ------------------------------ */
 let exchangeRates = { rates: {} };
 
@@ -11,35 +30,39 @@ async function loadRates() {
   try {
     const res = await fetch("https://open.er-api.com/v6/latest/GBP");
     const data = await res.json();
-    if (data && data.result === "success") {
+
+    if (data && data.result === "success" && data.rates) {
       exchangeRates.rates = data.rates;
-    } else {
-      exchangeRates = { rates: {} };
+      return;
     }
-  } catch (err) {
-    exchangeRates = { rates: {} };
-  }
+  } catch (err) {}
+
+  // 🔥 API failed = use fallback
+  exchangeRates.rates = fallbackRates;
 }
 
 /* ------------------------------
-   AUTO-DETECT USER CURRENCY VIA IP
+   AUTO-DETECT CURRENCY
 ------------------------------ */
 async function detectUserCurrency() {
   try {
     const res = await fetch("https://ipapi.co/json/");
     const data = await res.json();
-    return data.currency || "GBP";
-  } catch (err) {
-    return "GBP";
-  }
+    if (data.currency) return data.currency;
+  } catch (err) {}
+
+  return "GBP";
 }
 
 /* ------------------------------
-   CONVERT PRICE (GBP → currency)
+   CONVERT PRICE
 ------------------------------ */
 function convertPrice(amountGBP, currency) {
-  if (!exchangeRates.rates[currency]) return amountGBP;
-  return amountGBP * exchangeRates.rates[currency];
+  const rate = exchangeRates.rates[currency];
+
+  if (!rate) return amountGBP; // fallback to GBP
+
+  return amountGBP * rate;
 }
 
 /* ------------------------------
@@ -47,6 +70,7 @@ function convertPrice(amountGBP, currency) {
 ------------------------------ */
 function formatPrice(amountGBP) {
   const converted = convertPrice(amountGBP, userCurrency);
+
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: userCurrency,
@@ -55,21 +79,21 @@ function formatPrice(amountGBP) {
 }
 
 /* ------------------------------
-   LOAD DROPDOWN OVERRIDE
+   LOAD SAVED CURRENCY
 ------------------------------ */
 let savedCurrency = localStorage.getItem("tamedblox_currency");
 let userCurrency = "GBP";
 
 /* ------------------------------
-   WAIT UNTIL NAVBAR EXISTS
+   WAIT FOR NAVBAR
 ------------------------------ */
-function waitForNavbar(callback) {
-  if (document.getElementById("currencySelector")) return callback();
-  setTimeout(() => waitForNavbar(callback), 30);
+function waitForNavbar(cb) {
+  if (document.getElementById("currencySelector")) return cb();
+  setTimeout(() => waitForNavbar(cb), 20);
 }
 
 /* ------------------------------
-   INITIALIZE DROPDOWN (ALWAYS WORKS)
+   INIT DROPDOWN
 ------------------------------ */
 function initCurrencyDropdown() {
   const dropdown = document.getElementById("currencySelector");
@@ -91,22 +115,20 @@ function initCurrencyDropdown() {
 }
 
 /* =====================================================
-   PRODUCT LIST (BASE GBP PRICES)
+   PRODUCT LIST
 ===================================================== */
 
 const products = [
   {
     name: "La Grande Combinasion ($10M/s)",
     rarity: "Secret",
-    price: 10.30,      // base GBP
-    oldPrice: 13.38,   // base GBP
+    price: 10.30,       // GBP
+    oldPrice: 13.38,    // GBP
     image: "https://i.postimg.cc/tCT9T6xC/Carti.webp"
   }
 ];
 
-/* =====================================================
-   FIX FOR PRICE CONVERSION BUG
-===================================================== */
+/* Ensure numeric */
 function normalizeProducts() {
   products.forEach(p => {
     p.price = Number(p.price);
@@ -115,22 +137,15 @@ function normalizeProducts() {
 }
 
 /* =====================================================
-   DISCOUNT HELPERS
+   DISCOUNTS
 ===================================================== */
 function getDiscountPercent(price, oldPrice) {
   if (!oldPrice || oldPrice <= price) return 0;
   return Math.round(((oldPrice - price) / oldPrice) * 100);
 }
 
-function getDiscountClass(percent) {
-  if (percent > 90) return "discount-red";
-  if (percent > 50) return "discount-orange";
-  if (percent > 20) return "discount-yellow";
-  return "discount-green";
-}
-
 /* =====================================================
-   RENDER PRODUCT CARDS
+   RENDER PRODUCTS
 ===================================================== */
 function renderProducts(list) {
   const grid = document.getElementById("productGrid");
@@ -187,13 +202,13 @@ function setupSearch() {
    ADD TO CART
 ===================================================== */
 function addToCart(name, btn) {
-  const product = products.find(p => p.name === name);
+  const p = products.find(p => p.name === name);
   const img = btn.closest(".card").querySelector(".product-img");
-  window.Cart.addItem(product, img);
+  window.Cart.addItem(p, img);
 }
 
 /* =====================================================
-   3D TILT
+   3D CARD TILT
 ===================================================== */
 function initCardTilt() {
   const cards = document.querySelectorAll(".card");
@@ -217,32 +232,25 @@ function initCardTilt() {
 }
 
 /* =====================================================
-   MAIN INITIALIZER (ORDER FIXED)
+   MAIN INIT
 ===================================================== */
 document.addEventListener("DOMContentLoaded", async () => {
 
-  // 1. Normalise number types BEFORE conversion
   normalizeProducts();
 
-  // 2. Load live FX rates
   await loadRates();
 
-  // 3. Auto-detect local currency OR load saved override
   if (!savedCurrency || savedCurrency === "AUTO") {
     userCurrency = await detectUserCurrency();
   } else {
     userCurrency = savedCurrency;
   }
 
-  // 4. Wait for navbar → then init dropdown
   waitForNavbar(initCurrencyDropdown);
 
-  // 5. Render with correct converted prices
   renderProducts(products);
-
   setupSearch();
 
-  // 6. Initialize Cart LAST
   if (window.Cart && window.Cart.init) {
     window.Cart.init();
   }
