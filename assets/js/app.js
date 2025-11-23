@@ -5,7 +5,6 @@
 
 /* ------------------------------
    STATIC EXCHANGE RATES
-   These ALWAYS load instantly.
 ------------------------------ */
 const exchangeRates = {
   GBP: 1,
@@ -23,16 +22,12 @@ const exchangeRates = {
   PLN: 5.06
 };
 
-/* ------------------------------
-   Fake loader (no API needed)
------------------------------- */
+/* ------------------------------ */
 async function loadRates() {
   return true;
 }
 
-/* ------------------------------
-   AUTO-DETECT USER CURRENCY
------------------------------- */
+/* ------------------------------ */
 async function detectUserCurrency() {
   try {
     const res = await fetch("https://ipapi.co/json/");
@@ -42,16 +37,12 @@ async function detectUserCurrency() {
   return "GBP";
 }
 
-/* ------------------------------
-   CONVERT GBP TO USER CURRENCY
------------------------------- */
+/* ------------------------------ */
 function convertPrice(amountGBP, currency) {
   return amountGBP * (exchangeRates[currency] || 1);
 }
 
-/* ------------------------------
-   FORMAT CURRENCY STRING
------------------------------- */
+/* ------------------------------ */
 function formatPrice(amountGBP) {
   const converted = convertPrice(amountGBP, userCurrency);
   return new Intl.NumberFormat("en-US", {
@@ -61,9 +52,7 @@ function formatPrice(amountGBP) {
   }).format(converted);
 }
 
-/* ------------------------------
-   CURRENCY DROPDOWN
------------------------------- */
+/* ------------------------------ */
 let savedCurrency = localStorage.getItem("tamedblox_currency");
 let userCurrency = "GBP";
 
@@ -103,11 +92,29 @@ async function loadProducts() {
     products = await res.json();
 
     normalizeProducts();
+
+    // ⭐ Wait for navbar + currency to finish loading
+    await waitForCurrencyReady();
+
     renderProducts(products);
 
   } catch (err) {
     console.error("❌ Failed to load backend products:", err);
   }
+}
+
+/* Utility: Wait for userCurrency to be set */
+function waitForCurrencyReady() {
+  return new Promise(resolve => {
+    let tries = 0;
+    const check = () => {
+      if (userCurrency && userCurrency !== "GBP_DEFAULT_PENDING") return resolve();
+      tries++;
+      if (tries > 50) return resolve();
+      setTimeout(check, 20);
+    };
+    check();
+  });
 }
 
 /* Convert price fields to real numbers */
@@ -216,28 +223,26 @@ function initCardTilt() {
 /* =====================================================
    MAIN INITIALIZER
 ===================================================== */
-document.addEventListener("DOMContentLoaded", async () => {
 
-  // Load exchange rates (static, instant)
+document.addEventListener("DOMContentLoaded", async () => {
   await loadRates();
 
-  // Detect or load currency preference
+  // Mark currency as pending during load
+  userCurrency = "GBP_DEFAULT_PENDING";
+
   if (!savedCurrency || savedCurrency === "AUTO") {
     userCurrency = await detectUserCurrency();
   } else {
     userCurrency = savedCurrency;
   }
 
-  // Init dropdown once navbar loads
   waitForNavbar(initCurrencyDropdown);
 
-  // Load backend products
-  await loadProducts();
+  // ⭐ products load AFTER currency is ready
+  loadProducts();
 
-  // Setup search
   setupSearch();
 
-  // Init cart
   if (window.Cart && window.Cart.init) {
     window.Cart.init();
   }
