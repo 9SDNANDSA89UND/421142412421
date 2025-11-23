@@ -53,21 +53,17 @@ function renderProducts(list) {
           ${
             p.oldPrice
               ? `
-            <span class="discount-tag">
-              <svg xmlns="http://www.w3.org/2000/svg" 
-                   width="16" height="16" viewBox="0 0 24 24" 
-                   fill="none" stroke="currentColor" stroke-width="2" 
-                   stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 7V5a2 2 0 0 1 2-2h2"/>
-                <path d="M17 3h2a2 2 0 0 1 2 2v2"/>
-                <path d="M21 17v2a2 2 0 0 1-2 2h-2"/>
-                <path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
-                <path d="m8 8 3.5 3.5"/>
-                <circle cx="8" cy="8" r="2"/>
-                <circle cx="14" cy="14" r="2"/>
+            <span class="discount-tag ${getDiscountClass(percent)}">
+              <svg xmlns="http://www.w3.org/2000/svg"
+                width="16" height="16" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20.59 13.41 11 3.82a2 2 0 0 0-1.41-.59H3v6.59a2 2 0 0 0 .59 1.41l9.59 9.59a2 2 0 0 0 2.82 0l4.59-4.59a2 2 0 0 0 0-2.82Z"/>
+                <circle cx="7.5" cy="7.5" r="1.5"/>
               </svg>
               ${percent}% Discount
-            </span>`
+            </span>
+            `
               : ""
           }
         </div>
@@ -78,7 +74,11 @@ function renderProducts(list) {
 
         <div class="price-box">
           <span class="price">£${p.price}</span>
-          ${p.oldPrice ? `<span class="old-price">£${p.oldPrice}</span>` : ""}
+          ${
+            p.oldPrice
+              ? `<span class="old-price">£${p.oldPrice}</span>`
+              : ""
+          }
         </div>
 
         <button class="buy-btn" onclick="addToCart('${p.name}', this)">
@@ -109,7 +109,9 @@ function setupSearch() {
 
   input.addEventListener("input", () => {
     const q = input.value.toLowerCase();
-    const filtered = products.filter(p => p.name.toLowerCase().includes(q));
+    const filtered = products.filter(p =>
+      p.name.toLowerCase().includes(q)
+    );
     renderProducts(filtered);
   });
 }
