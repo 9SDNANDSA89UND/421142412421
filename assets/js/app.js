@@ -23,15 +23,16 @@ const exchangeRates = {
 };
 
 /* =====================================================
-   LOAD SAVED OR AUTO CURRENCY (BEFORE ANYTHING ELSE)
+   LOAD SAVED CURRENCY (BEFORE ANYTHING RENDERS)
 ===================================================== */
 
 let savedCurrency = localStorage.getItem("tamedblox_currency");
-let userCurrency = savedCurrency || "AUTO";   // AUTO = autodetect on first load
+// ❗ Do NOT use "AUTO" — null means autodetect
+let userCurrency = savedCurrency || null;
 
 /* ------------------------------ */
 async function loadRates() {
-  return true; // static system, no API fetch needed
+  return true;
 }
 
 /* ------------------------------ */
@@ -41,11 +42,11 @@ async function detectUserCurrency() {
     const data = await res.json();
 
     if (exchangeRates[data.currency]) {
-      return data.currency;
+      return data.currency;   // valid currency
     }
   } catch (err) {}
 
-  return "GBP";
+  return "GBP"; // fallback always valid
 }
 
 /* =====================================================
@@ -53,7 +54,8 @@ async function detectUserCurrency() {
 ===================================================== */
 
 function convertPrice(amountGBP, currency) {
-  return amountGBP * (exchangeRates[currency] || 1);
+  const rate = exchangeRates[currency] || 1;
+  return amountGBP * rate;
 }
 
 function formatPrice(amountGBP) {
@@ -145,7 +147,6 @@ function renderProducts(list) {
 
     grid.innerHTML += `
       <div class="card">
-
         <div class="card-badges">
           <span class="tag ${rarityClass}">${p.rarity || "Secret"}</span>
           ${p.oldPrice ? `<span class="discount-tag">${percent}% OFF</span>` : ""}
@@ -163,7 +164,6 @@ function renderProducts(list) {
         <button class="buy-btn" onclick="addToCart('${p.name}', this)">
           Add to Cart
         </button>
-
       </div>
     `;
   });
@@ -220,24 +220,29 @@ function initCardTilt() {
 }
 
 /* =====================================================
-   MAIN INITIALIZER
+   MAIN INITIALIZER (FINAL FIX)
 ===================================================== */
 
 document.addEventListener("DOMContentLoaded", async () => {
 
   await loadRates();
 
-  // Detect first-time auto currency
-  if (userCurrency === "AUTO") {
+  // Auto-detect properly (NO MORE "AUTO" bug)
+  if (!userCurrency) {
     userCurrency = await detectUserCurrency();
   }
 
-  // Navbar initializes dropdown
+  // VALIDATE CURRENCY
+  if (!exchangeRates[userCurrency]) {
+    userCurrency = "GBP"; // guaranteed fallback
+  }
+
+  // Navbar dropdown init
   waitForNavbar(() => {
     initCurrencyDropdown();
   });
 
-  // NOW load products (currency is final)
+  // Now load products with correct, final currency
   await loadProducts();
 
   setupSearch();
