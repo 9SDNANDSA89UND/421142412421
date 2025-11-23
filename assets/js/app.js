@@ -43,7 +43,9 @@ function renderProducts(list) {
       <div class="card">
         <div class="card-badges">
           <span class="tag ${rarityClass}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M10.5 3 8 9l4 13 4-13-2.5-6"/>
               <path d="M17 3a2 2 0 0 1 1.6.8l3 4a2 2 0 0 1 .013 2.382l-7.99 10.986a2 2 0 0 1-3.247 0l-7.99-10.986A2 2 0 0 1 2.4 7.8l2.998-3.997A2 2 0 0 1 7 3z"/>
               <path d="M2 9h20"/>
@@ -53,8 +55,12 @@ function renderProducts(list) {
 
           ${p.oldPrice ? `
             <span class="discount-tag ${getDiscountClass(percent)}">
-              <svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>
-                <path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/>
+              <svg xmlns='http://www.w3.org/2000/svg' width='14' height='14'
+                viewBox='0 0 24 24' fill='none' stroke='currentColor'
+                stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>
+                <path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 
+                1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 
+                0 0-3.42z"/>
                 <circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/>
               </svg>
               ${percent}% Discount
@@ -66,12 +72,16 @@ function renderProducts(list) {
         <h3>${p.name}</h3>
 
         <div class="price-box">
-          <span class="price">£${p.price}</span>
-          ${p.oldPrice ? `<span class="old-price">£${p.oldPrice}</span>` : ""}
+          <span class="price">£${p.price.toFixed(2)}</span>
+          ${p.oldPrice ? `<span class="old-price">£${p.oldPrice.toFixed(2)}</span>` : ""}
         </div>
 
         <button class="buy-btn" onclick="addToCart('${p.name}', this)">
-          <svg xmlns="http://www.w3.org/2000/svg" class="btn-cart-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg xmlns="http://www.w3.org/2000/svg"
+            class="btn-cart-icon" width="16" height="16"
+            viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
             <circle cx="9" cy="21" r="1"/>
             <circle cx="20" cy="21" r="1"/>
             <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
@@ -82,7 +92,6 @@ function renderProducts(list) {
     `;
   });
 
-  // Apply tilt AFTER rendering
   initCardTilt();
 }
 
@@ -95,7 +104,9 @@ function setupSearch() {
 
   input.addEventListener("input", () => {
     const q = input.value.toLowerCase();
-    const filtered = products.filter(p => p.name.toLowerCase().includes(q));
+    const filtered = products.filter(p =>
+      p.name.toLowerCase().includes(q)
+    );
     renderProducts(filtered);
   });
 }
@@ -132,11 +143,13 @@ function initCardTilt() {
       const rotateX = ((y - centerY) / centerY) * -12;
       const rotateY = ((x - centerX) / centerX) * 12;
 
-      card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      card.style.transform =
+        `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
     });
 
     card.addEventListener("mouseleave", () => {
-      card.style.transform = `perspective(800px) rotateX(0deg) rotateY(0deg)`;
+      card.style.transform =
+        `perspective(800px) rotateX(0deg) rotateY(0deg)`;
     });
   });
 }
@@ -148,5 +161,6 @@ document.addEventListener("DOMContentLoaded", () => {
   renderProducts(products);
   setupSearch();
 
-  if (window.Cart && window.Cart.init) window.Cart.init();
+  if (window.Cart && window.Cart.init)
+    window.Cart.init();
 });
