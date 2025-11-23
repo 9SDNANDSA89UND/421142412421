@@ -1,15 +1,16 @@
 /* =====================================================
-   SIMPLE USD DISPLAY SYSTEM
-   No conversion. Just display product.price as USD.
+   TamedBlox — USD-ONLY PRICE SYSTEM
+   No currency selector. No conversion.
+   Simply display all prices as USD labels.
 ===================================================== */
 
-/* Format number as USD without converting anything */
+/* Format product numbers as USD strings */
 function formatUSD(amount) {
   return `$${Number(amount).toFixed(2)} USD`;
 }
 
 /* =====================================================
-   LOAD PRODUCTS FROM BACKEND (GBP NUMBERS)
+   LOAD PRODUCTS (BACKEND RETURNS GBP NUMBERS)
 ===================================================== */
 
 let products = [];
@@ -19,10 +20,10 @@ async function loadProducts() {
     const res = await fetch("https://website-5eml.onrender.com/products");
     products = await res.json();
 
-    // Ensure numeric values
+    // Ensure numeric fields
     products.forEach(p => {
       p.price = Number(p.price);
-      if (p.oldPrice) p.oldPrice = Number(p.oldPrice);
+      p.oldPrice = p.oldPrice ? Number(p.oldPrice) : null;
     });
 
     renderProducts(products);
@@ -33,7 +34,7 @@ async function loadProducts() {
 }
 
 /* =====================================================
-   PRODUCT RENDERING (USD ONLY)
+   PRODUCT RENDERING (USD DISPLAY ONLY)
 ===================================================== */
 
 function getDiscountPercent(price, oldPrice) {
@@ -60,17 +61,13 @@ function renderProducts(list) {
           ${discount ? `<span class="discount-tag">${discount}% OFF</span>` : ""}
         </div>
 
-        <img src="${p.image}" class="product-img">
+        <img src="${p.image}" class="product-img" />
 
         <h3>${p.name}</h3>
 
         <div class="price-box">
           <span class="price">${formatUSD(p.price)}</span>
-          ${
-            p.oldPrice
-              ? `<span class="old-price">${formatUSD(p.oldPrice)}</span>`
-              : ""
-          }
+          ${p.oldPrice ? `<span class="old-price">${formatUSD(p.oldPrice)}</span>` : ""}
         </div>
 
         <button class="buy-btn" onclick="addToCart('${p.name}', this)">
@@ -94,21 +91,23 @@ function setupSearch() {
 
   input.addEventListener("input", () => {
     const q = input.value.toLowerCase();
-    renderProducts(products.filter(p => p.name.toLowerCase().includes(q)));
+    const filtered = products.filter(p => p.name.toLowerCase().includes(q));
+    renderProducts(filtered);
   });
 }
 
 /* =====================================================
-   CART INTEGRATION
+   ADD TO CART (USD VALUES)
 ===================================================== */
 
 function addToCart(name, btn) {
   const product = products.find(p => p.name === name);
   const img = btn.closest(".card").querySelector(".product-img");
 
+  // Store values as USD numbers (not strings)
   const usdProduct = {
     ...product,
-    price: Number(product.price), // already USD-style numeric
+    price: Number(product.price),
     oldPrice: product.oldPrice ? Number(product.oldPrice) : null
   };
 
@@ -131,7 +130,8 @@ function initCardTilt() {
       const rx = ((y - r.height / 2) / (r.height / 2)) * -10;
       const ry = ((x - r.width / 2) / (r.width / 2)) * 10;
 
-      card.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+      card.style.transform =
+        `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg)`;
     });
 
     card.addEventListener("mouseleave", () => {
@@ -141,7 +141,7 @@ function initCardTilt() {
 }
 
 /* =====================================================
-   INITIALIZATION
+   INITIALIZER
 ===================================================== */
 
 document.addEventListener("DOMContentLoaded", async () => {
