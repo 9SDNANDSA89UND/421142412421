@@ -12,7 +12,7 @@
 }
 
 /* ==========================================
-   SMALL PREMIUM CARD — FIXED HEIGHT
+   PREMIUM CARD — FIXED LAYOUT GRID
 ========================================== */
 .card {
   position: relative;
@@ -23,11 +23,19 @@
   border: 1px solid rgba(78,245,138,0.15);
   overflow: hidden;
 
-  height: 310px; /* ⭐ ALL CARDS SAME HEIGHT */
+  width: 100%;
+  height: 330px; /* ⭐ FIXED HEIGHT = PERFECT GRID */
 
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  display: grid;
+  grid-template-rows:
+    26px   /* badges */
+    130px  /* image */
+    40px   /* title */
+    28px   /* price */
+    1fr    /* filler */
+    40px;  /* button */
+
+  gap: 6px;
 
   transform-style: preserve-3d;
   perspective: 900px;
@@ -69,7 +77,7 @@
 }
 
 /* ==========================================
-   SHINE SWEEP
+   SHINE SWEEP EFFECT
 ========================================== */
 .card::after {
   content: "";
@@ -101,76 +109,41 @@
 }
 
 /* ==========================================
-   PRODUCT IMAGE — SMALL
+   PRODUCT IMAGE — FIXED
 ========================================== */
 .product-img {
   width: 100%;
-  height: 120px;
-  object-fit: cover;
+  height: 130px;
   border-radius: 10px;
+  object-fit: cover;
 
   box-shadow:
     0 0 10px rgba(0,0,0,0.5),
     0 0 16px rgba(78,245,138,0.15);
-
-  margin-bottom: 10px;
 }
 
 /* ==========================================
-   TITLE — FIXED HEIGHT
-========================================== */
-.card h3 {
-  font-size: 15px;
-  font-weight: 800;
-  margin: 0;
-  height: 32px; /* ⭐ FIXED HEIGHT */
-  display: flex;
-  align-items: center;
-}
-
-/* ==========================================
-   BADGES — RARITY LEFT, DISCOUNT RIGHT
+   BADGES ROW — RARITY LEFT, DISCOUNT RIGHT
 ========================================== */
 .card-badges {
   width: 100%;
-  margin-bottom: 10px;
-
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: relative;
 }
 
-/* RARITY TAG LEFT */
-.tag {
-  margin: 0;
-}
-
-/* DISCOUNT TAG RIGHT */
-.card-badges .discount-tag {
-  position: relative;
-  right: 0;
-  margin-left: auto;
-}
-
-/* ==========================================
-   RARITY TAGS — MINI PULSE
-========================================== */
-@keyframes rarityPulseSmall {
-  0% { box-shadow: 0 0 6px currentColor; }
-  50% { box-shadow: 0 0 14px currentColor; }
-  100% { box-shadow: 0 0 6px currentColor; }
-}
-
+/* RARITY TAG */
 .tag {
   padding: 4px 10px;
   border-radius: 50px;
   font-size: 10px;
   font-weight: 800;
-  animation: rarityPulseSmall 2.4s ease-in-out infinite;
+  margin: 0;
   backdrop-filter: blur(3px);
+  animation: rarityPulseSmall 2.4s ease-in-out infinite;
 }
 
+/* RARITY COLORS */
 .tag-god {
   background: rgba(255,0,200,0.18);
   color: #ff00ea;
@@ -189,8 +162,15 @@
   border: 1px solid rgba(255,170,0,0.45);
 }
 
+/* RARITY PULSE ANIMATION */
+@keyframes rarityPulseSmall {
+  0% { box-shadow: 0 0 6px currentColor; }
+  50% { box-shadow: 0 0 14px currentColor; }
+  100% { box-shadow: 0 0 6px currentColor; }
+}
+
 /* ==========================================
-   DISCOUNT TAG — HIGH VISIBILITY + TILT
+   DISCOUNT TAG — NEON + TILT
 ========================================== */
 .discount-tag {
   padding: 6px 12px;
@@ -208,10 +188,8 @@
     0 0 10px rgba(78,245,138,0.7),
     0 0 20px rgba(78,245,138,0.45);
 
-  opacity: 1 !important;
   transform: scale(1.05);
-
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: 0.2s ease;
 }
 
 .discount-tag:hover {
@@ -222,6 +200,20 @@
 }
 
 /* ==========================================
+   TITLE — FIXED HEIGHT
+========================================== */
+.card h3 {
+  font-size: 15px;
+  font-weight: 800;
+  margin: 0;
+
+  height: 40px;          /* ⭐ LOCKED HEIGHT */
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* ==========================================
    PRICE — FIXED HEIGHT
 ========================================== */
 .price-box {
@@ -229,9 +221,8 @@
   gap: 10px;
   align-items: center;
 
-  height: 20px; /* ⭐ FIXED HEIGHT */
-  margin-top: 6px;
-  margin-bottom: 12px;
+  height: 28px;          /* ⭐ LOCKED HEIGHT */
+  margin: 0;
 }
 
 .price {
@@ -248,12 +239,11 @@
 }
 
 /* ==========================================
-   ADD TO CART BUTTON — SMALL
+   ADD TO CART BUTTON — FIXED
 ========================================== */
 .buy-btn {
   width: 100%;
-  padding: 10px 0;
-  border: none;
+  height: 40px;           /* ⭐ LOCKED HEIGHT */
   border-radius: 10px;
 
   background: #4ef58a;
