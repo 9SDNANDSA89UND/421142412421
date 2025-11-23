@@ -1,7 +1,8 @@
 /* =====================================================
-   AUTO-DETECT CURRENCY BASED ON USER'S LOCATION
+   AUTO + MANUAL CURRENCY SYSTEM
 ===================================================== */
 
+// Map timezones to default currency
 const currencyMap = {
   "Europe/London": "GBP",
   "Europe/Paris": "EUR",
@@ -31,13 +32,17 @@ const currencyMap = {
   "Australia/Melbourne": "AUD"
 };
 
-// Detect user timezone → map to currency
-const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-const userCurrency = currencyMap[userTimezone] || "GBP"; // fallback for unknown regions
+// Load saved currency or auto-detect
+const savedCurrency = localStorage.getItem("tamedblox_currency");
 
-/* =====================================================
-   CURRENCY FORMATTER
-===================================================== */
+if (savedCurrency && savedCurrency !== "AUTO") {
+    var userCurrency = savedCurrency;
+} else {
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    var userCurrency = currencyMap[timezone] || "GBP";
+}
+
+/* Format prices based on userCurrency */
 function formatPrice(amount) {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -45,6 +50,29 @@ function formatPrice(amount) {
     minimumFractionDigits: 2
   }).format(amount);
 }
+
+/* =====================================================
+   CURRENCY DROPDOWN HANDLER
+===================================================== */
+document.addEventListener("DOMContentLoaded", () => {
+  const dropdown = document.getElementById("currencySelector");
+
+  if (dropdown) {
+    dropdown.value = savedCurrency || "AUTO";
+
+    dropdown.addEventListener("change", () => {
+      const val = dropdown.value;
+
+      if (val === "AUTO") {
+        localStorage.removeItem("tamedblox_currency");
+      } else {
+        localStorage.setItem("tamedblox_currency", val);
+      }
+
+      location.reload();
+    });
+  }
+});
 
 /* =====================================================
    PRODUCT LIST
@@ -75,7 +103,7 @@ function getDiscountClass(percent) {
 }
 
 /* =====================================================
-   RENDER PRODUCTS TO GRID
+   RENDER PRODUCTS
 ===================================================== */
 function renderProducts(list) {
   const grid = document.getElementById("productGrid");
@@ -89,6 +117,7 @@ function renderProducts(list) {
 
     grid.innerHTML += `
       <div class="card">
+
         <div class="card-badges">
           <span class="tag ${rarityClass}">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
@@ -106,17 +135,14 @@ function renderProducts(list) {
               <svg xmlns='http://www.w3.org/2000/svg' width='14' height='14'
                 viewBox='0 0 24 24' fill='none' stroke='currentColor'
                 stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>
-                <path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 
-                0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 
-                2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 
-                0 0-3.42z"/>
+                <path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/>
                 <circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/>
               </svg>
               ${percent}% Discount
             </span>` : ""}
         </div>
 
-        <img src="${p.image}" alt="${p.name}" class="product-img">
+        <img src="${p.image}" class="product-img">
 
         <h3>${p.name}</h3>
 
@@ -126,17 +152,16 @@ function renderProducts(list) {
         </div>
 
         <button class="buy-btn" onclick="addToCart('${p.name}', this)">
-          <svg xmlns="http://www.w3.org/2000/svg" class="btn-cart-icon"
-            width="16" height="16" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round"
-            stroke-linejoin="round">
+          <svg xmlns="http://www.w3.org/2000/svg" class="btn-cart-icon" width="16"
+               height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="9" cy="21" r="1"/>
             <circle cx="20" cy="21" r="1"/>
-            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 
-            1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
           </svg>
           Add to Cart
         </button>
+
       </div>
     `;
   });
@@ -152,16 +177,16 @@ function setupSearch() {
   if (!input) return;
 
   input.addEventListener("input", () => {
-    const q = input.value.toLowerCase();
+    const query = input.value.toLowerCase();
     const filtered = products.filter(p =>
-      p.name.toLowerCase().includes(q)
+      p.name.toLowerCase().includes(query)
     );
     renderProducts(filtered);
   });
 }
 
 /* =====================================================
-   CART ADD
+   ADD TO CART WRAPPER
 ===================================================== */
 function addToCart(name, btn) {
   const product = products.find(p => p.name === name);
@@ -174,7 +199,7 @@ function addToCart(name, btn) {
 }
 
 /* =====================================================
-   3D TILT — MOUSE POSITION
+   3D TILT ON MOUSE POSITION
 ===================================================== */
 function initCardTilt() {
   const cards = document.querySelectorAll(".card");
@@ -204,7 +229,7 @@ function initCardTilt() {
 }
 
 /* =====================================================
-   INIT
+   INIT EVERYTHING
 ===================================================== */
 document.addEventListener("DOMContentLoaded", () => {
   renderProducts(products);
