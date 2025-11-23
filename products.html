@@ -66,32 +66,29 @@
   <!-- ⭐ PRODUCT SCRIPT -->
   <script>
 
+    const imgURL = "https://static.wikia.nocookie.net/stealabr/images/5/58/Strawberryelephant.png/revision/latest?cb=20250830235735";
+
     /* =========================================
-       PRODUCT LIST
+       13 TEST PRODUCTS WITH RANDOM OLD PRICES
     ========================================== */
-    const products = [
-      {
-        name: "Mystic Blade",
-        rarity: "God",
-        price: 12.99,
-        oldPrice: 19.99,
-        image: "https://static.wikia.nocookie.net/stealabr/images/5/58/Strawberryelephant.png/revision/latest?cb=20250830235735"
-      },
-      {
-        name: "Shadow Cloak",
-        rarity: "Secret",
-        price: 8.49,
-        oldPrice: 12,
-        image: "https://static.wikia.nocookie.net/stealabr/images/5/58/Strawberryelephant.png/revision/latest?cb=20250830235735"
-      },
-      {
-        name: "OG Emblem",
-        rarity: "OG",
-        price: 4.2,
-        oldPrice: null,
-        image: "https://static.wikia.nocookie.net/stealabr/images/5/58/Strawberryelephant.png/revision/latest?cb=20250830235735"
-      }
-    ];
+    const products = [];
+
+    function makeProduct() {
+      const price = Number((Math.random() * 20 + 3).toFixed(2)); 
+      const old = Number((price + (Math.random() * 10 + 5)).toFixed(2));
+
+      return {
+        name: "Test",
+        rarity: ["God", "Secret", "OG", "Mythic", "Limited", "Exclusive"][Math.floor(Math.random()*6)],
+        price: price,
+        oldPrice: old,
+        image: imgURL
+      };
+    }
+
+    for (let i = 0; i < 13; i++) {
+      products.push(makeProduct());
+    }
 
     /* =========================================
        DISCOUNTS
@@ -131,15 +128,13 @@
             </div>
 
             <img src="${p.image}" class="product-img">
-
             <h3>${p.name}</h3>
 
             <div class="price-box">
               <span class="price">£${p.price}</span>
-              ${p.oldPrice ? `<span class="old-price">£${p.oldPrice}</span>` : ""}
+              <span class="old-price">£${p.oldPrice}</span>
             </div>
 
-            <!-- ⭐ UPDATED BUTTON WITH CART ICON -->
             <button class="buy-btn" onclick="addToCart('${p.name}', this)">
               <svg xmlns="http://www.w3.org/2000/svg" 
                 class="btn-cart-icon" width="16" height="16" 
@@ -152,7 +147,6 @@
               </svg>
               Add to Cart
             </button>
-
           </div>
         `;
       });
