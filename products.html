@@ -5,10 +5,12 @@
   <title>TamedBlox — Products</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <!-- CSS -->
   <link rel="stylesheet" href="assets/css/main.css">
   <link rel="stylesheet" href="assets/css/cards.css">
   <link rel="stylesheet" href="assets/css/modal.css">
 
+  <!-- Component Loader -->
   <script>
     async function loadComponent(selector, file) {
       const el = document.querySelector(selector);
@@ -19,6 +21,7 @@
 
 <body>
 
+  <!-- NAV & AUTH MODALS -->
   <div id="navbar"></div>
   <div id="modals"></div>
 
@@ -27,29 +30,38 @@
     loadComponent("#modals", "components/modals.html");
   </script>
 
+  <!-- PAGE HEADER -->
   <section class="container" style="margin-top:40px;">
     <h1 style="font-size:32px;font-weight:900;">All Products</h1>
-    <p style="color:#aeb6c1;margin-top:10px;">Browse the full TamedBlox shop.</p>
+    <p style="color:#aeb6c1;margin-top:10px;">
+      Browse the full TamedBlox shop.
+    </p>
+
+    <!-- SEARCH BAR -->
     <input id="searchInput" placeholder="Search products..." class="modern-input" style="margin-top:20px;">
   </section>
 
+  <!-- PRODUCT GRID -->
   <div id="productGrid" class="product-grid"></div>
 
+  <!-- CART DRAWER -->
   <div id="cartDrawer" class="cart-drawer"></div>
   <div id="cartOverlay" class="cart-overlay"></div>
 
+  <!-- FOOTER -->
   <div id="footer"></div>
   <script>
     loadComponent("#footer", "components/footer.html");
   </script>
 
+  <!-- JS FILES -->
   <script src="assets/js/app.js"></script>
   <script src="assets/js/cart.js"></script>
   <script src="assets/js/drawer.js"></script>
   <script src="assets/js/auth.js"></script>
 
   <script>
-    /* This file now only loads products from app.js */
+    /* Initialize cart after DOM loads */
     document.addEventListener("DOMContentLoaded", () => {
       if (window.Cart && window.Cart.init) {
         window.Cart.init();
