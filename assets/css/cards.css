@@ -24,16 +24,16 @@
   overflow: hidden;
 
   width: 100%;
-  height: 330px;
+  height: 330px; /* consistent size */
 
   display: grid;
   grid-template-rows:
-    24px
-    150px   /* ⭐ NEW square image */
-    40px
-    28px
-    1fr
-    40px;
+    24px      /* badges */
+    150px     /* square image */
+    40px      /* title */
+    28px      /* price */
+    1fr       /* filler */
+    40px;     /* add to cart button */
 
   gap: 6px;
 
@@ -44,7 +44,7 @@
   cursor: pointer;
 }
 
-/* ⭐ AUTO TILT ON HOVER */
+/* ⭐Auto tilt on hover */
 .card:hover {
   transform: scale(1.05) rotateX(4deg) rotateY(-4deg);
   box-shadow:
@@ -53,7 +53,7 @@
 }
 
 /* ==========================================
-   GREEN GLOW BORDER
+   GREEN GLOW BORDER GLOW
 ========================================== */
 .card::before {
   content: "";
@@ -74,7 +74,7 @@
 }
 
 /* ==========================================
-   SHINE SWEEP EFFECT
+   SHINE SWEEP
 ========================================== */
 .card::after {
   content: "";
@@ -106,11 +106,11 @@
 }
 
 /* ==========================================
-   PRODUCT IMAGE — NOW A SQUARE
+   PRODUCT IMAGE — PERFECT SQUARE
 ========================================== */
 .product-img {
   width: 100%;
-  height: 150px; /* ⭐ SQUARE */
+  height: 150px;
   border-radius: 10px;
   object-fit: cover;
 
@@ -129,7 +129,7 @@
   align-items: center;
 }
 
-/* ---------- RARITY TAGS ---------- */
+/* ---------- RARITY TAG ---------- */
 .tag {
   padding: 4px 10px;
   border-radius: 50px;
@@ -165,18 +165,18 @@
   100% { box-shadow: 0 0 6px currentColor; }
 }
 
-/* ---------- ⭐ SMALLER DISCOUNT BADGE ---------- */
+/* ---------- DISCOUNT TAG (now smaller) ---------- */
 .discount-tag {
-  padding: 4px 8px;     /* smaller */
+  padding: 4px 8px;
   border-radius: 40px;
 
-  font-size: 11px;      /* smaller */
+  font-size: 11px;
   font-weight: 900;
 
   color: #0b0f14;
   background: #4ef58a;
 
-  border: 1px solid rgba(255,255,255,0.3);  /* thinner */
+  border: 1px solid rgba(255,255,255,0.3);
   box-shadow:
     0 0 7px rgba(78,245,138,0.6),
     0 0 14px rgba(78,245,138,0.3);
@@ -190,7 +190,7 @@
 }
 
 /* ==========================================
-   TITLE — FIXED
+   TITLE — FIXED POSITION
 ========================================== */
 .card h3 {
   font-size: 15px;
@@ -203,7 +203,7 @@
 }
 
 /* ==========================================
-   PRICE ROW — FIXED
+   PRICE SECTION — FIXED
 ========================================== */
 .price-box {
   height: 28px;
@@ -226,7 +226,7 @@
 }
 
 /* ==========================================
-   ADD TO CART BUTTON — FIXED
+   ADD TO CART BUTTON — WITH ICON SUPPORT
 ========================================== */
 .buy-btn {
   width: 100%;
@@ -238,6 +238,11 @@
   font-size: 12px;
   font-weight: 900;
 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
   box-shadow:
     0 0 8px rgba(78,245,138,0.5),
     0 4px 14px rgba(0,0,0,0.45);
@@ -248,4 +253,11 @@
 .buy-btn:hover {
   transform: translateY(-2px);
   opacity: 0.95;
+}
+
+/* cart icon styling */
+.btn-cart-icon {
+  width: 16px;
+  height: 16px;
+  stroke: #0b0f14;
 }
