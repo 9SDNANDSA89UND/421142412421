@@ -27,16 +27,16 @@
   overflow: hidden;
 
   width: 100%;
-  height: 330px;
+  height: 350px;
 
   display: grid;
   grid-template-rows:
-    24px
-    150px
-    40px
-    28px
-    1fr
-    40px;
+    24px   /* badges */
+    auto   /* image square */
+    40px   /* product title */
+    28px   /* price box */
+    1fr    /* spacing */
+    40px;  /* add to cart */
 
   gap: 6px;
 
@@ -109,13 +109,14 @@
 }
 
 /* ==========================================
-   SQUARE PRODUCT IMAGE
+   PERFECT SQUARE IMAGE
 ========================================== */
 .product-img {
   width: 100%;
-  height: 150px;
+  aspect-ratio: 1 / 1;     /* square */
+  object-fit: cover;       /* fill without distortion */
+  object-position: center; /* keep centered */
   border-radius: 10px;
-  object-fit: cover;
 
   box-shadow:
     0 0 10px rgba(0,0,0,0.5),
@@ -153,28 +154,10 @@
   border: 1px solid rgba(0,200,255,0.45);
 }
 
-.tag-mythic {
-  background: rgba(180,0,255,0.18);
-  color: #c44dff;
-  border: 1px solid rgba(180,0,255,0.45);
-}
-
 .tag-og {
   background: rgba(255,170,0,0.18);
   color: #ffaa2b;
   border: 1px solid rgba(255,170,0,0.45);
-}
-
-.tag-limited {
-  background: rgba(255,60,60,0.18);
-  color: #ff4a4a;
-  border: 1px solid rgba(255,60,60,0.45);
-}
-
-.tag-exclusive {
-  background: rgba(60,255,153,0.18);
-  color: #4fff96;
-  border: 1px solid rgba(60,255,153,0.45);
 }
 
 @keyframes rarityPulseSmall {
@@ -184,7 +167,7 @@
 }
 
 /* ==========================================
-   DISCOUNT TAG — SMALL & CLEAN
+   DISCOUNT TAG
 ========================================== */
 .discount-tag {
   padding: 4px 8px;
@@ -244,7 +227,7 @@
 }
 
 /* ==========================================
-   ADD TO CART BUTTON — with icon
+   ADD TO CART BUTTON
 ========================================== */
 .buy-btn {
   width: 100%;
