@@ -112,18 +112,37 @@
 
 
 /* ============================================================
-   DISCOUNT TAG (NEON PILL)
+   NEW DISCOUNT BADGE (WITH ICON)
 ============================================================ */
-.discount-tag {
-  padding: 6px 12px;
-  font-size: 12px;
-  font-weight: 900;
+.discount-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 
-  border-radius: 40px;
-  color: #0b0f14;
+  padding: 6px 14px;
+  border-radius: 14px;
 
-  background: #4ef58a;
-  box-shadow: 0 0 6px rgba(78, 245, 138, 0.5);
+  background: rgba(78, 245, 138, 0.15);
+  color: #4ef58a;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  border: 1px solid rgba(78, 245, 138, 0.4);
+  box-shadow: 0 0 10px rgba(78, 245, 138, 0.25);
+
+  backdrop-filter: blur(6px);
+}
+
+/* Icon styling */
+.discount-icon {
+  width: 16px;
+  height: 16px;
+  stroke: #4ef58a;
+}
+
+.discount-text {
+  line-height: 1;
 }
 
 
