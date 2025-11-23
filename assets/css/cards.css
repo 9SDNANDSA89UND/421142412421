@@ -12,7 +12,7 @@
 }
 
 /* ============================================================
-   PRODUCT CARD — PREMIUM REWORKED
+   PRODUCT CARD — PREMIUM
 ============================================================ */
 .card {
   background: rgba(17, 25, 31, 0.9);
@@ -22,14 +22,13 @@
   padding: 18px 18px 22px;
 
   position: relative;
-  overflow: visible;
+  overflow: hidden;
 
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 
   transition: 0.25s ease;
-  box-shadow: 0 0 0 rgba(78, 245, 138, 0.0);
 }
 
 .card:hover {
@@ -72,10 +71,10 @@
 }
 
 /* ============================================================
-   RARITY TAG — MODERN STYLE
+   RARITY TAG — TEXT ONLY
 ============================================================ */
 .tag {
-  padding: 7px 16px; /* fixed SVG clipping */
+  padding: 6px 16px;
   font-size: 13px;
   font-weight: 700;
 
@@ -87,39 +86,29 @@
 
   display: inline-flex;
   align-items: center;
-  gap: 8px; /* fixed gap */
+  justify-content: center;
 
   box-shadow: 0 0 12px currentColor;
-  text-shadow: 0 0 4px currentColor;
 }
 
 /* GOD */
-.tag-god { 
-  color: #ff48ff; 
-  background: rgba(255, 0, 255, 0.22); 
-}
+.tag-god    { color: #ff48ff; background: rgba(255, 0, 255, 0.22); }
 
 /* SECRET */
-.tag-secret { 
-  color: #00d2ff; 
-  background: rgba(0, 210, 255, 0.22); 
-}
+.tag-secret { color: #00d2ff; background: rgba(0, 210, 255, 0.22); }
 
 /* OG */
-.tag-og { 
-  color: #ffb03a; 
-  background: rgba(255,170,60,0.22); 
-}
+.tag-og     { color: #ffb03a; background: rgba(255,170,60,0.22); }
 
 /* ============================================================
-   DISCOUNT BADGE — NEW STYLE
+   DISCOUNT BADGE (TAG ICON + TEXT)
 ============================================================ */
 .discount-tag {
   display: inline-flex;
   align-items: center;
   gap: 8px;
 
-  padding: 7px 16px; /* fixed height */
+  padding: 6px 16px;
   font-size: 13px;
   font-weight: 800;
 
@@ -130,25 +119,20 @@
   box-shadow: 0 0 6px rgba(78, 245, 138, 0.5);
 }
 
-/* FIX SVG CLIPPING */
-.tag svg,
 .discount-tag svg {
-  width: 18px;
-  height: 18px;
-  display: block;
-  overflow: visible;
-  line-height: 0;
+  width: 16px;
+  height: 16px;
+  stroke: #0b0f14;
+  flex-shrink: 0;
 }
 
 /* ============================================================
    PRODUCT NAME
 ============================================================ */
 .card h3 {
-  margin-top: 16px;
+  margin-top: 18px;
   font-size: 17px;
   font-weight: 800;
-
-  letter-spacing: 0.3px;
 
   white-space: nowrap;
   overflow: hidden;
@@ -156,17 +140,17 @@
 }
 
 /* ============================================================
-   PRICE AREA
+   PRICE SECTION
 ============================================================ */
 .price-box {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin: 12px 0 20px;
+  margin: 14px 0 20px;
 }
 
 .price {
-  font-size: 19px;
+  font-size: 20px;
   font-weight: 900;
   color: #4ef58a;
 }
@@ -178,7 +162,7 @@
 }
 
 /* ============================================================
-   BUTTON — NEW POLISHED STYLE
+   BUY BUTTON
 ============================================================ */
 .buy-btn {
   width: 100%;
