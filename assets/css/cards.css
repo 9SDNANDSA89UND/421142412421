@@ -24,32 +24,29 @@
   overflow: hidden;
 
   width: 100%;
-  height: 330px; /* ⭐ FIXED HEIGHT = PERFECT GRID */
+  height: 330px;
 
   display: grid;
   grid-template-rows:
-    26px   /* badges */
-    130px  /* image */
-    40px   /* title */
-    28px   /* price */
-    1fr    /* filler */
-    40px;  /* button */
+    24px
+    150px   /* ⭐ NEW square image */
+    40px
+    28px
+    1fr
+    40px;
 
   gap: 6px;
 
   transform-style: preserve-3d;
   perspective: 900px;
 
-  box-shadow:
-    0 0 14px rgba(78,245,138,0.06),
-    inset 0 0 6px rgba(255,255,255,0.03);
-
   transition: transform 0.25s ease, box-shadow 0.25s ease;
   cursor: pointer;
 }
 
+/* ⭐ AUTO TILT ON HOVER */
 .card:hover {
-  transform: scale(1.05);
+  transform: scale(1.05) rotateX(4deg) rotateY(-4deg);
   box-shadow:
     0 0 22px rgba(78,245,138,0.28),
     0 6px 16px rgba(0,0,0,0.45);
@@ -109,11 +106,11 @@
 }
 
 /* ==========================================
-   PRODUCT IMAGE — FIXED
+   PRODUCT IMAGE — NOW A SQUARE
 ========================================== */
 .product-img {
   width: 100%;
-  height: 130px;
+  height: 150px; /* ⭐ SQUARE */
   border-radius: 10px;
   object-fit: cover;
 
@@ -123,7 +120,7 @@
 }
 
 /* ==========================================
-   BADGES ROW — RARITY LEFT, DISCOUNT RIGHT
+   BADGES ROW
 ========================================== */
 .card-badges {
   width: 100%;
@@ -132,18 +129,18 @@
   align-items: center;
 }
 
-/* RARITY TAG */
+/* ---------- RARITY TAGS ---------- */
 .tag {
   padding: 4px 10px;
   border-radius: 50px;
   font-size: 10px;
   font-weight: 800;
   margin: 0;
+
   backdrop-filter: blur(3px);
   animation: rarityPulseSmall 2.4s ease-in-out infinite;
 }
 
-/* RARITY COLORS */
 .tag-god {
   background: rgba(255,0,200,0.18);
   color: #ff00ea;
@@ -162,67 +159,57 @@
   border: 1px solid rgba(255,170,0,0.45);
 }
 
-/* RARITY PULSE ANIMATION */
 @keyframes rarityPulseSmall {
   0% { box-shadow: 0 0 6px currentColor; }
   50% { box-shadow: 0 0 14px currentColor; }
   100% { box-shadow: 0 0 6px currentColor; }
 }
 
-/* ==========================================
-   DISCOUNT TAG — NEON + TILT
-========================================== */
+/* ---------- ⭐ SMALLER DISCOUNT BADGE ---------- */
 .discount-tag {
-  padding: 6px 12px;
-  border-radius: 50px;
+  padding: 4px 8px;     /* smaller */
+  border-radius: 40px;
 
-  font-size: 13px;
+  font-size: 11px;      /* smaller */
   font-weight: 900;
 
   color: #0b0f14;
   background: #4ef58a;
 
-  border: 2px solid rgba(255,255,255,0.4);
-
+  border: 1px solid rgba(255,255,255,0.3);  /* thinner */
   box-shadow:
-    0 0 10px rgba(78,245,138,0.7),
-    0 0 20px rgba(78,245,138,0.45);
+    0 0 7px rgba(78,245,138,0.6),
+    0 0 14px rgba(78,245,138,0.3);
 
-  transform: scale(1.05);
-  transition: 0.2s ease;
+  transform: scale(1);
+  transition: 0.18s ease;
 }
 
 .discount-tag:hover {
-  transform: scale(1.18) rotate(3deg);
-  box-shadow:
-    0 0 18px rgba(78,245,138,0.9),
-    0 0 30px rgba(78,245,138,0.65);
+  transform: scale(1.1) rotate(2deg);
 }
 
 /* ==========================================
-   TITLE — FIXED HEIGHT
+   TITLE — FIXED
 ========================================== */
 .card h3 {
   font-size: 15px;
   font-weight: 800;
   margin: 0;
-
-  height: 40px;          /* ⭐ LOCKED HEIGHT */
+  height: 40px;
   display: flex;
   align-items: center;
   overflow: hidden;
 }
 
 /* ==========================================
-   PRICE — FIXED HEIGHT
+   PRICE ROW — FIXED
 ========================================== */
 .price-box {
+  height: 28px;
   display: flex;
   gap: 10px;
   align-items: center;
-
-  height: 28px;          /* ⭐ LOCKED HEIGHT */
-  margin: 0;
 }
 
 .price {
@@ -243,7 +230,7 @@
 ========================================== */
 .buy-btn {
   width: 100%;
-  height: 40px;           /* ⭐ LOCKED HEIGHT */
+  height: 40px;
   border-radius: 10px;
 
   background: #4ef58a;
@@ -251,10 +238,11 @@
   font-size: 12px;
   font-weight: 900;
 
-  transition: 0.25s ease;
   box-shadow:
     0 0 8px rgba(78,245,138,0.5),
     0 4px 14px rgba(0,0,0,0.45);
+
+  transition: 0.25s ease;
 }
 
 .buy-btn:hover {
