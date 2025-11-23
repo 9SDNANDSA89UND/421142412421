@@ -78,7 +78,7 @@
     </div>
   </section>
 
-  <!-- 🛒 NEW CART DRAWER -->
+  <!-- CART DRAWER -->
   <div id="cartDrawer" class="cart-drawer">
     <div class="cart-header">
       <h2 class="cart-title">Cart</h2>
@@ -113,10 +113,11 @@
   <script src="assets/js/drawer.js"></script>
   <script src="assets/js/auth.js"></script>
 
-  <!-- ⭐ LOAD BACKEND PRODUCTS ON HOMEPAGE -->
+  <!-- ⭐ FINAL FIX: Load backend products AFTER ALL SCRIPTS -->
   <script>
-    document.addEventListener("DOMContentLoaded", async () => {
-      await loadProducts();  // ← THIS FIXES EVERYTHING
+    window.addEventListener("load", async () => {
+      console.log("🔥 Homepage loading backend products...");
+      await loadProducts();
     });
   </script>
 
