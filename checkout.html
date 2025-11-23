@@ -169,72 +169,129 @@
   <script src="assets/js/cart.js"></script>
   <script src="assets/js/auth.js"></script>
 
+  <!-- ⭐ UPDATED CHECKOUT SCRIPT WITH AUTO-CURRENCY -->
   <script>
-    /* Load cart data before anything else */
-    window.Cart.init();
+/* =====================================================
+   AUTO-DETECT CURRENCY (MATCHES app.js)
+===================================================== */
 
-    /* Populate checkout from Cart */
-    document.addEventListener("DOMContentLoaded", () => {
-      const wrapper = document.getElementById("checkoutItems");
-      const totalEl = document.getElementById("checkoutTotal");
+const currencyMap = {
+  "Europe/London": "GBP",
+  "Europe/Paris": "EUR",
+  "Europe/Berlin": "EUR",
+  "Europe/Madrid": "EUR",
+  "Europe/Rome": "EUR",
+  "Europe/Amsterdam": "EUR",
+  "Europe/Oslo": "NOK",
+  "Europe/Stockholm": "SEK",
+  "Europe/Copenhagen": "DKK",
+  "Europe/Warsaw": "PLN",
 
-      const items = window.Cart.items;
-      let total = 0;
+  "America/New_York": "USD",
+  "America/Chicago": "USD",
+  "America/Denver": "USD",
+  "America/Los_Angeles": "USD",
+  "America/Toronto": "CAD",
+  "America/Vancouver": "CAD",
 
-      if (!items || items.length === 0) {
-        wrapper.innerHTML = `<p style="color:#9ca4b1;">Your cart is empty.</p>`;
-        return;
+  "Asia/Tokyo": "JPY",
+  "Asia/Hong_Kong": "HKD",
+  "Asia/Seoul": "KRW",
+  "Asia/Singapore": "SGD",
+  "Asia/Dubai": "AED",
+
+  "Australia/Sydney": "AUD",
+  "Australia/Melbourne": "AUD"
+};
+
+const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+const userCurrency = currencyMap[userTimezone] || "GBP";
+
+function formatPrice(amount) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: userCurrency,
+    minimumFractionDigits: 2
+  }).format(amount);
+}
+
+/* =====================================================
+   INITIALIZE CART BEFORE ANYTHING
+===================================================== */
+window.Cart.init();
+
+/* =====================================================
+   POPULATE CHECKOUT ITEMS
+===================================================== */
+document.addEventListener("DOMContentLoaded", () => {
+  const wrapper = document.getElementById("checkoutItems");
+  const totalEl = document.getElementById("checkoutTotal");
+
+  const items = window.Cart.items;
+  let total = 0;
+
+  if (!items || items.length === 0) {
+    wrapper.innerHTML = `<p style="color:#9ca4b1;">Your cart is empty.</p>`;
+    totalEl.innerText = formatPrice(0);
+    return;
+  }
+
+  let html = "";
+  items.forEach(i => {
+    total += i.price * i.qty;
+
+    html += `
+      <div class="checkout-card">
+        <img src="${i.image}" class="checkout-img">
+
+        <div class="checkout-info">
+          <div class="checkout-name">${i.name}</div>
+          <div class="checkout-price">${formatPrice(i.price)}</div>
+          <div class="checkout-qty">Qty: ${i.qty}</div>
+        </div>
+      </div>
+    `;
+  });
+
+  wrapper.innerHTML = html;
+  totalEl.innerText = formatPrice(total);
+});
+
+/* =====================================================
+   STRIPE CHECKOUT REDIRECT
+===================================================== */
+document.getElementById("checkoutPay").onclick = async () => {
+  const cart = window.Cart.items;
+
+  if (!cart || cart.length === 0) {
+    alert("Your cart is empty.");
+    return;
+  }
+
+  try {
+    const res = await fetch(
+      "https://website-5eml.onrender.com/pay/create-checkout-session",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          cart,
+          currency: userCurrency // Send user's currency to backend
+        })
       }
+    );
 
-      let html = "";
-      items.forEach(i => {
-        total += i.price * i.qty;
+    const data = await res.json();
 
-        html += `
-          <div class="checkout-card">
-            <img src="${i.image}" class="checkout-img">
-
-            <div class="checkout-info">
-              <div class="checkout-name">${i.name}</div>
-              <div class="checkout-price">£${i.price}</div>
-              <div class="checkout-qty">Qty: ${i.qty}</div>
-            </div>
-          </div>
-        `;
-      });
-
-      wrapper.innerHTML = html;
-      totalEl.innerText = "£" + total.toFixed(2);
-    });
-
-    /* Stripe Payment Redirect */
-    document.getElementById("checkoutPay").onclick = async () => {
-      const cart = window.Cart.items;
-
-      if (!cart || cart.length === 0) {
-        alert("Your cart is empty.");
-        return;
-      }
-
-      try {
-        const res = await fetch("https://website-5eml.onrender.com/pay/create-checkout-session", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ cart })
-        });
-
-        const data = await res.json();
-
-        if (data.url) {
-          window.location.href = data.url;
-        } else {
-          alert(data.error || "Payment session failed.");
-        }
-
-      } catch (err) {
-        alert("Unable to reach payment server.");
-      }
-    };
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      alert(data.error || "Payment session failed.");
+    }
+  } catch (err) {
+    alert("Unable to reach payment server.");
+  }
+};
   </script>
 
 </body>
