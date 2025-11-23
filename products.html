@@ -40,22 +40,19 @@
       Browse the full TamedBlox shop.
     </p>
 
-    <!-- SEARCH -->
     <input id="searchInput" placeholder="Search products..." class="modern-input" style="margin-top:20px;">
   </section>
 
   <!-- PRODUCT GRID -->
   <div id="productGrid" class="product-grid"></div>
 
-  <!-- CART DRAWER -->
+  <!-- CART -->
   <div id="cartDrawer" class="cart-drawer"></div>
   <div id="cartOverlay" class="cart-overlay"></div>
 
   <!-- FOOTER -->
   <div id="footer"></div>
-  <script>
-    loadComponent("#footer", "components/footer.html");
-  </script>
+  <script> loadComponent("#footer", "components/footer.html"); </script>
 
   <!-- JS -->
   <script src="assets/js/app.js"></script>
@@ -63,38 +60,33 @@
   <script src="assets/js/drawer.js"></script>
   <script src="assets/js/auth.js"></script>
 
-  <!-- ⭐ PRODUCT SCRIPT -->
+  <!-- PRODUCT SCRIPT -->
   <script>
 
-    const imgURL = "https://static.wikia.nocookie.net/stealabr/images/5/58/Strawberryelephant.png/revision/latest?cb=20250830235735";
+    const imgURL =
+      "https://static.wikia.nocookie.net/stealabr/images/5/58/Strawberryelephant.png/revision/latest?cb=20250830235735";
 
-    /* =========================================
-       13 TEST PRODUCTS WITH RANDOM OLD PRICES
-    ========================================== */
+    const rarityOptions = ["God", "Secret", "Mythic", "OG", "Limited", "Exclusive"];
+
+    function makeRandomOldPrice(price) {
+      return Number((price + (Math.random() * 10 + 5)).toFixed(2));
+    }
+
     const products = [];
+    const names = ["Test A","Test B","Test C","Test D","Test E","Test F","Test G","Test H","Test I","Test J"];
 
-    function makeProduct() {
-      const price = Number((Math.random() * 20 + 3).toFixed(2)); 
-      const old = Number((price + (Math.random() * 10 + 5)).toFixed(2));
-
-      return {
-        name: "Test",
-        rarity: ["God", "Secret", "OG", "Mythic", "Limited", "Exclusive"][Math.floor(Math.random()*6)],
+    for (let i = 0; i < 10; i++) {
+      const price = Number((Math.random() * 20 + 3).toFixed(2));
+      products.push({
+        name: names[i],
+        rarity: rarityOptions[Math.floor(Math.random() * rarityOptions.length)],
         price: price,
-        oldPrice: old,
+        oldPrice: makeRandomOldPrice(price),
         image: imgURL
-      };
+      });
     }
 
-    for (let i = 0; i < 13; i++) {
-      products.push(makeProduct());
-    }
-
-    /* =========================================
-       DISCOUNTS
-    ========================================== */
     function getDiscountPercent(price, oldPrice) {
-      if (!oldPrice || oldPrice <= price) return 0;
       return Math.round(((oldPrice - price) / oldPrice) * 100);
     }
 
@@ -105,29 +97,24 @@
       return "discount-green";
     }
 
-    /* =========================================
-       RENDER PRODUCTS
-    ========================================== */
     function renderProducts(list) {
       const grid = document.getElementById("productGrid");
       grid.innerHTML = "";
 
       list.forEach(p => {
-        const discountPercent = getDiscountPercent(p.price, p.oldPrice);
+        const percent = getDiscountPercent(p.price, p.oldPrice);
         const rarityClass = `tag-${p.rarity.toLowerCase()}`;
-
-        const discountHTML = discountPercent
-          ? `<span class="discount-tag ${getDiscountClass(discountPercent)}">-${discountPercent}%</span>`
-          : "";
 
         grid.innerHTML += `
           <div class="card">
+
             <div class="card-badges">
               <span class="tag ${rarityClass}">${p.rarity}</span>
-              ${discountHTML}
+              <span class="discount-tag ${getDiscountClass(percent)}">-${percent}%</span>
             </div>
 
             <img src="${p.image}" class="product-img">
+
             <h3>${p.name}</h3>
 
             <div class="price-box">
@@ -136,10 +123,10 @@
             </div>
 
             <button class="buy-btn" onclick="addToCart('${p.name}', this)">
-              <svg xmlns="http://www.w3.org/2000/svg" 
-                class="btn-cart-icon" width="16" height="16" 
-                viewBox="0 0 24 24" fill="none" 
-                stroke="currentColor" stroke-width="2" 
+              <svg xmlns="http://www.w3.org/2000/svg"
+                class="btn-cart-icon" width="16" height="16"
+                viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="9" cy="21" r="1"></circle>
                 <circle cx="20" cy="21" r="1"></circle>
@@ -152,21 +139,14 @@
       });
     }
 
-    /* =========================================
-       SEARCH
-    ========================================== */
     function setupSearch() {
       const input = document.getElementById("searchInput");
       input.addEventListener("input", () => {
         const q = input.value.toLowerCase();
-        const filtered = products.filter(p => p.name.toLowerCase().includes(q));
-        renderProducts(filtered);
+        renderProducts(products.filter(p => p.name.toLowerCase().includes(q)));
       });
     }
 
-    /* =========================================
-       ADD TO CART (ANIMATED)
-    ========================================== */
     function addToCart(name, btn) {
       const product = products.find(p => p.name === name);
       if (!product) return;
@@ -177,9 +157,6 @@
       Cart.addItem(product, img);
     }
 
-    /* =========================================
-       INIT
-    ========================================== */
     document.addEventListener("DOMContentLoaded", () => {
       renderProducts(products);
       setupSearch();
