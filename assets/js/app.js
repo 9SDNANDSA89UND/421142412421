@@ -22,9 +22,16 @@ const exchangeRates = {
   PLN: 5.06
 };
 
+/* =====================================================
+   LOAD SAVED OR AUTO CURRENCY (BEFORE ANYTHING ELSE)
+===================================================== */
+
+let savedCurrency = localStorage.getItem("tamedblox_currency");
+let userCurrency = savedCurrency || "AUTO";   // AUTO = autodetect on first load
+
 /* ------------------------------ */
 async function loadRates() {
-  return true;
+  return true; // static system, no API fetch needed
 }
 
 /* ------------------------------ */
@@ -32,19 +39,26 @@ async function detectUserCurrency() {
   try {
     const res = await fetch("https://ipapi.co/json/");
     const data = await res.json();
-    if (exchangeRates[data.currency]) return data.currency;
+
+    if (exchangeRates[data.currency]) {
+      return data.currency;
+    }
   } catch (err) {}
+
   return "GBP";
 }
 
-/* ------------------------------ */
+/* =====================================================
+   PRICE CONVERSION FUNCTIONS
+===================================================== */
+
 function convertPrice(amountGBP, currency) {
   return amountGBP * (exchangeRates[currency] || 1);
 }
 
-/* ------------------------------ */
 function formatPrice(amountGBP) {
   const converted = convertPrice(amountGBP, userCurrency);
+
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: userCurrency,
@@ -53,19 +67,14 @@ function formatPrice(amountGBP) {
 }
 
 /* =====================================================
-   LOAD SAVED CURRENCY (BEFORE ANY RENDER)
+   NAVBAR WAIT + DROPDOWN INIT
 ===================================================== */
 
-let savedCurrency = localStorage.getItem("tamedblox_currency");
-let userCurrency = savedCurrency || "AUTO";
-
-/* ------------------------------ */
 function waitForNavbar(cb) {
   if (document.getElementById("currencySelector")) return cb();
   setTimeout(() => waitForNavbar(cb), 20);
 }
 
-/* ------------------------------ */
 function initCurrencyDropdown() {
   const dropdown = document.getElementById("currencySelector");
   if (!dropdown) return;
@@ -114,14 +123,16 @@ function normalizeProducts() {
 /* =====================================================
    DISCOUNTS
 ===================================================== */
+
 function getDiscountPercent(price, oldPrice) {
   if (!oldPrice || oldPrice <= price) return 0;
   return Math.round(((oldPrice - price) / oldPrice) * 100);
 }
 
 /* =====================================================
-   RENDER PRODUCT CARDS
+   RENDER PRODUCTS
 ===================================================== */
+
 function renderProducts(list) {
   const grid = document.getElementById("productGrid");
   if (!grid) return;
@@ -176,6 +187,7 @@ function setupSearch() {
 /* =====================================================
    CART
 ===================================================== */
+
 function addToCart(name, btn) {
   const product = products.find(p => p.name === name);
   const img = btn.closest(".card").querySelector(".product-img");
@@ -183,8 +195,9 @@ function addToCart(name, btn) {
 }
 
 /* =====================================================
-   CARD TILT
+   CARD TILT EFFECT
 ===================================================== */
+
 function initCardTilt() {
   const cards = document.querySelectorAll(".card");
 
@@ -214,17 +227,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   await loadRates();
 
-  // Apply saved or detected currency BEFORE render
+  // Detect first-time auto currency
   if (userCurrency === "AUTO") {
     userCurrency = await detectUserCurrency();
   }
 
-  // Navbar initializes dropdown (does not affect currency)
+  // Navbar initializes dropdown
   waitForNavbar(() => {
     initCurrencyDropdown();
   });
 
-  // NOW load products with correct currency
+  // NOW load products (currency is final)
   await loadProducts();
 
   setupSearch();
