@@ -107,19 +107,14 @@
     loadComponent("#footer", "components/footer.html");
   </script>
 
-  <!-- JS -->
+  <!-- JS SCRIPTS -->
   <script src="assets/js/app.js"></script>
   <script src="assets/js/cart.js"></script>
   <script src="assets/js/drawer.js"></script>
   <script src="assets/js/auth.js"></script>
 
-  <!-- ⭐ FINAL FIX: Load backend products AFTER ALL SCRIPTS -->
-  <script>
-    window.addEventListener("load", async () => {
-      console.log("🔥 Homepage loading backend products...");
-      await loadProducts();
-    });
-  </script>
+  <!-- ❌ Removed the loadProducts() override here -->
+  <!-- This block caused GBP overwrite and broke currency conversion -->
 
 </body>
 </html>
