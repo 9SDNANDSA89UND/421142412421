@@ -11,7 +11,7 @@ const products = [
     image: "https://i.postimg.cc/tCT9T6xC/Carti.webp"
   }
 
-  // ⭐ Add more real products below manually
+  // ⭐ Add more real products here manually
 ];
 
 /* =========================================
@@ -31,7 +31,7 @@ function getDiscountClass(percent) {
 }
 
 /* =========================================
-   PRODUCT RENDERING
+   PRODUCT RENDERING (NEW BADGE)
 ========================================= */
 
 function renderProducts(list) {
@@ -44,12 +44,26 @@ function renderProducts(list) {
     const percent = getDiscountPercent(p.price, p.oldPrice);
     const rarityClass = `tag-${p.rarity.toLowerCase()}`;
 
+    const discountHTML = p.oldPrice
+      ? `
+        <span class="discount-badge ${getDiscountClass(percent)}">
+          <svg class="discount-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7 7h.01"/>
+            <path d="m7.5 21.5 14-14a2.121 2.121 0 0 0 0-3l-2-2a2.121 2.121 0 0 0-3 0l-14 14a2.121 2.121 0 0 0 0 3l2 2a2.121 2.121 0 0 0 3 0Z"/>
+          </svg>
+          <span class="discount-text">${percent}% Discount</span>
+        </span>
+      `
+      : "";
+
     grid.innerHTML += `
       <div class="card">
 
         <div class="card-badges">
           <span class="tag ${rarityClass}">${p.rarity}</span>
-          ${p.oldPrice ? `<span class="discount-tag ${getDiscountClass(percent)}">-${percent}%</span>` : ""}
+          ${discountHTML}
         </div>
 
         <img src="${p.image}" alt="${p.name}" class="product-img">
