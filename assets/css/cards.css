@@ -12,28 +12,23 @@
 }
 
 /* ============================================================
-   PRODUCT CARD
+   PRODUCT CARD — PREMIUM
 ============================================================ */
 .card {
   background: rgba(17, 25, 31, 0.9);
   border: 1px solid rgba(78, 245, 138, 0.15);
   border-radius: 20px;
 
-  padding: 18px 18px 22px;
-
-  position: relative;
-  overflow: hidden;
-
+  padding: 18px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  position: relative;
 
   transition: 0.25s ease;
-  box-shadow: 0 0 0 rgba(78, 245, 138, 0);
 }
 
 .card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-5px);
   box-shadow: 0 0 22px rgba(78, 245, 138, 0.25);
 }
 
@@ -43,11 +38,12 @@
 .product-img {
   width: 100%;
   height: 250px;
-  border-radius: 14px;
-  padding: 6px;
 
+  border-radius: 14px;
   object-fit: contain;
+
   background: rgba(255,255,255,0.03);
+  padding: 6px;
 
   display: flex;
   align-items: center;
@@ -74,48 +70,33 @@
    RARITY TAG
 ============================================================ */
 .tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
   padding: 6px 14px;
   font-size: 13px;
   font-weight: 700;
 
   border-radius: 40px;
-  color: white;
+  color: #fff;
 
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255,255,255,0.15);
 
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-
   box-shadow: 0 0 12px currentColor;
-  text-shadow: 0 0 4px currentColor;
 }
 
 .tag svg {
-  width: 15px !important;
-  height: 15px !important;
-  stroke-width: 2;
-  stroke: currentColor;
-  flex-shrink: 0;
+  width: 16px !important;
+  height: 16px !important;
+  stroke: currentColor !important;
+  flex-shrink: 0 !important;
 }
 
-/* Rarity Colors */
-.tag-god {
-  color: #ff48ff;
-  background: rgba(255, 0, 255, 0.22);
-}
-
-.tag-secret {
-  color: #00d2ff;
-  background: rgba(0, 210, 255, 0.22);
-}
-
-.tag-og {
-  color: #ffb03a;
-  background: rgba(255,170,60,0.22);
-}
+.tag-god { color:#ff48ff; background:rgba(255,0,255,0.22); }
+.tag-secret { color:#00d2ff; background:rgba(0,210,255,0.22); }
+.tag-og { color:#ffb03a; background:rgba(255,170,60,0.22); }
 
 /* ============================================================
    DISCOUNT TAG
@@ -125,7 +106,7 @@
   align-items: center;
   gap: 6px;
 
-  padding: 6px 16px;
+  padding: 6px 14px;
   font-size: 13px;
   font-weight: 800;
 
@@ -133,19 +114,18 @@
   color: #0b0f14;
 
   background: #4ef58a;
-  box-shadow: 0 0 6px rgba(78,245,138,0.5);
+  box-shadow: 0 0 8px rgba(78,245,138,0.5);
 }
 
 .discount-tag svg {
-  width: 15px !important;
-  height: 15px !important;
-  stroke-width: 2;
+  width: 16px !important;
+  height: 16px !important;
   stroke: #0b0f14 !important;
-  flex-shrink: 0;
+  flex-shrink: 0 !important;
 }
 
 /* ============================================================
-   PRODUCT TITLE
+   PRODUCT NAME
 ============================================================ */
 .card h3 {
   margin-top: 16px;
@@ -158,13 +138,13 @@
 }
 
 /* ============================================================
-   PRICING
+   PRICE
 ============================================================ */
 .price-box {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin: 12px 0 20px;
+  margin: 14px 0 20px;
 }
 
 .price {
@@ -180,7 +160,7 @@
 }
 
 /* ============================================================
-   BUTTON
+   ADD TO CART BUTTON
 ============================================================ */
 .buy-btn {
   width: 100%;
@@ -206,12 +186,11 @@
 
 .buy-btn:hover {
   transform: translateY(-3px);
-  box-shadow: 0 0 12px rgba(78,245,138,0.4);
+  box-shadow: 0 0 12px rgba(78, 245, 138, 0.4);
 }
 
 .btn-cart-icon {
-  width: 17px !important;
-  height: 17px !important;
-  stroke-width: 2;
-  stroke: #0d1117;
+  width: 17px;
+  height: 17px;
+  opacity: 0.85;
 }
