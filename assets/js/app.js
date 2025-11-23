@@ -52,15 +52,20 @@ function formatPrice(amountGBP) {
   }).format(converted);
 }
 
-/* ------------------------------ */
-let savedCurrency = localStorage.getItem("tamedblox_currency");
-let userCurrency = "GBP";
+/* =====================================================
+   LOAD SAVED CURRENCY (BEFORE ANY RENDER)
+===================================================== */
 
+let savedCurrency = localStorage.getItem("tamedblox_currency");
+let userCurrency = savedCurrency || "AUTO";
+
+/* ------------------------------ */
 function waitForNavbar(cb) {
   if (document.getElementById("currencySelector")) return cb();
   setTimeout(() => waitForNavbar(cb), 20);
 }
 
+/* ------------------------------ */
 function initCurrencyDropdown() {
   const dropdown = document.getElementById("currencySelector");
   if (!dropdown) return;
@@ -92,7 +97,6 @@ async function loadProducts() {
     products = await res.json();
 
     normalizeProducts();
-
     renderProducts(products);
 
   } catch (err) {
@@ -100,7 +104,6 @@ async function loadProducts() {
   }
 }
 
-/* Convert price fields to real numbers */
 function normalizeProducts() {
   products.forEach(p => {
     p.price = Number(p.price);
@@ -158,7 +161,7 @@ function renderProducts(list) {
 }
 
 /* =====================================================
-   SEARCH BAR SUPPORT
+   SEARCH
 ===================================================== */
 function setupSearch() {
   const input = document.getElementById("searchInput");
@@ -171,7 +174,7 @@ function setupSearch() {
 }
 
 /* =====================================================
-   ADD TO CART
+   CART
 ===================================================== */
 function addToCart(name, btn) {
   const product = products.find(p => p.name === name);
@@ -180,7 +183,7 @@ function addToCart(name, btn) {
 }
 
 /* =====================================================
-   3D TILT EFFECT
+   CARD TILT
 ===================================================== */
 function initCardTilt() {
   const cards = document.querySelectorAll(".card");
@@ -208,25 +211,21 @@ function initCardTilt() {
 ===================================================== */
 
 document.addEventListener("DOMContentLoaded", async () => {
+
   await loadRates();
 
-  // temporary state
-  userCurrency = "GBP_DEFAULT_PENDING";
-
-  // detect or load saved currency
-  if (!savedCurrency || savedCurrency === "AUTO") {
+  // Apply saved or detected currency BEFORE render
+  if (userCurrency === "AUTO") {
     userCurrency = await detectUserCurrency();
-  } else {
-    userCurrency = savedCurrency;
   }
 
-  // wait for navbar THEN run dropdown + load products
+  // Navbar initializes dropdown (does not affect currency)
   waitForNavbar(() => {
     initCurrencyDropdown();
-
-    // ⭐ now products render with correct currency
-    loadProducts();
   });
+
+  // NOW load products with correct currency
+  await loadProducts();
 
   setupSearch();
 
