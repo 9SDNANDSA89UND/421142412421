@@ -1,6 +1,6 @@
 /* =====================================================
-   FRONTEND-ONLY CURRENCY SYSTEM — FINAL VERSION
-   Backend always returns GBP — we convert it here.
+   FRONTEND-ONLY CURRENCY SYSTEM — FINAL VERSION (v8)
+   Backend always returns GBP — we convert on frontend.
 ===================================================== */
 
 /* ------------------------------
@@ -29,7 +29,7 @@ const exchangeRates = {
 let userCurrency = localStorage.getItem("tamedblox_currency") || "GBP";
 
 /* =====================================================
-   CURRENCY CONVERSION (SIMPLE & RELIABLE)
+   CURRENCY CONVERSION
 ===================================================== */
 
 function convertPrice(amountGBP) {
@@ -45,7 +45,7 @@ function formatPrice(amountGBP) {
 }
 
 /* =====================================================
-   CURRENCY DROPDOWN (INSTANT RE-RENDER)
+   CURRENCY DROPDOWN
 ===================================================== */
 
 function initCurrencyDropdown() {
@@ -58,13 +58,13 @@ function initCurrencyDropdown() {
     userCurrency = dropdown.value;
     localStorage.setItem("tamedblox_currency", userCurrency);
 
-    // Re-render products instantly
+    // Re-render prices instantly
     renderProducts(products);
   });
 }
 
 /* =====================================================
-   BACKEND PRODUCT LOADING
+   PRODUCT DATA
 ===================================================== */
 
 let products = [];
@@ -74,7 +74,6 @@ async function loadProducts() {
     const res = await fetch("https://website-5eml.onrender.com/products");
     products = await res.json();
 
-    // Ensure number format
     products.forEach(p => {
       p.price = Number(p.price);
       if (p.oldPrice) p.oldPrice = Number(p.oldPrice);
@@ -88,7 +87,7 @@ async function loadProducts() {
 }
 
 /* =====================================================
-   PRODUCT RENDERER (CURRENCY APPLIED HERE)
+   PRODUCT RENDERER
 ===================================================== */
 
 function getDiscountPercent(price, oldPrice) {
@@ -158,7 +157,7 @@ function addToCart(name, btn) {
 }
 
 /* =====================================================
-   3D CARD TILT
+   3D TILT EFFECT
 ===================================================== */
 
 function initCardTilt() {
@@ -183,23 +182,37 @@ function initCardTilt() {
 }
 
 /* =====================================================
-   MAIN INITIALIZER
+   MAIN INITIALIZER (v8 FIX)
 ===================================================== */
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", () => {
 
-  // Wait for navbar to exist
+  /* 
+    FIX FOR PRICES ALWAYS SHOWING GBP:
+    ---------------------------------
+    We delay loading products UNTIL the navbar (dropdown)
+    is fully loaded. This ensures userCurrency is correct
+    BEFORE renderProducts() ever runs.
+  */
+
   const wait = setInterval(() => {
-    if (document.getElementById("currencySelector")) {
+    const dropdown = document.getElementById("currencySelector");
+    if (dropdown) {
       clearInterval(wait);
+
+      // init dropdown FIRST
       initCurrencyDropdown();
+
+      // THEN load products (correct currency applied)
+      loadProducts();
+
+      // Setup search once data exists
+      setupSearch();
+
+      // Init cart
+      if (window.Cart && window.Cart.init) {
+        window.Cart.init();
+      }
     }
   }, 20);
-
-  await loadProducts();
-  setupSearch();
-
-  if (window.Cart && window.Cart.init) {
-    window.Cart.init();
-  }
 });
