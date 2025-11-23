@@ -1,17 +1,19 @@
 /* =====================================================
-   CURRENCY SYSTEM — FIXED + BACKEND PRODUCT SUPPORT
+   STATIC CURRENCY SYSTEM — 100% RELIABLE (NO API)
+   BASE: GBP
 ===================================================== */
 
 /* ------------------------------
-   FALLBACK EXCHANGE RATES (GBP→X)
-   Used if API fails
+   STATIC EXCHANGE RATES
+   These ALWAYS load instantly.
 ------------------------------ */
-const fallbackRates = {
+const exchangeRates = {
+  GBP: 1,
   USD: 1.27,
   EUR: 1.17,
   CAD: 1.74,
   AUD: 1.96,
-  JPY: 187.3,
+  JPY: 187.30,
   AED: 4.67,
   HKD: 9.94,
   SGD: 1.71,
@@ -22,23 +24,10 @@ const fallbackRates = {
 };
 
 /* ------------------------------
-   LIVE EXCHANGE RATES
+   Fake loader (no API needed)
 ------------------------------ */
-let exchangeRates = { rates: {} };
-
 async function loadRates() {
-  try {
-    const res = await fetch("https://open.er-api.com/v6/latest/GBP");
-    const data = await res.json();
-
-    if (data && data.result === "success" && data.rates) {
-      exchangeRates.rates = data.rates;
-      return;
-    }
-  } catch (err) {}
-
-  // API failed → fallback
-  exchangeRates.rates = fallbackRates;
+  return true;
 }
 
 /* ------------------------------
@@ -48,23 +37,20 @@ async function detectUserCurrency() {
   try {
     const res = await fetch("https://ipapi.co/json/");
     const data = await res.json();
-    if (data.currency) return data.currency;
+    if (exchangeRates[data.currency]) return data.currency;
   } catch (err) {}
-
   return "GBP";
 }
 
 /* ------------------------------
-   CONVERT PRICE (GBP → userCurrency)
+   CONVERT GBP TO USER CURRENCY
 ------------------------------ */
 function convertPrice(amountGBP, currency) {
-  const rate = exchangeRates.rates[currency];
-  if (!rate) return amountGBP;
-  return amountGBP * rate;
+  return amountGBP * (exchangeRates[currency] || 1);
 }
 
 /* ------------------------------
-   FORMAT PRICE
+   FORMAT CURRENCY STRING
 ------------------------------ */
 function formatPrice(amountGBP) {
   const converted = convertPrice(amountGBP, userCurrency);
@@ -76,9 +62,8 @@ function formatPrice(amountGBP) {
 }
 
 /* ------------------------------
-   CURRENCY DROPDOWN SETUP
+   CURRENCY DROPDOWN
 ------------------------------ */
-
 let savedCurrency = localStorage.getItem("tamedblox_currency");
 let userCurrency = "GBP";
 
@@ -107,7 +92,7 @@ function initCurrencyDropdown() {
 }
 
 /* =====================================================
-   LOAD PRODUCTS FROM BACKEND
+   BACKEND PRODUCT LOADING
 ===================================================== */
 
 let products = [];
@@ -121,11 +106,11 @@ async function loadProducts() {
     renderProducts(products);
 
   } catch (err) {
-    console.error("❌ Failed to load products from backend:", err);
+    console.error("❌ Failed to load backend products:", err);
   }
 }
 
-/* Ensure numeric fields */
+/* Convert price fields to real numbers */
 function normalizeProducts() {
   products.forEach(p => {
     p.price = Number(p.price);
@@ -152,7 +137,7 @@ function renderProducts(list) {
 
   list.forEach(p => {
     const percent = getDiscountPercent(p.price, p.oldPrice);
-    const rarityClass = `tag-${p.rarity?.toLowerCase() || "secret"}`;
+    const rarityClass = `tag-${(p.rarity || "Secret").toLowerCase()}`;
 
     grid.innerHTML += `
       <div class="card">
@@ -183,7 +168,7 @@ function renderProducts(list) {
 }
 
 /* =====================================================
-   SEARCH BAR
+   SEARCH BAR SUPPORT
 ===================================================== */
 function setupSearch() {
   const input = document.getElementById("searchInput");
@@ -196,7 +181,7 @@ function setupSearch() {
 }
 
 /* =====================================================
-   CART ADDING
+   ADD TO CART
 ===================================================== */
 function addToCart(name, btn) {
   const product = products.find(p => p.name === name);
@@ -233,26 +218,26 @@ function initCardTilt() {
 ===================================================== */
 document.addEventListener("DOMContentLoaded", async () => {
 
-  // 1. Load FX rates
+  // Load exchange rates (static, instant)
   await loadRates();
 
-  // 2. Detect or load currency
+  // Detect or load currency preference
   if (!savedCurrency || savedCurrency === "AUTO") {
     userCurrency = await detectUserCurrency();
   } else {
     userCurrency = savedCurrency;
   }
 
-  // 3. Wait for navbar then init dropdown
+  // Init dropdown once navbar loads
   waitForNavbar(initCurrencyDropdown);
 
-  // 4. Load backend products
+  // Load backend products
   await loadProducts();
 
-  // 5. Search
+  // Setup search
   setupSearch();
 
-  // 6. Init cart last
+  // Init cart
   if (window.Cart && window.Cart.init) {
     window.Cart.init();
   }
