@@ -1,12 +1,21 @@
 /* =========================================
-   CART SYSTEM (MODULAR)
+   CART SYSTEM (NOW WITH AUTO CURRENCY)
 ========================================= */
+
+/* --- MUST MATCH app.js --- */
+function formatPrice(amount) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: userCurrency,   // comes from app.js
+    minimumFractionDigits: 2
+  }).format(amount);
+}
 
 window.Cart = {
   items: [],
 
   /* -----------------------------
-     INIT CART FROM LOCALSTORAGE
+     INIT
   ----------------------------- */
   init() {
     const saved = localStorage.getItem("tamedblox_cart");
@@ -26,7 +35,7 @@ window.Cart = {
   },
 
   /* -----------------------------
-     ⭐ FLY TO CART ANIMATION + BOUNCE + PARTICLES
+     FLY TO CART ANIMATION
   ----------------------------- */
   flyToCart(imgSrc, startElement) {
     const cartIcon = document.getElementById("cartBtn");
@@ -44,12 +53,12 @@ window.Cart = {
 
     document.body.appendChild(flyImg);
 
-    /* ⭐ PARTICLE TRAIL */
-    let particleInterval = setInterval(() => {
+    let trail = setInterval(() => {
       const particle = document.createElement("div");
       particle.className = "fly-particle";
-      particle.style.left = flyImg.getBoundingClientRect().left + "px";
-      particle.style.top = flyImg.getBoundingClientRect().top + "px";
+      const rect = flyImg.getBoundingClientRect();
+      particle.style.left = rect.left + "px";
+      particle.style.top = rect.top + "px";
       document.body.appendChild(particle);
 
       requestAnimationFrame(() => {
@@ -60,33 +69,28 @@ window.Cart = {
       setTimeout(() => particle.remove(), 500);
     }, 45);
 
-    /* ⭐ Start the fly animation */
     requestAnimationFrame(() => {
       flyImg.style.transform = `
-        translate(${endRect.left - startRect.left}px, 
+        translate(${endRect.left - startRect.left}px,
                   ${endRect.top - startRect.top}px)
         scale(0.2)
       `;
       flyImg.style.opacity = "0";
     });
 
-    /* ⭐ BOUNCE ON IMPACT */
     setTimeout(() => {
       cartIcon.style.animation = "cartBounce 0.35s ease";
-      setTimeout(() => {
-        cartIcon.style.animation = "";
-      }, 350);
+      setTimeout(() => cartIcon.style.animation = "", 350);
     }, 850);
 
-    /* Clean up */
     setTimeout(() => {
-      clearInterval(particleInterval);
+      clearInterval(trail);
       flyImg.remove();
     }, 900);
   },
 
   /* -----------------------------
-     ADD ITEM + FLY ANIMATION
+     ADD ITEM
   ----------------------------- */
   addItem(product, clickedElement = null) {
     const existing = this.items.find(i => i.name === product.name);
@@ -104,14 +108,13 @@ window.Cart = {
 
     this.save();
 
-    /* ⭐ Trigger Animation */
     if (clickedElement) {
       this.flyToCart(product.image, clickedElement);
     }
   },
 
   /* -----------------------------
-     CHANGE QUANTITY
+     CHANGE QTY
   ----------------------------- */
   changeQty(name, amount) {
     const item = this.items.find(i => i.name === name);
@@ -126,7 +129,7 @@ window.Cart = {
   },
 
   /* -----------------------------
-     REMOVE ITEM COMPLETELY
+     REMOVE ITEM
   ----------------------------- */
   remove(name) {
     this.items = this.items.filter(i => i.name !== name);
@@ -145,6 +148,7 @@ window.Cart = {
 
   /* -----------------------------
      UPDATE CART DRAWER UI
+     (NOW FORMATTED WITH CURRENCY)
   ----------------------------- */
   updateDrawer() {
     const drawer = document.getElementById("drawerContent");
@@ -152,7 +156,7 @@ window.Cart = {
 
     if (this.items.length === 0) {
       drawer.innerHTML = `<p style="color:#9ca4b1;">Your cart is empty.</p>`;
-      document.getElementById("drawerTotal").innerText = "£0.00";
+      document.getElementById("drawerTotal").innerText = formatPrice(0);
       return;
     }
 
@@ -168,7 +172,7 @@ window.Cart = {
 
           <div class="cart-info">
             <div class="cart-name">${item.name}</div>
-            <div class="cart-price">£${item.price}</div>
+            <div class="cart-price">${formatPrice(item.price)}</div>
           </div>
 
           <div class="cart-qty-controls">
@@ -186,7 +190,6 @@ window.Cart = {
 
     drawer.innerHTML = html;
 
-    /* ⭐ NEW total updater */
-    document.getElementById("drawerTotal").innerText = "£" + total.toFixed(2);
+    document.getElementById("drawerTotal").innerText = formatPrice(total);
   }
 };
