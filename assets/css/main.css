@@ -138,7 +138,7 @@ a {
 }
 
 /* ==========================================
-   🔥 NEW ACCOUNT + LOGOUT BUTTONS
+   🔥 NEW ACCOUNT + LOGOUT BUTTONS (WITH SVG)
 ========================================== */
 .nav-account-btn,
 .nav-logout-btn {
@@ -149,8 +149,23 @@ a {
   color: #ffffff;
   font-weight: 600;
   font-size: 14px;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
   cursor: pointer;
   backdrop-filter: blur(6px);
+  transition: 0.2s ease;
+}
+
+/* SVG icons */
+.nav-account-btn svg,
+.nav-logout-btn svg {
+  width: 18px;
+  height: 18px;
+  stroke: #ffffff;
+  opacity: 0.85;
   transition: 0.2s ease;
 }
 
@@ -161,11 +176,21 @@ a {
   color: #4ef58a;
 }
 
+.nav-account-btn:hover svg {
+  stroke: #4ef58a;
+  opacity: 1;
+}
+
 /* Red hover for Logout */
 .nav-logout-btn:hover {
   background: rgba(255, 60, 60, 0.18);
   border-color: rgba(255, 60, 60, 0.45);
   color: #ff6b6b;
+}
+
+.nav-logout-btn:hover svg {
+  stroke: #ff6b6b;
+  opacity: 1;
 }
 
 /* Spacing next to Cart */
