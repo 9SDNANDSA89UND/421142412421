@@ -31,6 +31,9 @@ async function loadChat() {
 
   window.USER_CHAT = chat;
 
+  // ⭐ FIX #1 — REQUIRED: attach user email to USER_CHAT
+  window.USER_CHAT.userEmail = user.email;
+
   // Order summary
   const order = chat.orderDetails;
   document.getElementById("chatOrderSummary").innerHTML = `
@@ -99,5 +102,11 @@ document.getElementById("chatSend").onclick = async () => {
 
 document.addEventListener("DOMContentLoaded", () => {
   loadChat();
-  setInterval(refreshMessages, 2000);
+
+  // ⭐ FIX #2 — Prevent errors before USER_CHAT is loaded
+  setInterval(() => {
+    if (window.USER_CHAT && window.USER_CHAT._id) {
+      refreshMessages();
+    }
+  }, 2000);
 });
