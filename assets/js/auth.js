@@ -1,17 +1,13 @@
-/* =========================================
-   AUTH HANDLERS (FRONTEND ONLY)
-========================================= */
-
 function initAuth() {
   const loginBtn = document.getElementById("openLogin");
   const signupBtn = document.getElementById("openSignup");
 
-  // Navbar not loaded yet → try again
+  // Navbar not loaded yet → try until it loads
   if (!loginBtn || !signupBtn) {
-    return setTimeout(initAuth, 50);
+    return setTimeout(initAuth, 80);
   }
 
-  // OPEN / CLOSE MODALS
+  // Modal helpers
   window.openModal = id => {
     document.getElementById(id)?.classList.remove("hidden");
   };
@@ -20,69 +16,74 @@ function initAuth() {
     document.getElementById(id)?.classList.add("hidden");
   };
 
-  loginBtn.addEventListener("click", () => openModal("loginModal"));
-  signupBtn.addEventListener("click", () => openModal("signupModal"));
+  // Open login modal
+  loginBtn.onclick = () => openModal("loginModal");
 
-  /* -------------------------
-     LOGIN SUBMIT
-  ------------------------- */
-  const loginSubmit = document.getElementById("loginSubmit");
-  if (loginSubmit) {
-    loginSubmit.addEventListener("click", async () => {
-      const email = document.getElementById("loginEmail").value;
-      const password = document.getElementById("loginPassword").value;
+  // Open signup modal
+  signupBtn.onclick = () => openModal("signupModal");
 
-      const res = await fetch("https://website-5eml.onrender.com/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password })
-      });
+  /* -----------------------------------
+        LOGIN SUBMIT
+  ------------------------------------ */
+  document.getElementById("loginSubmit").onclick = async () => {
+    const email = document.getElementById("loginEmail").value;
+    const password = document.getElementById("loginPassword").value;
 
-      const data = await res.json();
-
-      if (!data.success) {
-        document.getElementById("loginError").innerText = data.error || "Login failed.";
-        return;
-      }
-
-      localStorage.setItem("authToken", data.token);
-      closeModal("loginModal");
-      location.reload();
+    const res = await fetch("https://website-5eml.onrender.com/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password })
     });
-  }
 
-  /* -------------------------
-     SIGNUP SUBMIT
-  ------------------------- */
-  const signupSubmit = document.getElementById("signupSubmit");
-  if (signupSubmit) {
-    signupSubmit.addEventListener("click", async () => {
-      const username = document.getElementById("signupUsername").value;
-      const email = document.getElementById("signupEmail").value;
-      const password = document.getElementById("signupPassword").value;
+    const data = await res.json();
 
-      const res = await fetch("https://website-5eml.onrender.com/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, email, password })
-      });
+    if (!data.success) {
+      document.getElementById("loginError").innerText =
+        data.error || "Login failed.";
+      return;
+    }
 
-      const data = await res.json();
+    localStorage.setItem("authToken", data.token);
+    closeModal("loginModal");
+    location.reload();
+  };
 
-      if (!data.success) {
-        document.getElementById("signupError").innerText = data.error || "Signup failed.";
-        return;
-      }
+  /* -----------------------------------
+        SIGNUP SUBMIT
+  ------------------------------------ */
+  document.getElementById("signupSubmit").onclick = async () => {
+    const username = document.getElementById("signupUsername").value;
+    const email = document.getElementById("signupEmail").value;
+    const password = document.getElementById("signupPassword").value;
+    const confirm = document.getElementById("signupPasswordConfirm").value;
 
-      localStorage.setItem("authToken", data.token);
-      closeModal("signupModal");
-      location.reload();
+    if (password !== confirm) {
+      document.getElementById("signupError").innerText = "Passwords do not match.";
+      return;
+    }
+
+    const res = await fetch("https://website-5eml.onrender.com/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, email, password })
     });
-  }
 
-  /* -------------------------
-     UPDATE NAVBAR WHEN LOGGED IN
-  ------------------------- */
+    const data = await res.json();
+
+    if (!data.success) {
+      document.getElementById("signupError").innerText =
+        data.error || "Signup failed.";
+      return;
+    }
+
+    localStorage.setItem("authToken", data.token);
+    closeModal("signupModal");
+    location.reload();
+  };
+
+  /* -----------------------------------
+        UPDATE NAVBAR WHEN LOGGED IN
+  ------------------------------------ */
   const token = localStorage.getItem("authToken");
 
   if (token) {
@@ -112,5 +113,5 @@ function initAuth() {
   console.log("Auth initialized.");
 }
 
-// Start once DOM loads
+// Start when DOM is ready
 document.addEventListener("DOMContentLoaded", initAuth);
