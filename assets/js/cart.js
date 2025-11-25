@@ -148,15 +148,21 @@ window.Cart = {
 
   /* -----------------------------
      UPDATE CART DRAWER UI
-     (NOW FORMATTED WITH CURRENCY)
+     (NOW WITH RETRY FIX)
   ----------------------------- */
   updateDrawer() {
     const drawer = document.getElementById("drawerContent");
-    if (!drawer) return;
+
+    // ⭐ FIX: Wait for navbar/drawer to load
+    if (!drawer) {
+      setTimeout(() => this.updateDrawer(), 50);
+      return;
+    }
 
     if (this.items.length === 0) {
       drawer.innerHTML = `<p style="color:#9ca4b1;">Your cart is empty.</p>`;
-      document.getElementById("drawerTotal").innerText = formatPrice(0);
+      const totalEl = document.getElementById("drawerTotal");
+      if (totalEl) totalEl.innerText = formatPrice(0);
       return;
     }
 
@@ -190,6 +196,7 @@ window.Cart = {
 
     drawer.innerHTML = html;
 
-    document.getElementById("drawerTotal").innerText = formatPrice(total);
+    const totalEl = document.getElementById("drawerTotal");
+    if (totalEl) totalEl.innerText = formatPrice(total);
   }
 };
