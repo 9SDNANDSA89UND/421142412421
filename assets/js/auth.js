@@ -6,7 +6,7 @@ function initAuth() {
   const loginBtn = document.getElementById("openLogin");
   const signupBtn = document.getElementById("openSignup");
 
-  // Navbar loads dynamically, retry until present
+  // Navbar loads dynamically → wait for it
   if (!loginBtn || !signupBtn) {
     return setTimeout(initAuth, 80);
   }
@@ -20,10 +20,8 @@ function initAuth() {
     document.getElementById(id)?.classList.add("hidden");
   };
 
-  /* ========= OPEN LOGIN MODAL ========= */
+  /* ========= OPEN MODALS ========= */
   loginBtn.onclick = () => openModal("loginModal");
-
-  /* ========= OPEN SIGNUP MODAL ========= */
   signupBtn.onclick = () => openModal("signupModal");
 
   /* =====================================
@@ -36,7 +34,7 @@ function initAuth() {
     const res = await fetch("https://website-5eml.onrender.com/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ email, password })
     });
 
     const data = await res.json();
@@ -60,29 +58,26 @@ function initAuth() {
     const password = signupPassword.value;
     const confirm = signupPasswordConfirm.value;
 
-    const errorBox = signupError;
-
     if (password !== confirm) {
-      errorBox.innerText = "Passwords do not match.";
+      signupError.innerText = "Passwords do not match.";
       return;
     }
 
     const res = await fetch("https://website-5eml.onrender.com/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, email, password }),
+      body: JSON.stringify({ username, email, password })
     });
 
     const data = await res.json();
 
     if (!data.success) {
-      // Duplicate email/username messages
       if (data.error === "Email already exists") {
-        errorBox.innerText = "That email is already in use.";
+        signupError.innerText = "That email is already in use.";
       } else if (data.error === "Username already exists") {
-        errorBox.innerText = "That username is already taken.";
+        signupError.innerText = "That username is already taken.";
       } else {
-        errorBox.innerText = data.error || "Signup failed.";
+        signupError.innerText = data.error || "Signup failed.";
       }
       return;
     }
@@ -92,35 +87,46 @@ function initAuth() {
     location.reload();
   };
 
-  /* =====================================
-       NAVBAR WHEN LOGGED IN
-  ====================================== */
-  const token = localStorage.getItem("authToken");
-
-  if (token) {
-    const navRight = document.querySelector(".nav-right");
-    if (navRight) {
-      document.getElementById("openLogin")?.remove();
-      document.getElementById("openSignup")?.remove();
-
-      const accountBtn = document.createElement("button");
-      accountBtn.className = "auth-btn";
-      accountBtn.innerText = "Account";
-
-      const logoutBtn = document.createElement("button");
-      logoutBtn.className = "auth-btn";
-      logoutBtn.innerText = "Logout";
-      logoutBtn.onclick = () => {
-        localStorage.removeItem("authToken");
-        location.reload();
-      };
-
-      navRight.appendChild(accountBtn);
-      navRight.appendChild(logoutBtn);
-    }
-  }
+  // Apply logged-in UI separately (fixes logout-on-refresh)
+  applyLoggedInUI();
 
   console.log("Auth initialized.");
+}
+
+/* =====================================
+   FIXED LOGGED-IN UI (NO MORE RESET)
+===================================== */
+function applyLoggedInUI() {
+  const token = localStorage.getItem("authToken");
+  if (!token) return;
+
+  const navRight = document.querySelector(".nav-right");
+
+  // Navbar not loaded yet? → retry until it exists
+  if (!navRight) {
+    return setTimeout(applyLoggedInUI, 80);
+  }
+
+  // Remove login/signup
+  document.getElementById("openLogin")?.remove();
+  document.getElementById("openSignup")?.remove();
+
+  // Account button
+  const accountBtn = document.createElement("button");
+  accountBtn.className = "nav-account-btn";
+  accountBtn.innerText = "Account";
+
+  // Logout button
+  const logoutBtn = document.createElement("button");
+  logoutBtn.className = "nav-logout-btn";
+  logoutBtn.innerText = "Logout";
+  logoutBtn.onclick = () => {
+    localStorage.removeItem("authToken");
+    location.reload();
+  };
+
+  navRight.appendChild(accountBtn);
+  navRight.appendChild(logoutBtn);
 }
 
 /* =====================================
@@ -137,7 +143,7 @@ document.addEventListener("click", (e) => {
   const eyeOpen = toggle.querySelector(".eye-open");
   const eyeClosed = toggle.querySelector(".eye-closed");
 
-  // Swap type
+  // Swap visibility
   if (input.type === "password") {
     input.type = "text";
     eyeOpen.style.display = "none";
@@ -149,5 +155,5 @@ document.addEventListener("click", (e) => {
   }
 });
 
-/* Start auth once DOM loads */
+/* Start auth once DOM is fully loaded */
 document.addEventListener("DOMContentLoaded", initAuth);
