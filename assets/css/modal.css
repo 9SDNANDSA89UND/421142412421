@@ -67,6 +67,41 @@
 }
 
 /* ============================
+   PASSWORD TOGGLE
+============================ */
+
+.password-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.password-wrap .modern-input {
+  margin-bottom: 0;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+  opacity: 0.8;
+  user-select: none;
+  transition: 0.2s ease;
+}
+
+.toggle-password:hover {
+  opacity: 1;
+}
+
+/* Add spacing under combined password fields */
+.password-wrap + .password-wrap {
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+
+/* ============================
    BUTTONS
 ============================ */
 
@@ -78,7 +113,7 @@
   font-weight: 900;
   border-radius: 12px;
   cursor: pointer;
-  margin-top: 5px;
+  margin-top: 16px;
   color: #0b0f14;
   transition: 0.2s;
 }
@@ -102,64 +137,31 @@
 }
 
 /* ============================
-   CAPTCHA
+   ERROR / HINT TEXT
 ============================ */
 
-#captchaText {
-  padding: 10px 14px;
-  background: #0d1117;
-  border: 1px solid #4ef58a60;
-  font-weight: 900;
-  letter-spacing: 2px;
-  user-select: none;
-}
-
-#refreshCaptcha {
-  padding: 10px 14px;
-  background: #4ef58a;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 900;
-}
-
 .modal-hint {
-  font-size: 13px;
-  margin-top: -6px;
-  margin-bottom: 12px;
-}
-
-.modal-hint.valid {
-  color: #4ef58a;
+  font-size: 14px;
+  margin-top: 6px;
+  margin-bottom: 0;
+  display: block;
 }
 
 .modal-hint.invalid {
-  color: #ff6b6b;
+  color: #ff4b4b !important;
+  font-weight: 600;
+}
+
+.modal-hint.valid {
+  color: #4ef58a !important;
+  font-weight: 600;
 }
 
 /* ============================
-   USERNAME SUGGESTIONS
+   USERNAME SUGGESTIONS (REMOVED)
 ============================ */
 
-#usernameSuggestions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
-#usernameSuggestions span {
-  background: rgba(78,245,138,0.2);
-  padding: 6px 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 12px;
-  transition: 0.2s;
-}
-
-#usernameSuggestions span:hover {
-  background: rgba(78,245,138,0.35);
-}
+/* (no longer used — deleted from modals.html) */
 
 /* ============================
    TOASTS
