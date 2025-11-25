@@ -11,20 +11,6 @@
     <!-- RIGHT BUTTONS -->
     <div class="nav-right">
 
-      <!-- ⭐ CURRENCY DROPDOWN -->
-      <select id="currencySelector" class="currency-dropdown">
-        <option value="AUTO">Auto</option>
-        <option value="GBP">£ GBP</option>
-        <option value="USD">$ USD</option>
-        <option value="EUR">€ EUR</option>
-        <option value="CAD">$ CAD</option>
-        <option value="AUD">$ AUD</option>
-        <option value="JPY">¥ JPY</option>
-        <option value="HKD">$ HKD</option>
-        <option value="SGD">$ SGD</option>
-        <option value="AED">د.إ AED</option>
-      </select>
-
       <!-- LOGIN -->
       <button id="openLogin" class="nav-rect-btn">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
@@ -90,8 +76,10 @@
 <div id="cartOverlay" class="cart-overlay"></div>
 
 <script>
-  // Fix icon loading after navbar injection
+  // Fix icon loading after navbar injection (SVGs)
   setTimeout(() => {
-    if (typeof lucide !== "undefined") lucide.createIcons();
+    if (typeof lucide !== "undefined") {
+      lucide.createIcons();
+    }
   }, 20);
 </script>
