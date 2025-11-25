@@ -1,7 +1,5 @@
 /* =====================================================
-   TamedBlox — USD-ONLY PRICE SYSTEM (Option A)
-   No conversions. No dropdown. No detection.
-   All GBP backend values displayed as USD labels.
+   TamedBlox — CLEAN USD-ONLY PRICE SYSTEM (FINAL FIXED)
 ===================================================== */
 
 /* Format product numbers as USD strings */
@@ -9,18 +7,16 @@ function formatUSD(amount) {
   return `$${Number(amount).toFixed(2)} USD`;
 }
 
-/* =====================================================
-   LOAD PRODUCTS (BACKEND RETURNS GBP NUMBERS)
-===================================================== */
-
 let products = [];
 
+/* =====================================================
+   LOAD PRODUCTS
+===================================================== */
 async function loadProducts() {
   try {
     const res = await fetch("https://website-5eml.onrender.com/products");
     products = await res.json();
 
-    // Ensure numeric formatting
     products.forEach(p => {
       p.price = Number(p.price);
       p.oldPrice = p.oldPrice ? Number(p.oldPrice) : null;
@@ -34,14 +30,16 @@ async function loadProducts() {
 }
 
 /* =====================================================
-   PRODUCT RENDERING (USD DISPLAY ONLY)
+   DISCOUNT CALCULATOR
 ===================================================== */
-
 function getDiscountPercent(price, oldPrice) {
   if (!oldPrice || oldPrice <= price) return 0;
   return Math.round(((oldPrice - price) / oldPrice) * 100);
 }
 
+/* =====================================================
+   PRODUCT RENDERING
+===================================================== */
 function renderProducts(list) {
   const grid = document.getElementById("productGrid");
   if (!grid) return;
@@ -70,7 +68,8 @@ function renderProducts(list) {
           ${p.oldPrice ? `<span class="old-price">${formatUSD(p.oldPrice)}</span>` : ""}
         </div>
 
-        <button class="buy-btn" onclick="addToCart('${p.name}', this)">
+        <!-- ⭐ FIXED: FLY TO CART START ELEMENT -->
+        <button class="buy-btn" onclick="addToCart('${p.name}', this.closest('.card').querySelector('.product-img'))">
           Add to Cart
         </button>
 
@@ -84,7 +83,6 @@ function renderProducts(list) {
 /* =====================================================
    SEARCH BAR
 ===================================================== */
-
 function setupSearch() {
   const input = document.getElementById("searchInput");
   if (!input) return;
@@ -97,26 +95,24 @@ function setupSearch() {
 }
 
 /* =====================================================
-   ADD TO CART (USD VALUES)
+   ADD TO CART (FIXED)
 ===================================================== */
-
-function addToCart(name, btn) {
+function addToCart(name, imgElement) {
   const product = products.find(p => p.name === name);
-  const img = btn.closest(".card").querySelector(".product-img");
 
-  const usdProduct = {
+  const fixedProduct = {
     ...product,
     price: Number(product.price),
     oldPrice: product.oldPrice ? Number(product.oldPrice) : null
   };
 
-  window.Cart.addItem(usdProduct, img);
+  // ⭐ send the IMAGE element (correct) → fly-to-cart works again
+  window.Cart.addItem(fixedProduct, imgElement);
 }
 
 /* =====================================================
-   CARD TILT EFFECT
+   3D CARD TILT
 ===================================================== */
-
 function initCardTilt() {
   const cards = document.querySelectorAll(".card");
 
@@ -141,7 +137,6 @@ function initCardTilt() {
 /* =====================================================
    INITIALIZER
 ===================================================== */
-
 document.addEventListener("DOMContentLoaded", async () => {
   await loadProducts();
   setupSearch();
