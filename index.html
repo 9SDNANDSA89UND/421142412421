@@ -1,82 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>TamedBlox — Home</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- CSS -->
-  <link rel="stylesheet" href="assets/css/main.css">
-  <link rel="stylesheet" href="assets/css/cards.css">
-  <link rel="stylesheet" href="assets/css/modal.css">
-  <link rel="stylesheet" href="assets/css/reviews.css">
-
-  <!-- NEW CHAT UI CSS -->
-  <link rel="stylesheet" href="assets/css/chat.css">
-
-  <!-- Component Loader -->
-  <script>
-    async function loadComponent(selector, file) {
-      const el = document.querySelector(selector);
-      if (el) {
-        const html = await fetch(file).then(r => r.text());
-        el.innerHTML = html;
-      }
-    }
-  </script>
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/css/cards.css" />
+  <link rel="stylesheet" href="assets/css/modal.css" />
+  <link rel="stylesheet" href="assets/css/reviews.css" />
+  <link rel="stylesheet" href="assets/css/chat.css" />
 </head>
 
 <body>
-
-  <!-- NAVBAR + MODALS -->
+  <!-- NAV & MODALS -->
   <div id="navbar"></div>
   <div id="modals"></div>
-
   <script>
+    async function loadComponent(el, file) {
+      const container = document.querySelector(el);
+      if (container) container.innerHTML = await fetch(file).then((r) => r.text());
+    }
     loadComponent("#navbar", "components/navbar.html");
     loadComponent("#modals", "components/modals.html");
   </script>
 
-  <!-- HERO SECTION -->
-  <section class="container" style="margin-top:40px;">
-    <h1 style="font-size:32px;font-weight:900;">Featured Products</h1>
-    <p style="margin-top:10px;color:#b7bec9;">
-      Best-selling items from TamedBlox.
-    </p>
+  <!-- HERO -->
+  <section class="container" style="margin-top: 40px">
+    <h1 style="font-size: 32px; font-weight: 900">Featured Products</h1>
+    <p style="margin-top: 10px; color: #b7bec9">Best-selling items from TamedBlox.</p>
   </section>
 
-  <!-- PRODUCT GRID -->
+  <!-- PRODUCTS -->
   <div id="productGrid" class="product-grid"></div>
 
   <!-- REVIEWS -->
   <section class="reviews-section">
     <h2 class="reviews-title">Customer Reviews</h2>
-
     <div class="reviews-grid">
       <div class="review-card">
         <div class="review-header">
-          <img src="https://via.placeholder.com/50" class="review-pfp">
+          <img src="https://via.placeholder.com/50" class="review-pfp" />
           <div>
             <div class="review-name">Alex R</div>
             <div class="review-rating">★★★★★</div>
           </div>
         </div>
-        <div class="review-body">
-          Instant delivery. Exactly what I paid for, 10/10.
-        </div>
+        <div class="review-body">Instant delivery. Exactly what I paid for, 10/10.</div>
       </div>
 
       <div class="review-card">
         <div class="review-header">
-          <img src="https://via.placeholder.com/50" class="review-pfp">
+          <img src="https://via.placeholder.com/50" class="review-pfp" />
           <div>
             <div class="review-name">Nova</div>
             <div class="review-rating">★★★★★</div>
           </div>
         </div>
-        <div class="review-body">
-          Quick service and amazing prices.
-        </div>
+        <div class="review-body">Quick service and amazing prices.</div>
       </div>
     </div>
   </section>
@@ -85,7 +67,7 @@
   <div id="cartDrawer" class="cart-drawer">
     <div class="cart-header">
       <h2 class="cart-title">Cart</h2>
-      <span class="cart-clear" onclick="Cart.items=[];Cart.save();">Clear Cart</span>
+      <span id="closeDrawer" style="cursor:pointer;font-size:22px;">×</span>
     </div>
 
     <div id="drawerContent"></div>
@@ -95,10 +77,7 @@
         <span>Total</span>
         <span id="drawerTotal">$0.00 USD</span>
       </div>
-
-      <button class="checkout-btn" onclick="location.href='checkout.html'">
-        Buy
-      </button>
+      <button class="checkout-btn" onclick="location.href='checkout.html'">Buy</button>
     </div>
   </div>
 
@@ -110,51 +89,52 @@
     loadComponent("#footer", "components/footer.html");
   </script>
 
-  <!-- JS -->
+  <!-- SCRIPTS -->
   <script src="assets/js/app.js"></script>
   <script src="assets/js/cart.js"></script>
   <script src="assets/js/drawer.js"></script>
   <script src="assets/js/auth.js"></script>
 
-  <!-- ⭐ NEW PREMIUM CHAT UI -->
+  <!-- ======================= -->
+  <!-- ADMIN MULTI-CHAT PANEL -->
+  <!-- ======================= -->
+
+  <!-- CHAT ICON BUTTON -->
   <div id="chatButton" class="chat-circle hidden">
-    <svg xmlns="http://www.w3.org/2000/svg" 
-         width="24" height="24" viewBox="0 0 24 24" fill="none"
-         stroke="currentColor" stroke-width="2" stroke-linecap="round"
-         stroke-linejoin="round" class="lucide lucide-message-circle-icon">
-      <path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"/>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" stroke="currentColor"
+      fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path
+        d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" />
     </svg>
+  </div>
+
+  <!-- TALL ADMIN PANEL -->
+  <div id="adminChatPanel" class="admin-panel hidden">
+    <div class="admin-panel-header">Active Chats</div>
+    <div id="adminChatList" class="admin-chat-list"></div>
   </div>
 
   <!-- CHAT WINDOW -->
   <div id="chatWindow" class="chat-window hidden">
-
-    <!-- Order Summary -->
     <div id="chatOrderSummary" class="chat-order-summary"></div>
-
-    <!-- Messages -->
     <div id="chatMessages" class="chat-messages"></div>
 
-    <!-- Input -->
     <div class="chat-input-row">
-      <input id="chatInput" placeholder="Type a message...">
+      <input id="chatInput" placeholder="Type a message..." />
 
-      <!-- NEW SEND ICON BUTTON -->
       <button id="chatSend" class="chat-send-btn">
-        <svg xmlns="http://www.w3.org/2000/svg" 
-             width="22" height="22" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2" stroke-linecap="round" 
-             stroke-linejoin="round" class="lucide lucide-send-horizontal">
-          <path d="M3.714 3.048a.498.498 0 0 0-.683.627l2.843 7.627a2 2 0 0 1 0 1.396l-2.842 7.627a.498.498 0 0 0 .682.627l18-8.5a.5.5 0 0 0 0-.904z"/>
-          <path d="M6 12h16"/>
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+          viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path
+            d="M3.714 3.048a.498.498 0 0 0-.683.627l2.843 7.627a2 2 0 0 1 0 1.396l-2.842 7.627a.498.498 0 0 0 .682.627l18-8.5a.5.5 0 0 0 0-.904z" />
+          <path d="M6 12h16" />
         </svg>
       </button>
     </div>
-
   </div>
 
   <!-- CHAT LOGIC -->
   <script src="assets/js/chat.js"></script>
-
 </body>
 </html>
