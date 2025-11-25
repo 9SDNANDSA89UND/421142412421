@@ -11,6 +11,9 @@
   <link rel="stylesheet" href="assets/css/modal.css">
   <link rel="stylesheet" href="assets/css/reviews.css">
 
+  <!-- CHAT CSS (HOMEPAGE ONLY) -->
+  <link rel="stylesheet" href="assets/css/chat.css">
+
   <!-- Component Loader -->
   <script>
     async function loadComponent(selector, file) {
@@ -25,7 +28,7 @@
 
 <body>
 
-  <!-- NAVBAR + MODALS (LOADED BEFORE ANY JS EXECUTES) -->
+  <!-- NAVBAR + MODALS -->
   <div id="navbar"></div>
   <div id="modals"></div>
 
@@ -107,11 +110,27 @@
     loadComponent("#footer", "components/footer.html");
   </script>
 
-  <!-- JS (BOTTOM LOADING FIXES CURRENCY + CART SYSTEM) -->
+  <!-- JS (BOTTOM ORDER FIXES CART + AUTH + CARD VISUALS) -->
   <script src="assets/js/app.js"></script>
   <script src="assets/js/cart.js"></script>
   <script src="assets/js/drawer.js"></script>
   <script src="assets/js/auth.js"></script>
+
+  <!-- CHAT BUTTON + WINDOW (HOMEPAGE ONLY) -->
+  <div id="chatButton" class="chat-circle hidden">💬</div>
+
+  <div id="chatWindow" class="chat-window hidden">
+    <div id="chatMessages" class="chat-messages"></div>
+    <div id="chatOrderSummary" class="chat-order-summary"></div>
+
+    <div class="chat-input-row">
+      <input id="chatInput" placeholder="Type here...">
+      <button id="chatSend">➤</button>
+    </div>
+  </div>
+
+  <!-- CHAT LOGIC -->
+  <script src="assets/js/chat.js"></script>
 
 </body>
 </html>
