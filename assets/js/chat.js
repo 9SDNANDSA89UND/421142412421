@@ -1,62 +1,64 @@
 async function loadChat() {
   const token = localStorage.getItem("authToken");
-
-  // Not logged in → no chat system at all
   if (!token) return;
 
-  // Get logged-in user
+  // Get user info
   const userRes = await fetch("https://website-5eml.onrender.com/auth/me", {
     headers: { Authorization: "Bearer " + token }
   });
 
-  // If token invalid → stop
   if (!userRes.ok) return;
-
   const user = await userRes.json();
 
   const ADMIN_EMAIL = "benjaminmorcombe@gmail.com";
   const isAdmin = user.email === ADMIN_EMAIL;
 
-  // Get chat
+  // Get chat from backend
   const chatRes = await fetch("https://website-5eml.onrender.com/chats/my-chats", {
     headers: { Authorization: "Bearer " + token }
   });
 
-  // If unauthorized or server error → stop
-  if (!chatRes.ok) {
-    console.warn("Chat not available:", await chatRes.text());
-    if (isAdmin) {
-      // Admin sees chat bubble even with no active chat
-      document.getElementById("chatButton").classList.remove("hidden");
-    }
-    return;
+  let chat = null;
+  if (chatRes.ok) {
+    chat = await chatRes.json();
   }
 
-  const chat = await chatRes.json();
-
-  // Admin OR user with chat → show the button
-  if (isAdmin || chat) {
+  // ADMIN ALWAYS SEES CHAT BUTTON
+  if (isAdmin) {
     document.getElementById("chatButton").classList.remove("hidden");
+
+    // If admin has no chat yet → create a blank chat state
+    if (!chat) {
+      window.USER_CHAT = {
+        _id: null,
+        messages: [],
+        userEmail: user.email,
+        orderDetails: null
+      };
+      return;
+    }
   }
 
-  // If no chat exists yet → stop (admin still sees empty window)
+  // Normal user → chat must exist
   if (!chat) return;
 
-  // Save chat to global
+  // Store chat globally
   window.USER_CHAT = chat;
   window.USER_CHAT.userEmail = user.email;
 
-  // Safety guard
-  if (!chat.orderDetails) return;
+  // If orderDetails missing, skip summary
+  if (chat.orderDetails) {
+    const order = chat.orderDetails;
+    document.getElementById("chatOrderSummary").innerHTML = `
+      <strong>Order ID:</strong> ${order.orderId}<br>
+      <strong>Total:</strong> $${order.total} USD<br>
+      <strong>Items:</strong><br>
+      ${order.items.map(i => `• ${i.qty}× ${i.name}`).join("<br>")}
+    `;
+  }
 
-  const order = chat.orderDetails;
-
-  document.getElementById("chatOrderSummary").innerHTML = `
-    <strong>Order ID:</strong> ${order.orderId}<br>
-    <strong>Total:</strong> $${order.total} USD<br>
-    <strong>Items:</strong><br>
-    ${order.items.map(i => `• ${i.qty}× ${i.name}`).join("<br>")}
-  `;
+  // Show chat button for users with a chat
+  document.getElementById("chatButton").classList.remove("hidden");
 }
 
 // Toggle chat window
@@ -64,53 +66,68 @@ document.getElementById("chatButton").onclick = () => {
   document.getElementById("chatWindow").classList.toggle("hidden");
 };
 
+// Refresh messages safely
 async function refreshMessages() {
-  // If no chat yet → don't try to load messages
-  if (!window.USER_CHAT || !window.USER_CHAT._id) return;
+  const chat = window.USER_CHAT;
+  if (!chat) return;
 
   const token = localStorage.getItem("authToken");
 
+  // ADMIN with no chatId → skip message loading
+  if (!chat._id) return;
+
   const res = await fetch(
-    `https://website-5eml.onrender.com/chats/messages/${window.USER_CHAT._id}`,
+    `https://website-5eml.onrender.com/chats/messages/${chat._id}`,
     { headers: { Authorization: "Bearer " + token } }
   );
 
   if (!res.ok) return;
-
   const msgs = await res.json();
 
   const box = document.getElementById("chatMessages");
   box.innerHTML = msgs
     .map(
       m => `
-      <div class="msg ${
-        m.sender === window.USER_CHAT.userEmail ? "me" : "them"
-      }">
-        ${m.content}<br>
-        <small>${new Date(m.timestamp).toLocaleTimeString()}</small>
-      </div>
-    `
+        <div class="msg ${
+          m.sender === chat.userEmail ? "me" : "them"
+        }">
+          ${m.content}<br>
+          <small>${new Date(m.timestamp).toLocaleTimeString()}</small>
+        </div>
+      `
     )
     .join("");
 
   box.scrollTop = box.scrollHeight;
 }
 
+// Send message
 document.getElementById("chatSend").onclick = async () => {
   const msg = document.getElementById("chatInput").value.trim();
-
-  // No message → do nothing
   if (!msg) return;
 
-  // No chat yet → user has not purchased anything
-  if (!window.USER_CHAT || !window.USER_CHAT._id) {
+  const chat = window.USER_CHAT;
+
+  if (!chat) return;
+
+  const ADMIN_EMAIL = "benjaminmorcombe@gmail.com";
+
+  // Non-admin must have a chatId
+  if (!chat._id && chat.userEmail !== ADMIN_EMAIL) {
     alert("Chat is not available. You must have an active order first.");
     return;
   }
 
-  document.getElementById("chatInput").value = "";
-
   const token = localStorage.getItem("authToken");
+
+  // ADMIN with no existing chat → cannot send
+  if (!chat._id && chat.userEmail === ADMIN_EMAIL) {
+    alert("No chat opened yet. Wait until a customer makes an order.");
+    return;
+  }
+
+  // Clear input
+  document.getElementById("chatInput").value = "";
 
   await fetch("https://website-5eml.onrender.com/chats/send", {
     method: "POST",
@@ -119,7 +136,7 @@ document.getElementById("chatSend").onclick = async () => {
       Authorization: "Bearer " + token
     },
     body: JSON.stringify({
-      chatId: window.USER_CHAT._id,
+      chatId: chat._id,
       content: msg
     })
   });
@@ -131,7 +148,6 @@ document.getElementById("chatSend").onclick = async () => {
 document.addEventListener("DOMContentLoaded", () => {
   loadChat();
 
-  // Refresh only when chat actually exists
   setInterval(() => {
     if (window.USER_CHAT && window.USER_CHAT._id) {
       refreshMessages();
