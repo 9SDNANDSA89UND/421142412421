@@ -31,14 +31,8 @@
 }
 
 @keyframes modalFade {
-  from {
-    opacity: 0;
-    transform: scale(0.92);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 .modern-title {
@@ -67,7 +61,7 @@
 }
 
 /* ============================
-   PASSWORD TOGGLE
+   PASSWORD TOGGLE (SVG ICONS)
 ============================ */
 
 .password-wrap {
@@ -81,24 +75,27 @@
 
 .toggle-password {
   position: absolute;
-  right: 12px;
+  right: 14px;
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
-  font-size: 18px;
-  opacity: 0.8;
-  user-select: none;
+  display: flex;
+  align-items: center;
+}
+
+.eye-icon {
+  width: 20px;
+  height: 20px;
+  color: #9ca4b1;
   transition: 0.2s ease;
 }
 
-.toggle-password:hover {
-  opacity: 1;
+.toggle-password:hover .eye-icon {
+  color: #ffffff;
 }
 
-/* Add spacing under combined password fields */
 .password-wrap + .password-wrap {
   margin-top: 12px;
-  margin-bottom: 12px;
 }
 
 /* ============================
@@ -115,7 +112,7 @@
   cursor: pointer;
   margin-top: 16px;
   color: #0b0f14;
-  transition: 0.2s;
+  transition: 0.2s ease;
 }
 
 .modern-btn:hover {
@@ -129,7 +126,7 @@
   font-size: 28px;
   cursor: pointer;
   color: #4ef58a;
-  transition: 0.2s;
+  transition: 0.2s ease;
 }
 
 .modern-close:hover {
@@ -142,7 +139,7 @@
 
 .modal-hint {
   font-size: 14px;
-  margin-top: 6px;
+  margin-top: 8px;
   margin-bottom: 0;
   display: block;
 }
@@ -156,12 +153,6 @@
   color: #4ef58a !important;
   font-weight: 600;
 }
-
-/* ============================
-   USERNAME SUGGESTIONS (REMOVED)
-============================ */
-
-/* (no longer used — deleted from modals.html) */
 
 /* ============================
    TOASTS
