@@ -6,7 +6,7 @@ function initAuth() {
   const loginBtn = document.getElementById("openLogin");
   const signupBtn = document.getElementById("openSignup");
 
-  // If navbar not loaded yet → retry
+  // Navbar loads dynamically, retry until present
   if (!loginBtn || !signupBtn) {
     return setTimeout(initAuth, 80);
   }
@@ -29,11 +29,9 @@ function initAuth() {
   /* =====================================
        LOGIN SUBMIT
   ====================================== */
-  const loginSubmit = document.getElementById("loginSubmit");
-
-  loginSubmit.onclick = async () => {
-    const email = document.getElementById("loginEmail").value;
-    const password = document.getElementById("loginPassword").value;
+  document.getElementById("loginSubmit").onclick = async () => {
+    const email = loginEmail.value;
+    const password = loginPassword.value;
 
     const res = await fetch("https://website-5eml.onrender.com/auth/login", {
       method: "POST",
@@ -44,8 +42,7 @@ function initAuth() {
     const data = await res.json();
 
     if (!data.success) {
-      document.getElementById("loginError").innerText =
-        data.error || "Invalid email or password.";
+      loginError.innerText = data.error || "Invalid email or password.";
       return;
     }
 
@@ -57,15 +54,13 @@ function initAuth() {
   /* =====================================
        SIGNUP SUBMIT
   ====================================== */
-  const signupSubmit = document.getElementById("signupSubmit");
+  document.getElementById("signupSubmit").onclick = async () => {
+    const username = signupUsername.value;
+    const email = signupEmail.value;
+    const password = signupPassword.value;
+    const confirm = signupPasswordConfirm.value;
 
-  signupSubmit.onclick = async () => {
-    const username = document.getElementById("signupUsername").value;
-    const email = document.getElementById("signupEmail").value;
-    const password = document.getElementById("signupPassword").value;
-    const confirm = document.getElementById("signupPasswordConfirm").value;
-
-    const errorBox = document.getElementById("signupError");
+    const errorBox = signupError;
 
     if (password !== confirm) {
       errorBox.innerText = "Passwords do not match.";
@@ -80,8 +75,8 @@ function initAuth() {
 
     const data = await res.json();
 
-    // Handle duplicate errors
     if (!data.success) {
+      // Duplicate email/username messages
       if (data.error === "Email already exists") {
         errorBox.innerText = "That email is already in use.";
       } else if (data.error === "Username already exists") {
@@ -98,24 +93,20 @@ function initAuth() {
   };
 
   /* =====================================
-       UPDATE NAVBAR WHEN LOGGED IN
+       NAVBAR WHEN LOGGED IN
   ====================================== */
   const token = localStorage.getItem("authToken");
 
   if (token) {
     const navRight = document.querySelector(".nav-right");
-
     if (navRight) {
-      // Remove login/signup buttons
       document.getElementById("openLogin")?.remove();
       document.getElementById("openSignup")?.remove();
 
-      // ACCOUNT button
       const accountBtn = document.createElement("button");
       accountBtn.className = "auth-btn";
       accountBtn.innerText = "Account";
 
-      // LOGOUT BUTTON
       const logoutBtn = document.createElement("button");
       logoutBtn.className = "auth-btn";
       logoutBtn.innerText = "Logout";
@@ -131,6 +122,32 @@ function initAuth() {
 
   console.log("Auth initialized.");
 }
+
+/* =====================================
+   SVG EYE ICON TOGGLE (SHOW/HIDE PASSWORD)
+===================================== */
+
+document.addEventListener("click", (e) => {
+  const toggle = e.target.closest(".toggle-password");
+  if (!toggle) return;
+
+  const inputId = toggle.getAttribute("data-target");
+  const input = document.getElementById(inputId);
+
+  const eyeOpen = toggle.querySelector(".eye-open");
+  const eyeClosed = toggle.querySelector(".eye-closed");
+
+  // Swap type
+  if (input.type === "password") {
+    input.type = "text";
+    eyeOpen.style.display = "none";
+    eyeClosed.style.display = "block";
+  } else {
+    input.type = "password";
+    eyeOpen.style.display = "block";
+    eyeClosed.style.display = "none";
+  }
+});
 
 /* Start auth once DOM loads */
 document.addEventListener("DOMContentLoaded", initAuth);
