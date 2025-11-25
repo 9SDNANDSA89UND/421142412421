@@ -9,20 +9,36 @@
 
     <input id="loginEmail" type="email" class="modern-input" placeholder="Email">
 
-    <!-- PASSWORD FIELD + TOGGLE -->
+    <!-- PASSWORD WITH SVG ICON -->
     <div class="password-wrap">
       <input id="loginPassword" type="password" class="modern-input" placeholder="Password">
-      <span class="toggle-password" data-target="loginPassword">👁️</span>
+
+      <span class="toggle-password" data-target="loginPassword">
+        <!-- eye icon -->
+        <svg class="eye-icon eye-open" viewBox="0 0 24 24">
+          <path fill="currentColor" d="M12 5C7 5 2.73 8.11 1 12c1.73 3.89 
+          6 7 11 7s9.27-3.11 11-7c-1.73-3.89-6-7-11-7m0 
+          12a5 5 0 1 1 0-10a5 5 0 0 1 0 10Z"/>
+        </svg>
+
+        <!-- eye-off icon (hidden by default) -->
+        <svg class="eye-icon eye-closed" viewBox="0 0 24 24" style="display:none;">
+          <path fill="currentColor" d="M2 5.27L3.28 4L20 20.72L18.73 
+          22l-2.3-2.31A10.75 10.75 0 0 1 12 19c-5 
+          0-9.27-3.11-11-7a12.5 12.5 0 0 1 5.06-5.91L2 
+          5.27M12 7a5 5 0 0 1 5 5c0 .65-.13 1.26-.36 
+          1.82L10.18 7.36A4.86 4.86 0 0 1 12 7m-7.81 
+          5c1.26 2.39 3.81 4 6.81 4c1.16 0 2.27-.23 
+          3.25-.64L5.59 6.69A11.56 11.56 0 0 0 1 
+          12c.54 1.2 1.23 2.32 2.19 3.27Z"/>
+        </svg>
+      </span>
     </div>
 
     <button id="loginSubmit" class="modern-btn">Login</button>
-
-    <!-- ERROR MESSAGE -->
-    <p id="loginError" class="modal-hint invalid" style="margin-top:12px;"></p>
-
+    <p id="loginError" class="modal-hint invalid"></p>
   </div>
 </div>
-
 
 
 <!-- SIGNUP MODAL -->
@@ -35,22 +51,56 @@
     <input id="signupUsername" type="text" class="modern-input" placeholder="Username">
     <input id="signupEmail" type="email" class="modern-input" placeholder="Email">
 
-    <!-- PASSWORD FIELD + TOGGLE -->
+    <!-- Password -->
     <div class="password-wrap">
       <input id="signupPassword" type="password" class="modern-input" placeholder="Password">
-      <span class="toggle-password" data-target="signupPassword">👁️</span>
+
+      <span class="toggle-password" data-target="signupPassword">
+        <svg class="eye-icon eye-open" viewBox="0 0 24 24">
+          <path fill="currentColor" d="M12 5C7 5 2.73 8.11 1 12c1.73 3.89 
+          6 7 11 7s9.27-3.11 11-7c-1.73-3.89-6-7-11-7m0 
+          12a5 5 0 1 1 0-10a5 5 0 0 1 0 10Z"/>
+        </svg>
+
+        <svg class="eye-icon eye-closed" viewBox="0 0 24 24" style="display:none;">
+          <path fill="currentColor" d="M2 5.27L3.28 4L20 20.72L18.73 
+          22l-2.3-2.31A10.75 10.75 0 0 1 12 19c-5 
+          0-9.27-3.11-11-7a12.5 12.5 0 0 1 5.06-5.91L2 
+          5.27M12 7a5 5 0 0 1 5 5c0 .65-.13 1.26-.36 
+          1.82L10.18 7.36A4.86 4.86 0 0 1 12 7m-7.81 
+          5c1.26 2.39 3.81 4 6.81 4c1.16 0 2.27-.23 
+          3.25-.64L5.59 6.69A11.56 11.56 0 0 0 1 
+          12c.54 1.2 1.23 2.32 2.19 3.27Z"/>
+        </svg>
+      </span>
     </div>
 
-    <!-- CONFIRM PASSWORD FIELD + TOGGLE -->
+    <!-- Confirm Password -->
     <div class="password-wrap">
       <input id="signupPasswordConfirm" type="password" class="modern-input" placeholder="Confirm Password">
-      <span class="toggle-password" data-target="signupPasswordConfirm">👁️</span>
+
+      <span class="toggle-password" data-target="signupPasswordConfirm">
+        <svg class="eye-icon eye-open" viewBox="0 0 24 24">
+          <path fill="currentColor" d="M12 5C7 5 2.73 8.11 1 12c1.73 3.89 
+          6 7 11 7s9.27-3.11 11-7c-1.73-3.89-6-7-11-7m0 
+          12a5 5 0 1 1 0-10a5 5 0 0 1 0 10Z"/>
+        </svg>
+
+        <svg class="eye-icon eye-closed" viewBox="0 0 24 24" style="display:none;">
+          <path fill="currentColor" d="M2 5.27L3.28 4L20 20.72L18.73 
+          22l-2.3-2.31A10.75 10.75 0 0 1 12 19c-5 
+          0-9.27-3.11-11-7a12.5 12.5 0 0 1 5.06-5.91L2 
+          5.27M12 7a5 5 0 0 1 5 5c0 .65-.13 1.26-.36 
+          1.82L10.18 7.36A4.86 4.86 0 0 1 12 7m-7.81 
+          5c1.26 2.39 3.81 4 6.81 4c1.16 0 2.27-.23 
+          3.25-.64L5.59 6.69A11.56 11.56 0 0 0 1 
+          12c.54 1.2 1.23 2.32 2.19 3.27Z"/>
+        </svg>
+      </span>
     </div>
 
     <button id="signupSubmit" class="modern-btn">Create Account</button>
 
-    <!-- ERROR MESSAGE -->
-    <p id="signupError" class="modal-hint invalid" style="margin-top:12px;"></p>
-
+    <p id="signupError" class="modal-hint invalid"></p>
   </div>
 </div>
