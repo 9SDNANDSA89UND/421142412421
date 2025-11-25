@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="assets/css/modal.css">
   <link rel="stylesheet" href="assets/css/reviews.css">
 
-  <!-- CHAT CSS (HOMEPAGE ONLY) -->
+  <!-- NEW CHAT UI CSS -->
   <link rel="stylesheet" href="assets/css/chat.css">
 
   <!-- Component Loader -->
@@ -85,7 +85,7 @@
   <div id="cartDrawer" class="cart-drawer">
     <div class="cart-header">
       <h2 class="cart-title">Cart</h2>
-      <span class="cart-clear" onclick="Cart.items=[];Cart.save();">Clear Cart</span>
+      <span id="closeDrawer" style="cursor:pointer;font-size:22px;">×</span>
     </div>
 
     <div id="drawerContent"></div>
@@ -116,15 +116,22 @@
   <script src="assets/js/drawer.js"></script>
   <script src="assets/js/auth.js"></script>
 
-  <!-- CHAT BUTTON + WINDOW (HOMEPAGE ONLY) -->
+  <!-- ⭐ NEW MESSENGER-STYLE CHAT UI -->
   <div id="chatButton" class="chat-circle hidden">💬</div>
 
   <div id="chatWindow" class="chat-window hidden">
-    <div id="chatMessages" class="chat-messages"></div>
-    <div id="chatOrderSummary" class="chat-order-summary"></div>
 
+    <!-- Order Summary -->
+    <div id="chatOrderSummary" class="chat-order-summary">
+      <!-- Filled by chat.js -->
+    </div>
+
+    <!-- Messages -->
+    <div id="chatMessages" class="chat-messages"></div>
+
+    <!-- Input -->
     <div class="chat-input-row">
-      <input id="chatInput" placeholder="Type here...">
+      <input id="chatInput" placeholder="Type a message...">
       <button id="chatSend">➤</button>
     </div>
   </div>
