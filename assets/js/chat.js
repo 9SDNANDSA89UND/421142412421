@@ -1,47 +1,45 @@
 /* ============================================================
-   TamedBlox — CHAT SYSTEM (FINAL PATCHED + PURCHASE LOGIC)
+   TamedBlox — CHAT SYSTEM (ANONYMOUS SEND FOR PURCHASED USERS)
    - Prevents duplicate loading
    - Fixes API redeclare
-   - Fixes illegal return
-   - Shows chat icon ONLY if user has purchased
-   - Works for logged-out purchased users
-   - Supports admin mode + user chats
+   - Allows anon send ONLY if purchased
+   - Chat bubble appears for purchased or admin
 ============================================================ */
 
 // ========= SAFE WRAPPER (NO DUPLICATE LOAD) ========= //
 if (window.__CHAT_JS_LOADED__) {
-  console.warn("chat.js already loaded — skipping duplicate load.");
+  console.warn("chat.js already loaded — skipping.");
 } else {
   window.__CHAT_JS_LOADED__ = true;
 
-// ========= SAFE API DEFINE (NO REDECLARE) ========= //
+// ========= SAFE API DEFINE ========= //
 window.API = window.API || "https://website-5eml.onrender.com";
 
 let ALL_CHATS = [];
 let CURRENT_CHAT = null;
 
 /* ============================================================
-   PURCHASE-BASED CHAT BUBBLE VISIBILITY
+   PURCHASE BASED CHAT ICON VISIBILITY
 ============================================================ */
 async function showChatBubbleIfPurchased() {
   const bubble = document.getElementById("chatButton");
   if (!bubble) return;
 
-  // --- Case 1: LocalStorage says they purchased
+  // Already marked as purchased
   if (localStorage.getItem("HAS_PURCHASED") === "yes") {
     bubble.classList.remove("hidden");
     return;
   }
 
-  // --- Case 2: Logged-in user w/ an active chat
+  // If logged in -> check if their account has a chat
   const token = localStorage.getItem("authToken");
   if (token) {
     try {
-      const res = await fetch(`${API}/chats/my-chats`, {
+      const r = await fetch(`${API}/chats/my-chats`, {
         headers: { Authorization: "Bearer " + token }
       });
 
-      const chat = await res.json();
+      const chat = await r.json();
       if (chat && chat._id) {
         bubble.classList.remove("hidden");
         localStorage.setItem("HAS_PURCHASED", "yes");
@@ -57,81 +55,79 @@ document.addEventListener("DOMContentLoaded", () => {
   showChatBubbleIfPurchased();
   loadChat();
 
-  // Auto-refresh messages every 2 seconds
   setInterval(() => {
     if (CURRENT_CHAT?._id) refreshMessages();
   }, 2000);
 
-  // =========== USER CHAT BUTTON CLICK ===========
   const chatBtn = document.getElementById("chatButton");
   if (chatBtn) {
     chatBtn.onclick = () => {
       const token = localStorage.getItem("authToken");
+      const bought = localStorage.getItem("HAS_PURCHASED") === "yes";
 
-      // If not logged in but HAS_PURCHASED → force login
-      if (!token) {
+      // Show login ONLY if not purchased AND not logged in
+      if (!token && !bought) {
         if (typeof openModal === "function") openModal("loginModal");
         return;
       }
 
-      // Logged-in → toggle chat
       document.getElementById("chatWindow").classList.toggle("hidden");
     };
   }
 
-  // =========== ADMIN CHAT PANEL BUTTON ===========
   const adminBtn = document.getElementById("adminChatBtn");
   if (adminBtn) {
     adminBtn.onclick = () => {
-      const panel = document.getElementById("adminChatPanel");
-      panel.classList.toggle("hidden");
+      document.getElementById("adminChatPanel").classList.toggle("hidden");
     };
   }
 
-  // =========== SEND MESSAGE BUTTON ===========
   const sendBtn = document.getElementById("chatSend");
   if (sendBtn) sendBtn.onclick = sendMessage;
 });
 
 /* ============================================================
-   LOAD CHAT BASED ON USER ROLE
+   LOAD CHAT DATA
 ============================================================ */
 async function loadChat() {
   const token = localStorage.getItem("authToken");
-  if (!token) return; // logged-out user will still see bubble if purchased
 
-  const userRes = await fetch(`${API}/auth/me`, {
+  // Logged out? They may still have purchased via localStorage
+  if (!token) {
+    // Chat will be anonymous until they login
+    return;
+  }
+
+  const me = await fetch(`${API}/auth/me`, {
     headers: { Authorization: "Bearer " + token }
   });
 
-  if (!userRes.ok) return; // token invalid
-  const user = await userRes.json();
+  if (!me.ok) return;
+  const user = await me.json();
 
-  /* ========= ADMIN MODE ========= */
-  if (user.admin === true) {
-    const allRes = await fetch(`${API}/chats/all`, {
+  // Admin mode
+  if (user.admin) {
+    const all = await fetch(`${API}/chats/all`, {
       headers: { Authorization: "Bearer " + token }
     });
 
-    ALL_CHATS = await allRes.json();
+    ALL_CHATS = await all.json();
     renderAdminChatList();
 
-    // Admins ALWAYS see chat bubble
     document.getElementById("chatButton")?.classList.remove("hidden");
     return;
   }
 
-  /* ========= USER MODE ========= */
+  // User mode
   const chatRes = await fetch(`${API}/chats/my-chats`, {
     headers: { Authorization: "Bearer " + token }
   });
 
   const chat = await chatRes.json();
-
-  // If user has a chat, show bubble + load chat
   if (chat && chat._id) {
     CURRENT_CHAT = { ...chat, userEmail: user.email };
     localStorage.setItem("HAS_PURCHASED", "yes");
+
     document.getElementById("chatButton")?.classList.remove("hidden");
 
     renderOrderSummary(chat);
@@ -140,7 +136,7 @@ async function loadChat() {
 }
 
 /* ============================================================
-   ADMIN — RENDER CHAT LIST
+   ADMIN — CHAT LIST
 ============================================================ */
 function renderAdminChatList() {
   const list = document.getElementById("adminChatList");
@@ -159,15 +155,12 @@ function renderAdminChatList() {
 }
 
 /* ============================================================
-   ADMIN — OPEN SPECIFIC CHAT
+   ADMIN — OPEN CHAT
 ============================================================ */
 async function openAdminChat(chatId) {
   const token = localStorage.getItem("authToken");
 
-  CURRENT_CHAT = {
-    _id: chatId,
-    userEmail: "admin"
-  };
+  CURRENT_CHAT = { _id: chatId, userEmail: "admin" };
 
   const res = await fetch(`${API}/chats/messages/${chatId}`, {
     headers: { Authorization: "Bearer " + token }
@@ -182,7 +175,7 @@ async function openAdminChat(chatId) {
 }
 
 /* ============================================================
-   USER — RENDER ORDER SUMMARY
+   ORDER SUMMARY
 ============================================================ */
 function renderOrderSummary(chat) {
   const el = document.getElementById("chatOrderSummary");
@@ -199,40 +192,44 @@ function renderOrderSummary(chat) {
     <strong>Order ID:</strong> ${o.orderId}<br>
     <strong>Total:</strong> $${o.total} USD<br>
     <strong>Items:</strong><br>
-    ${o.items.map((i) => `• ${i.qty}× ${i.name}`).join("<br>")}
+    ${o.items.map(i => `• ${i.qty}× ${i.name}`).join("<br>")}
   `;
 }
 
 /* ============================================================
-   RENDER CHAT MESSAGES
+   RENDER MESSAGES
 ============================================================ */
 function renderMessages(msgs) {
   const box = document.getElementById("chatMessages");
   if (!box) return;
 
-  box.innerHTML = msgs
-    .map(
-      (m) => `
-      <div class="msg ${m.sender === CURRENT_CHAT.userEmail ? "me" : "them"}">
-        ${m.content}
-        <br><small>${new Date(m.timestamp).toLocaleTimeString()}</small>
-      </div>
-    `
-    )
-    .join("");
+  box.innerHTML = msgs.map(m => `
+    <div class="msg ${m.sender === CURRENT_CHAT?.userEmail ? "me" : "them"}">
+      ${m.content}
+      <br><small>${new Date(m.timestamp).toLocaleTimeString()}</small>
+    </div>
+  `).join("");
 
   box.scrollTop = box.scrollHeight;
 }
 
 /* ============================================================
-   AUTO-REFRESH MESSAGES
+   REFRESH MESSAGES
 ============================================================ */
 async function refreshMessages() {
-  const token = localStorage.getItem("authToken");
   if (!CURRENT_CHAT?._id) return;
 
+  const token = localStorage.getItem("authToken");
+  const headers = {};
+
+  if (token) {
+    headers.Authorization = "Bearer " + token;
+  } else {
+    headers["X-Purchase-Verified"] = "true";
+  }
+
   const res = await fetch(`${API}/chats/messages/${CURRENT_CHAT._id}`, {
-    headers: { Authorization: "Bearer " + token }
+    headers
   });
 
   const msgs = await res.json();
@@ -240,24 +237,34 @@ async function refreshMessages() {
 }
 
 /* ============================================================
-   SEND MESSAGE
+   SEND MESSAGE (ANON IF PURCHASED)
 ============================================================ */
 async function sendMessage() {
-  const msg = document.getElementById("chatInput").value.trim();
-  if (!msg || !CURRENT_CHAT?._id) return;
+  const input = document.getElementById("chatInput");
+  const msg = input.value.trim();
+  if (!msg) return;
 
-  document.getElementById("chatInput").value = "";
+  input.value = "";
 
   const token = localStorage.getItem("authToken");
+  const purchased = localStorage.getItem("HAS_PURCHASED") === "yes";
+
+  // Block random non-buyers
+  if (!token && !purchased) {
+    alert("You must purchase before using chat.");
+    return;
+  }
+
+  // Anonymous OR logged-in headers
+  const headers = { "Content-Type": "application/json" };
+  if (token) headers.Authorization = "Bearer " + token;
+  else headers["X-Purchase-Verified"] = "true";
 
   await fetch(`${API}/chats/send`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + token
-    },
+    headers,
     body: JSON.stringify({
-      chatId: CURRENT_CHAT._id,
+      chatId: CURRENT_CHAT?._id,
       content: msg
     })
   });
@@ -266,6 +273,6 @@ async function sendMessage() {
 }
 
 /* ============================================================
-   END SAFE WRAPPER
+   END WRAPPER
 ============================================================ */
 } // end wrapper
