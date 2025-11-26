@@ -113,7 +113,7 @@
     async function loadComponent(selector, file) {
       const el = document.querySelector(selector);
       if (el) {
-        const html = await fetch(file).then(r => r.text());
+        const html = await fetch(file).then((r) => r.text());
         el.innerHTML = html;
       }
     }
@@ -160,29 +160,37 @@
   <script src="assets/js/cart.js"></script>
   <script src="assets/js/auth.js"></script>
 
-  <!-- USD-ONLY CHECKOUT LOGIC -->
+  <!-- ⭐ FULLY PATCHED CHECKOUT SCRIPT -->
   <script>
     function formatUSD(amount) {
       return `$${Number(amount).toFixed(2)} USD`;
     }
 
-    window.Cart.init();
+    /* Wait for Cart.js to be ready */
+    function waitForCart(callback) {
+      if (window.Cart && typeof window.Cart.init === "function") {
+        return callback();
+      }
+      setTimeout(() => waitForCart(callback), 40);
+    }
 
-    document.addEventListener("DOMContentLoaded", () => {
+    waitForCart(() => {
+      window.Cart.init();
+
       const wrapper = document.getElementById("checkoutItems");
       const totalEl = document.getElementById("checkoutTotal");
 
-      const items = window.Cart.items;
+      const items = window.Cart.items || [];
       let total = 0;
 
-      if (!items || items.length === 0) {
+      if (!items.length) {
         wrapper.innerHTML = `<p style="color:#9ca4b1;">Your cart is empty.</p>`;
         totalEl.innerText = formatUSD(0);
         return;
       }
 
       let html = "";
-      items.forEach(i => {
+      items.forEach((i) => {
         total += i.price * i.qty;
 
         html += `
@@ -200,37 +208,35 @@
 
       wrapper.innerHTML = html;
       totalEl.innerText = formatUSD(total);
-    });
 
-    document.getElementById("checkoutPay").onclick = async () => {
-      const cart = window.Cart.items;
-
-      if (!cart || cart.length === 0) {
-        alert("Your cart is empty.");
-        return;
-      }
-
-      try {
-        const res = await fetch(
-          "https://website-5eml.onrender.com/pay/create-checkout-session",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ cart })
-          }
-        );
-
-        const data = await res.json();
-
-        if (data.url) {
-          window.location.href = data.url;
-        } else {
-          alert(data.error || "Payment session failed.");
+      document.getElementById("checkoutPay").onclick = async () => {
+        if (!items.length) {
+          alert("Your cart is empty.");
+          return;
         }
-      } catch (err) {
-        alert("Unable to reach payment server.");
-      }
-    };
+
+        try {
+          const res = await fetch(
+            "https://website-5eml.onrender.com/pay/create-checkout-session",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ cart: items })
+            }
+          );
+
+          const data = await res.json();
+
+          if (data.url) {
+            window.location.href = data.url;
+          } else {
+            alert(data.error || "Payment session failed.");
+          }
+        } catch (err) {
+          alert("Payment server unreachable.");
+        }
+      };
+    });
   </script>
 
 </body>
