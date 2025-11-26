@@ -16,7 +16,6 @@
   <link rel="stylesheet" href="assets/css/reviews.css" />
   <link rel="stylesheet" href="assets/css/chat.css" />
 
-  <!-- Component Loader -->
   <script>
     async function loadComponent(selector, file) {
       const el = document.querySelector(selector);
@@ -27,41 +26,31 @@
 
 <body>
 
-  <!-- NAV & MODALS -->
+  <!-- NAVBAR + MODALS -->
   <div id="navbar"></div>
   <div id="modals"></div>
 
   <script>
-    loadComponent("#navbar", "components/navbar.html");
-    loadComponent("#modals", "components/modals.html");
-  </script>
+    // Load navbar and modals
+    Promise.all([
+      loadComponent("#navbar", "components/navbar.html"),
+      loadComponent("#modals", "components/modals.html"),
+    ]).then(() => {
+      console.log("🔥 Navbar + modals loaded. Loading scripts...");
 
-  <!-- WAIT FOR COMPONENTS BEFORE LOADING CHAT/AUTH -->
-  <script>
-    async function waitForComponents() {
-      console.log("⏳ Waiting for navbar & admin panel...");
+      // AFTER navbar exists → load auth.js
+      const auth = document.createElement("script");
+      auth.src = "assets/js/auth.js";
+      document.body.appendChild(auth);
 
-      while (
-        !document.querySelector("#navbar").innerHTML.trim() ||
-        !document.getElementById("adminChatPanel")
-      ) {
-        await new Promise(res => setTimeout(res, 50));
-      }
-
-      console.log("🔥 Components ready — loading Auth + Chat...");
-
-      // Inject auth.js
-      const authScript = document.createElement("script");
-      authScript.src = "assets/js/auth.js";
-      document.body.appendChild(authScript);
-
-      // Inject chat.js
-      const chatScript = document.createElement("script");
-      chatScript.src = "assets/js/chat.js";
-      document.body.appendChild(chatScript);
-    }
-
-    waitForComponents();
+      // AFTER auth loads → load chat.js
+      auth.onload = () => {
+        console.log("🔥 auth.js loaded. Now chat.js...");
+        const chat = document.createElement("script");
+        chat.src = "assets/js/chat.js";
+        document.body.appendChild(chat);
+      };
+    });
   </script>
 
   <!-- HERO -->
@@ -80,7 +69,7 @@
 
       <div class="review-card">
         <div class="review-header">
-          <img src="https://via.placeholder.com/50" class="review-pfp" />
+          <img src="assets/img/user1.png" class="review-pfp" />
           <div>
             <div class="review-name">Alex R</div>
             <div class="review-rating">★★★★★</div>
@@ -91,7 +80,7 @@
 
       <div class="review-card">
         <div class="review-header">
-          <img src="https://via.placeholder.com/50" class="review-pfp" />
+          <img src="assets/img/user2.png" class="review-pfp" />
           <div>
             <div class="review-name">Nova</div>
             <div class="review-rating">★★★★★</div>
@@ -129,12 +118,12 @@
     loadComponent("#footer", "components/footer.html");
   </script>
 
-  <!-- SCRIPTS (Loaded AFTER components inside waitForComponents) -->
+  <!-- CORE JS (load before auth/chat) -->
   <script src="assets/js/app.js"></script>
   <script src="assets/js/cart.js"></script>
   <script src="assets/js/drawer.js"></script>
 
-  <!-- ADMIN PANEL + CHAT WINDOWS EXIST IN THE PAGE -->
+  <!-- ADMIN PANEL + CHAT WINDOW HTML -->
   <div id="chatButton" class="chat-circle hidden">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
       stroke="currentColor" fill="none" stroke-width="2"
