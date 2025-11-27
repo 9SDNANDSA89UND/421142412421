@@ -549,139 +549,114 @@ footer,
   transition: transform 0.4s ease, opacity 0.5s ease;
 }
 
-
-/* === CART ALWAYS OUTSIDE HAMBURGER MENU === */
-.nav-cart {
-  position: absolute !important;
-  right: 16px !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-}
-
-/* Prevent cart from entering dropdown */
-@media (max-width: 760px) {
-  .nav-right .nav-cart {
-    display: none !important;
-  }
-}
-
-/* === MOVE HAMBURGER DROPDOWN LOWER === */
-@media (max-width: 760px) {
-  .nav-right {
-    top: 100px !important; /* lower spacing */
-  }
-}
-
-/* === HIDE CHECKBOX COMPLETELY === */
-#navToggle {
-  opacity: 0 !important;
-  position: absolute !important;
-  left: -9999px !important;
-  pointer-events: none !important;
-}
-
-/* === HAMBURGER LABEL FIX (NO BACKGROUND BOX) === */
-.nav-toggle-label {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  outline: none !important;
-}
-
-.nav-toggle-label span,
-.nav-toggle-label span::before,
-.nav-toggle-label span::after {
-  display: block;
-  height: 4px;
-  background: #fff !important;
-  border-radius: 4px;
-  content: "";
-  transition: 0.3s ease;
-}
-
-.nav-toggle-label span::before { transform: translateY(-8px); }
-.nav-toggle-label span::after { transform: translateY(4px); }
-
-/* Hide hamburger on desktop */
-@media (min-width: 761px) {
-  .nav-toggle-label {
-    display: none !important;
-  }
-}
-
-/* === MOBILE BUTTON RESIZING === */
-@media (max-width: 760px) {
-  .nav-rect-btn {
-    width: 90% !important;
-    justify-content: center !important;
-    padding: 12px !important;
-    font-size: 16px !important;
-  }
-}
-
-
 /* ============================================================
-   MOBILE-ONLY SQUARE HAMBURGER + CENTER LOGO FIX
+   CLEAN MOBILE-FRIENDLY NAVBAR FIX
+   This layer overrides navbar on mobile only
 ============================================================ */
 @media (max-width: 760px) {
 
+  .nav-inner {
+    height: 60px !important;
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  /* Center logo */
+  .nav-center {
+    position: absolute !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Square hamburger on left */
   .nav-hamburger-wrapper {
-    position: absolute;
-    left: 16px;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 99999;
+    position: absolute !important;
+    left: 14px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 46px !important;
+    height: 46px !important;
+    z-index: 99999 !important;
+  }
+
+  #navToggle {
+    display: none !important;
   }
 
   .nav-toggle-label {
-    display: flex !important;
-    justify-content: center;
-    align-items: center;
-
     width: 46px !important;
     height: 46px !important;
-
-    background: rgba(255,255,255,0.06) !important;
-    border: 1px solid rgba(255,255,255,0.15) !important;
+    background: rgba(255,255,255,0.07) !important;
     border-radius: 12px !important;
-    padding: 0 !important;
-    margin: 0 !important;
+    border: 1px solid rgba(255,255,255,0.15) !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
     box-shadow: none !important;
   }
 
   .nav-toggle-label span,
   .nav-toggle-label span::before,
   .nav-toggle-label span::after {
-    background: #ffffff !important;
-    width: 24px;
-    height: 3px;
-    border-radius: 3px;
-    content: "";
+    width: 24px !important;
+    height: 3px !important;
+    background: white !important;
+    border-radius: 4px !important;
+    content: "" !important;
   }
 
-  .nav-toggle-label span::before {
-    transform: translateY(-7px);
-  }
+  .nav-toggle-label span::before { transform: translateY(-7px) !important; }
+  .nav-toggle-label span::after  { transform: translateY(7px) !important; }
 
-  .nav-toggle-label span::after {
-    transform: translateY(7px);
-  }
-
-  .nav-center {
-    position: absolute !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-  }
-
+  /* Cart icon on right */
+  .nav-cart,
   .nav-cart-fixed {
     position: absolute !important;
-    right: 16px !important;
+    right: 14px !important;
     top: 50% !important;
     transform: translateY(-50%) !important;
+    width: 46px !important;
+    height: 46px !important;
+    padding: 0 !important;
+    background: rgba(255,255,255,0.07) !important;
+    border-radius: 12px !important;
+    border: 1px solid rgba(255,255,255,0.15) !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
     z-index: 99999 !important;
   }
 
+  /* Dropdown below navbar */
   .nav-right {
-    top: 105px !important;
+    position: absolute !important;
+    top: 62px !important;
+    left: 0;
+    right: 0;
+    width: 100% !important;
+    background: #0f141a !important;
+    padding: 18px 0 !important;
+    border-top: 1px solid rgba(255,255,255,0.10) !important;
+    display: none;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 14px !important;
+    z-index: 9999 !important;
+  }
+
+  #navToggle:checked ~ .nav-right {
+    display: flex !important;
+  }
+
+  .nav-right .nav-rect-btn {
+    width: 90% !important;
+    justify-content: center !important;
+    padding: 14px !important;
+    font-size: 16px !important;
   }
 }
