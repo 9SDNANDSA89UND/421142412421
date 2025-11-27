@@ -1,9 +1,9 @@
 /* ============================================================
-   TamedBlox Chat System — FINAL FRONTEND VERSION
-   ✔ Instant messages
+   TamedBlox Chat System — FINAL DELETE-ENABLED FRONTEND
+   ✔ Instant send
    ✔ SSE live updates
    ✔ Duplicate prevention
-   ✔ Admin close ticket included
+   ✔ Admin hard delete support
 ============================================================ */
 
 console.log("%c[TAMEDBLOX CHAT] Loaded", "color:#4ef58a;font-weight:900;");
@@ -13,11 +13,11 @@ window.API = "https://website-5eml.onrender.com";
 let CURRENT_CHAT = null;
 let IS_ADMIN = false;
 
-// ⭐ Tracks last message timestamp to prevent duplicates
+// ⭐ Tracks local message timestamp to prevent SSE duplicates
 let LAST_SENT_TIMESTAMP = null;
 
 /* ============================================================
-   SSE STREAM
+   SSE STREAM HANDLER
 ============================================================ */
 let evtSrc = null;
 
@@ -29,13 +29,22 @@ function startSSE(chatId) {
   evtSrc.onmessage = (e) => {
     try {
       const msg = JSON.parse(e.data);
-      appendMessage(msg);
 
-      // If ticket was closed by admin via SSE
-      if (msg.closed === true) {
+      // ⭐ Hard deleted ticket
+      if (msg.deleted === true) {
+        alert("This ticket has been deleted.");
+        qs("chatWindow").classList.add("hidden");
+
+        // Disable input
         qs("chatInput").disabled = true;
         qs("chatSend").disabled = true;
+
+        return;
       }
+
+      // Normal message
+      appendMessage(msg);
+
     } catch (err) {
       console.warn("SSE parse error:", err);
     }
@@ -50,7 +59,7 @@ function qs(id) {
 }
 
 /* ============================================================
-   BUBBLE DETECTION LOGIC
+   BUBBLE STYLING LOGIC
 ============================================================ */
 function isMine(m) {
   if (IS_ADMIN && m.sender === "admin") return true;
@@ -80,10 +89,8 @@ function createMsgHTML(m) {
    SAFE APPEND (NO DUPLICATES)
 ============================================================ */
 function appendMessage(msg) {
-  // Prevent duplicate messages from SSE echo
-  if (msg.timestamp === LAST_SENT_TIMESTAMP) {
-    return;
-  }
+  // Duplicate filter (SSE echo of our instant message)
+  if (msg.timestamp === LAST_SENT_TIMESTAMP) return;
 
   const box = qs("chatMessages");
   if (!box) return;
@@ -102,12 +109,6 @@ async function loadMessages(chatId) {
   const box = qs("chatMessages");
   box.innerHTML = msgs.map(createMsgHTML).join("");
   box.scrollTop = box.scrollHeight;
-
-  // Lock UI if last message indicates chat is closed
-  if (msgs.length && msgs[msgs.length - 1].closed === true) {
-    qs("chatInput").disabled = true;
-    qs("chatSend").disabled = true;
-  }
 }
 
 /* ============================================================
@@ -149,7 +150,7 @@ async function loadChatForUser(token) {
 }
 
 /* ============================================================
-   LOAD CHAT BY ID (STRIPE BUYER)
+   LOAD STRIPE CHAT (ANONYMOUS)
 ============================================================ */
 async function loadChatById(chatId) {
   try {
@@ -177,7 +178,7 @@ async function loadChatById(chatId) {
 }
 
 /* ============================================================
-   ADMIN MODE
+   ADMIN MODE: LOAD ACTIVE CHATS
 ============================================================ */
 async function loadAdminChats(token) {
   const res = await fetch(`${API}/chats/all`, {
@@ -208,6 +209,10 @@ async function openAdminChat(chatId) {
   });
 
   const chat = await res.json();
+  if (!chat) {
+    alert("This chat was deleted.");
+    return;
+  }
 
   CURRENT_CHAT = {
     _id: chatId,
@@ -218,12 +223,11 @@ async function openAdminChat(chatId) {
   await loadMessages(chatId);
   showChatWindow();
 
-  // ⭐ Required SSE fix for admins switching chats
   startSSE(chatId);
 }
 
 /* ============================================================
-   ORDER SUMMARY
+   ORDER SUMMARY RENDER
 ============================================================ */
 function renderOrderSummary(chat) {
   const o = chat.orderDetails;
@@ -243,13 +247,13 @@ function renderOrderSummary(chat) {
 }
 
 /* ============================================================
-   CLOSE TICKET (ADMIN)
+   HARD DELETE TICKET (ADMIN)
 ============================================================ */
 async function closeTicket() {
   if (!CURRENT_CHAT) return;
 
   const token = localStorage.getItem("authToken");
-  if (!IS_ADMIN) return alert("Only admins can close tickets.");
+  if (!IS_ADMIN) return alert("Only admins can delete tickets.");
 
   await fetch(`${API}/chats/close`, {
     method: "POST",
@@ -260,30 +264,27 @@ async function closeTicket() {
     body: JSON.stringify({ chatId: CURRENT_CHAT._id })
   });
 
-  qs("chatInput").disabled = true;
-  qs("chatSend").disabled = true;
+  // Remove from admin list instantly
+  document.querySelector(
+    `.admin-chat-item[onclick="openAdminChat('${CURRENT_CHAT._id}')"]`
+  )?.remove();
 
-  appendMessage({
-    system: true,
-    content: "This ticket has been closed.",
-    timestamp: new Date()
-  });
+  // Close chat UI
+  qs("chatWindow").classList.add("hidden");
 }
 
 /* ============================================================
-   SEND MESSAGE — INSTANT MSG + SSE SAFE
+   SEND MESSAGE — INSTANT + DUPLICATE SAFE
 ============================================================ */
 async function sendMessage() {
   const input = qs("chatInput");
   const msg = input.value.trim();
   if (!msg || !CURRENT_CHAT) return;
-  if (input.disabled) return; // ticket closed
 
   input.value = "";
 
   const timestamp = new Date().toISOString();
 
-  // ⭐ Instant local message
   const localMessage = {
     sender: IS_ADMIN ? "admin" : CURRENT_CHAT.userEmail,
     content: msg,
@@ -296,13 +297,9 @@ async function sendMessage() {
   const token = localStorage.getItem("authToken");
   const headers = { "Content-Type": "application/json" };
 
-  if (IS_ADMIN) {
-    headers.Authorization = "Bearer " + token;
-  } else if (token) {
-    headers.Authorization = "Bearer " + token;
-  } else {
-    headers["x-purchase-verified"] = "true";
-  }
+  if (IS_ADMIN) headers.Authorization = "Bearer " + token;
+  else if (token) headers.Authorization = "Bearer " + token;
+  else headers["x-purchase-verified"] = "true";
 
   fetch(`${API}/chats/send`, {
     method: "POST",
@@ -315,20 +312,22 @@ async function sendMessage() {
 }
 
 /* ============================================================
-   UI
+   UI BINDING + INIT
 ============================================================ */
 function enableAdminUI() {
   qs("adminChatPanel").classList.remove("hidden");
   qs("chatButton").classList.remove("hidden");
 
-  const closeBtn = document.createElement("button");
-  closeBtn.id = "closeTicketBtn";
-  closeBtn.innerText = "Close Ticket";
-  closeBtn.style =
-    "background:#ff4b4b;color:white;padding:10px;margin:10px;border-radius:10px;width:90%;cursor:pointer;";
-  closeBtn.onclick = closeTicket;
-
-  qs("chatWindow").prepend(closeBtn);
+  // Add delete button once
+  if (!qs("closeTicketBtn")) {
+    const btn = document.createElement("button");
+    btn.id = "closeTicketBtn";
+    btn.innerText = "Delete Ticket";
+    btn.style =
+      "background:#ff4b4b;color:white;padding:10px;margin:10px;border-radius:10px;width:90%;cursor:pointer;";
+    btn.onclick = closeTicket;
+    qs("chatWindow").prepend(btn);
+  }
 }
 
 function showChatWindow() {
@@ -353,7 +352,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const token = localStorage.getItem("authToken");
   let loaded = false;
 
-  // Case 1 — Stripe purchase return
+  // Returning from Stripe
   const urlParams = new URLSearchParams(location.search);
   if (urlParams.get("chat") === "open" && urlParams.get("session_id")) {
     const sid = urlParams.get("session_id");
@@ -367,12 +366,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // Case 2 — Logged-in user
   if (!loaded && token) {
     loaded = await loadChatForUser(token);
   }
 
-  // Case 3 — Hide chat button if no access
   if (!loaded) {
     qs("chatButton").classList.add("hidden");
     qs("chatWindow").classList.add("hidden");
