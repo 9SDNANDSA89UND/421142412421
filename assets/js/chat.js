@@ -1,225 +1,227 @@
 /* ============================================================
-   TamedBlox — FINAL CHAT.JS (LIVE SSE + ANON PURCHASE SUPPORT)
+   TamedBlox Chat System — FINAL PATCHED VERSION
+   ✔ Loads chat ONLY using chatId from Stripe
+   ✔ Prevents random users from seeing other chats
+   ✔ Fixes admin mode
+   ✔ SSE real-time messaging
+   ✔ No duplicate API, no “chat not ready”, no fallback bugs
 ============================================================ */
 
-if (window.__CHAT_JS_LOADED__) {
-  console.warn("chat.js already loaded");
-} else {
-  window.__CHAT_JS_LOADED__ = true;
+console.log("%c[TAMEDBLOX CHAT] Loaded", "color:#4ef58a;font-weight:900;");
 
-window.API = window.API || "https://website-5eml.onrender.com";
+window.API = "https://website-5eml.onrender.com";
 
 let CURRENT_CHAT = null;
-let ALL_CHATS = [];
-let LIVE_STREAM = null;
+let IS_ADMIN = false;
 
 /* ============================================================
-   URL PARAM HANDLING (Stripe)
+   SSE: LIVE MESSAGE STREAM
 ============================================================ */
-const urlParams = new URLSearchParams(window.location.search);
-const autoOpen = urlParams.get("chat") === "open";
-const sessionIdFromURL = urlParams.get("session_id");
+let evtSrc = null;
 
-if (autoOpen) {
-  localStorage.setItem("HAS_PURCHASED", "yes");
+function startSSE(chatId) {
+  if (evtSrc) evtSrc.close();
+
+  evtSrc = new EventSource(`${API}/chats/stream/${chatId}`);
+
+  evtSrc.onmessage = (e) => {
+    try {
+      const msg = JSON.parse(e.data);
+      appendMessage(msg);
+    } catch (err) {
+      console.warn("SSE parse error:", err);
+    }
+  };
 }
 
 /* ============================================================
-   TOKEN CLEANER
+   HELPERS
 ============================================================ */
-function sanitizeToken(t) {
-  if (!t || t === "null" || t === "undefined" || t.trim() === "") return null;
-  return t;
+
+function qs(id) {
+  return document.getElementById(id);
+}
+
+function createMsgHTML(m) {
+  const mine = m.sender === CURRENT_CHAT.userEmail;
+  return `
+    <div class="msg ${mine ? "me" : "them"}">
+      ${m.content}
+      <br><small>${new Date(m.timestamp).toLocaleTimeString()}</small>
+    </div>
+  `;
+}
+
+function appendMessage(msg) {
+  const box = qs("chatMessages");
+  if (!box) return;
+  box.innerHTML += createMsgHTML(msg);
+  box.scrollTop = box.scrollHeight;
 }
 
 /* ============================================================
-   SHOW CHAT ICON IF USER CAN USE CHAT
+   LOAD CHAT (LOGGED-IN USER)
 ============================================================ */
-async function showChatBubbleIfAllowed() {
-  const bubble = document.getElementById("chatButton");
-  if (!bubble) return;
 
-  if (localStorage.getItem("HAS_PURCHASED") === "yes") {
-    bubble.classList.remove("hidden");
-    return;
+async function loadChatForUser(token) {
+  const me = await fetch(`${API}/auth/me`, {
+    headers: { Authorization: "Bearer " + token }
+  });
+
+  if (!me.ok) return false;
+
+  const user = await me.json();
+  IS_ADMIN = !!user.admin;
+
+  if (IS_ADMIN) {
+    enableAdminUI();
+    return loadAdminChats(token);
   }
-
-  const token = sanitizeToken(localStorage.getItem("authToken"));
-  if (!token) return;
 
   const res = await fetch(`${API}/chats/my-chats`, {
     headers: { Authorization: "Bearer " + token }
   });
 
   const chat = await res.json();
-  if (chat && chat._id) {
-    bubble.classList.remove("hidden");
-    localStorage.setItem("HAS_PURCHASED", "yes");
+  if (!chat || !chat._id) return false;
+
+  CURRENT_CHAT = {
+    _id: chat._id,
+    userEmail: user.email
+  };
+
+  renderOrderSummary(chat);
+  await loadMessages(chat._id);
+  showChatWindow();
+
+  startSSE(chat._id);
+
+  return true;
+}
+
+/* ============================================================
+   LOAD CHAT BY chatId (ANONYMOUS PURCHASE)
+============================================================ */
+
+async function loadChatById(chatId) {
+  try {
+    const res = await fetch(`${API}/chats/by-id/${chatId}`);
+    const chat = await res.json();
+
+    if (!chat || !chat._id) return false;
+
+    CURRENT_CHAT = {
+      _id: chat._id,
+      userEmail: "anonymous"
+    };
+
+    renderOrderSummary(chat);
+    await loadMessages(chat._id);
+    showChatWindow();
+
+    startSSE(chat._id);
+
+    return true;
+  } catch (err) {
+    console.error("loadChatById error:", err);
+    return false;
   }
 }
 
 /* ============================================================
-   LIVE CHAT STREAM (SSE)
+   LOAD ALL MESSAGES
 ============================================================ */
-function startLiveChatStream(chatId) {
-  if (!chatId) return;
 
-  if (LIVE_STREAM) {
-    LIVE_STREAM.close();
-    LIVE_STREAM = null;
-  }
+async function loadMessages(chatId) {
+  const res = await fetch(`${API}/chats/messages/${chatId}`);
+  const msgs = await res.json();
 
-  LIVE_STREAM = new EventSource(`${API}/chats/live/${chatId}`);
-
-  LIVE_STREAM.addEventListener("message", (event) => {
-    const msg = JSON.parse(event.data);
-    appendLiveMessage(msg);
-  });
-
-  LIVE_STREAM.onerror = () => {
-    console.warn("⚠️ SSE disconnected, reconnecting automatically...");
-  };
-
-  console.log("📡 LIVE chat started:", chatId);
-}
-
-/* Append new messages instantly */
-function appendLiveMessage(msg) {
-  const box = document.getElementById("chatMessages");
-  if (!box) return;
-
-  box.innerHTML += `
-    <div class="msg ${msg.sender === CURRENT_CHAT?.userEmail ? "me" : "them"}">
-      ${msg.content}
-      <br><small>${new Date(msg.timestamp).toLocaleTimeString()}</small>
-    </div>
-  `;
-
+  const box = qs("chatMessages");
+  box.innerHTML = msgs.map(createMsgHTML).join("");
   box.scrollTop = box.scrollHeight;
 }
 
 /* ============================================================
-   LOAD CHAT USING STRIPE SESSION ID (metadata → chatId)
+   ADMIN MODE
 ============================================================ */
-async function tryLoadChatFromStripeSession() {
-  if (!sessionIdFromURL) return false;
 
-  try {
-    const r = await fetch(`${API}/pay/session-info/${sessionIdFromURL}`);
-    const data = await r.json();
-
-    if (data.chatId) {
-      CURRENT_CHAT = { _id: data.chatId, userEmail: "anonymous" };
-      localStorage.setItem("HAS_PURCHASED", "yes");
-
-      document.getElementById("chatButton")?.classList.remove("hidden");
-      document.getElementById("chatWindow")?.classList.remove("hidden");
-
-      startLiveChatStream(data.chatId);
-      refreshMessages();
-
-      return true;
-    }
-  } catch (err) {
-    console.error("Stripe session error:", err);
-  }
-
-  return false;
-}
-
-/* ============================================================
-   LOAD CHAT FOR LOGGED-IN USERS
-============================================================ */
-async function loadChat() {
-  const token = sanitizeToken(localStorage.getItem("authToken"));
-
-  if (token) {
-    const meRes = await fetch(`${API}/auth/me`, {
-      headers: { Authorization: "Bearer " + token }
-    });
-
-    if (meRes.ok) {
-      const user = await meRes.json();
-
-      // ADMIN CHAT
-      if (user.admin) {
-        const r = await fetch(`${API}/chats/all`, {
-          headers: { Authorization: "Bearer " + token }
-        });
-
-        ALL_CHATS = await r.json();
-        renderAdminChatList();
-        document.getElementById("chatButton")?.classList.remove("hidden");
-        return;
-      }
-
-      // USER CHAT
-      const r = await fetch(`${API}/chats/my-chats`, {
-        headers: { Authorization: "Bearer " + token }
-      });
-
-      const chat = await r.json();
-
-      if (chat && chat._id) {
-        CURRENT_CHAT = { _id: chat._id, userEmail: user.email };
-        document.getElementById("chatButton")?.classList.remove("hidden");
-
-        startLiveChatStream(chat._id);
-        refreshMessages();
-        return;
-      }
-    }
-  }
-
-  // FALLBACK: anonymous purchaser
-  if (localStorage.getItem("HAS_PURCHASED") === "yes") {
-    await loadAnonymousChat();
-  }
-}
-
-/* ============================================================
-   LOAD ANONYMOUS CHAT
-============================================================ */
-async function loadAnonymousChat() {
-  const r = await fetch(`${API}/chats/anonymous-latest`, {
-    headers: { "X-Purchase-Verified": "true" }
+async function loadAdminChats(token) {
+  const res = await fetch(`${API}/chats/all`, {
+    headers: { Authorization: "Bearer " + token }
   });
 
-  const chat = await r.json();
+  const list = await res.json();
+  const wrap = qs("adminChatList");
+  wrap.innerHTML = "";
 
-  if (chat && chat._id) {
-    CURRENT_CHAT = { _id: chat._id, userEmail: "anonymous" };
+  if (!Array.isArray(list)) return;
 
-    startLiveChatStream(chat._id);
-    refreshMessages();
+  list.forEach((chat) => {
+    wrap.innerHTML += `
+      <div class="admin-chat-item" onclick="openAdminChat('${chat._id}')">
+        <strong>${chat.orderDetails?.orderId || "Unknown Order"}</strong><br>
+        ${chat.participants?.[0] || "Unknown User"}
+      </div>
+    `;
+  });
+}
 
-    document.getElementById("chatButton")?.classList.remove("hidden");
-  }
+async function openAdminChat(chatId) {
+  const token = localStorage.getItem("authToken");
+
+  const res = await fetch(`${API}/chats/by-id/${chatId}`, {
+    headers: { Authorization: "Bearer " + token }
+  });
+
+  const chat = await res.json();
+
+  CURRENT_CHAT = {
+    _id: chatId,
+    userEmail: "admin"
+  };
+
+  renderOrderSummary(chat);
+  await loadMessages(chatId);
+  showChatWindow();
 }
 
 /* ============================================================
-   SEND MESSAGE (LIVE)
+   RENDER ORDER SUMMARY
 ============================================================ */
-async function sendMessage() {
-  const input = document.getElementById("chatInput");
-  const msg = input.value.trim();
-  if (!msg) return;
 
-  if (!CURRENT_CHAT?._id) {
-    alert("Chat not ready.");
+function renderOrderSummary(chat) {
+  const o = chat.orderDetails;
+  const box = qs("chatOrderSummary");
+
+  if (!o) {
+    box.innerHTML = `<strong>No linked order.</strong>`;
     return;
   }
 
+  box.innerHTML = `
+    <strong>Order:</strong> ${o.orderId}<br>
+    <strong>Total:</strong> $${o.total} USD<br>
+    <strong>Items:</strong><br>
+    ${o.items.map(i => `${i.qty}× ${i.name}`).join("<br>")}
+  `;
+}
+
+/* ============================================================
+   SEND MESSAGE
+============================================================ */
+
+async function sendMessage() {
+  const input = qs("chatInput");
+  const msg = input.value.trim();
+  if (!msg || !CURRENT_CHAT) return;
+
   input.value = "";
 
-  const token = sanitizeToken(localStorage.getItem("authToken"));
-  const purchased = localStorage.getItem("HAS_PURCHASED") === "yes";
+  const token = localStorage.getItem("authToken");
 
   const headers = { "Content-Type": "application/json" };
-
   if (token) headers.Authorization = "Bearer " + token;
-  else if (purchased) headers["X-Purchase-Verified"] = "true";
-  else return alert("Log in or purchase to chat.");
+  if (!token) headers["x-purchase-verified"] = "true";
 
   await fetch(`${API}/chats/send`, {
     method: "POST",
@@ -232,109 +234,59 @@ async function sendMessage() {
 }
 
 /* ============================================================
-   REFRESH MESSAGES (ONLY FOR INITIAL LOAD)
+   UI FUNCTIONS
 ============================================================ */
-async function refreshMessages() {
-  if (!CURRENT_CHAT?._id) return;
 
-  const token = sanitizeToken(localStorage.getItem("authToken"));
-  const headers = {};
-
-  if (token) headers.Authorization = "Bearer " + token;
-  else headers["X-Purchase-Verified"] = "true";
-
-  const r = await fetch(`${API}/chats/messages/${CURRENT_CHAT._id}`, {
-    headers
-  });
-
-  const messages = await r.json();
-  renderMessages(messages);
+function enableAdminUI() {
+  qs("adminChatPanel").classList.remove("hidden");
+  qs("chatButton").classList.remove("hidden");
 }
 
-/* Render full history */
-function renderMessages(messages) {
-  const box = document.getElementById("chatMessages");
+function showChatWindow() {
+  qs("chatWindow").classList.remove("hidden");
+  qs("chatButton").classList.remove("hidden");
+}
 
-  box.innerHTML = messages
-    .map(
-      (m) => `
-      <div class="msg ${m.sender === CURRENT_CHAT?.userEmail ? "me" : "them"}">
-        ${m.content}
-        <br><small>${new Date(m.timestamp).toLocaleTimeString()}</small>
-      </div>
-    `
-    )
-    .join("");
+function initChatUI() {
+  qs("chatSend").onclick = sendMessage;
 
-  box.scrollTop = box.scrollHeight;
+  qs("chatButton").onclick = () => {
+    qs("chatWindow").classList.toggle("hidden");
+  };
 }
 
 /* ============================================================
-   ADMIN CHAT LIST
+   MAIN STARTUP LOGIC
 ============================================================ */
-function renderAdminChatList() {
-  const list = document.getElementById("adminChatList");
 
-  list.innerHTML = ALL_CHATS.map(
-    (c) => `
-      <div class="admin-chat-item" onclick="openAdminChat('${c._id}')">
-        <strong>${c.orderDetails?.orderId || "Order"}</strong><br>
-        ${c.participants[0]}
-      </div>
-    `
-  ).join("");
-}
-
-window.openAdminChat = async function (chatId) {
-  const token = sanitizeToken(localStorage.getItem("authToken"));
-
-  CURRENT_CHAT = { _id: chatId, userEmail: "admin" };
-
-  const r = await fetch(`${API}/chats/messages/${chatId}`, {
-    headers: { Authorization: "Bearer " + token }
-  });
-
-  const messages = await r.json();
-  renderMessages(messages);
-
-  startLiveChatStream(chatId);
-
-  document.getElementById("chatWindow")?.classList.remove("hidden");
-};
-
-/* ============================================================
-   DOMContentLoaded (FINAL LIVE VERSION)
-============================================================ */
 document.addEventListener("DOMContentLoaded", async () => {
-  showChatBubbleIfAllowed();
+  initChatUI();
 
-  // 1️⃣ Try loading chat via Stripe session
-  const loadedFromStripe = await tryLoadChatFromStripeSession();
+  const token = localStorage.getItem("authToken");
+  let loaded = false;
 
-  // 2️⃣ If not loaded, fallback to normal system
-  if (!loadedFromStripe) {
-    await loadChat();
+  /* CASE 1 — Returning from Stripe */
+  const urlParams = new URLSearchParams(location.search);
+  if (urlParams.get("chat") === "open" && urlParams.get("session_id")) {
+    const sid = urlParams.get("session_id");
+
+    const res = await fetch(`${API}/pay/session-info/${sid}`);
+    const data = await res.json();
+
+    if (data.chatId) {
+      loaded = await loadChatById(data.chatId);
+      localStorage.setItem("HAS_PURCHASED", "yes");
+    }
   }
 
-  // 3️⃣ Chat bubble toggle
-  const bubble = document.getElementById("chatButton");
-  if (bubble) {
-    bubble.onclick = () =>
-      document.getElementById("chatWindow")?.classList.toggle("hidden");
+  /* CASE 2 — Logged-in user with real chat */
+  if (!loaded && token) {
+    loaded = await loadChatForUser(token);
   }
 
-  // 4️⃣ Send button
-  document
-    .getElementById("chatSend")
-    ?.addEventListener("click", sendMessage);
-
-  // 5️⃣ Auto-open (backup)
-  if (autoOpen && CURRENT_CHAT?._id) {
-    setTimeout(() => {
-      document.getElementById("chatButton")?.classList.remove("hidden");
-      document.getElementById("chatWindow")?.classList.remove("hidden");
-    }, 300);
+  /* CASE 3 — Non-purchaser → hide chat */
+  if (!loaded) {
+    qs("chatButton").classList.add("hidden");
+    qs("chatWindow").classList.add("hidden");
   }
 });
-
-} // END WRAPPER
