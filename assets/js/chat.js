@@ -1,9 +1,5 @@
 /* ============================================================
-   TamedBlox Chat System — FINAL FIXED VERSION
-   ✔ Instant sending (no invisible messages)
-   ✔ Correct bubble colors
-   ✔ Admin/user/anon logic correct
-   ✔ SSE real-time sync
+   TamedBlox Chat System — FINAL VERSION WITH SSE FIX
 ============================================================ */
 
 console.log("%c[TAMEDBLOX CHAT] Loaded", "color:#4ef58a;font-weight:900;");
@@ -78,7 +74,7 @@ async function loadMessages(chatId) {
 }
 
 /* ============================================================
-   LOAD CHAT FOR LOGGED-IN USER
+   LOAD CHAT (LOGGED-IN USER)
 ============================================================ */
 async function loadChatForUser(token) {
   const me = await fetch(`${API}/auth/me`, {
@@ -184,6 +180,9 @@ async function openAdminChat(chatId) {
   renderOrderSummary(chat);
   await loadMessages(chatId);
   showChatWindow();
+
+  // ⭐ FIX ADDED: start SSE for the opened chat
+  startSSE(chatId);
 }
 
 /* ============================================================
@@ -207,7 +206,7 @@ function renderOrderSummary(chat) {
 }
 
 /* ============================================================
-   SEND MESSAGE — ⭐ INSTANT ✔
+   SEND MESSAGE — INSTANT DISPLAY
 ============================================================ */
 async function sendMessage() {
   const input = qs("chatInput");
@@ -216,14 +215,14 @@ async function sendMessage() {
 
   input.value = "";
 
-  // ⭐ LOCAL INSTANT MESSAGE (no more invisible messages)
+  // ⭐ Instant local message (no waiting for SSE)
   const localMessage = {
     sender: IS_ADMIN ? "admin" : CURRENT_CHAT.userEmail,
     content: msg,
     timestamp: new Date()
   };
 
-  appendMessage(localMessage); // show immediately
+  appendMessage(localMessage);
 
   const token = localStorage.getItem("authToken");
   const headers = { "Content-Type": "application/json" };
@@ -236,6 +235,7 @@ async function sendMessage() {
     headers["x-purchase-verified"] = "true";
   }
 
+  // Send to backend (SSE will eventually echo it back)
   fetch(`${API}/chats/send`, {
     method: "POST",
     headers,
@@ -268,7 +268,7 @@ function initChatUI() {
 }
 
 /* ============================================================
-   MAIN
+   MAIN INIT
 ============================================================ */
 document.addEventListener("DOMContentLoaded", async () => {
   initChatUI();
@@ -276,7 +276,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const token = localStorage.getItem("authToken");
   let loaded = false;
 
-  // Coming back from Stripe
+  // Coming from Stripe
   const urlParams = new URLSearchParams(location.search);
   if (urlParams.get("chat") === "open" && urlParams.get("session_id")) {
     const sid = urlParams.get("session_id");
@@ -290,12 +290,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // Logged-in user
+  // Logged in?
   if (!loaded && token) {
     loaded = await loadChatForUser(token);
   }
 
-  // No chat access
+  // No access to chat
   if (!loaded) {
     qs("chatButton").classList.add("hidden");
     qs("chatWindow").classList.add("hidden");
