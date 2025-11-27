@@ -1,193 +1,255 @@
 /* ============================================================
-   TamedBlox Chat System — FINAL CSS
-   ✔ Chat window bottom-right
-   ✔ Admin panel top-left
-   ✔ No overlap
+   CHAT WIDGET — BASE STYLES
 ============================================================ */
 
-/* ---------------------------
-   CHAT OPEN BUTTON
----------------------------- */
 #chatButton {
   position: fixed;
-  bottom: 20px;
-  right: 20px; /* moved from left to right */
-  width: 55px;
-  height: 55px;
+  bottom: 25px;
+  right: 25px;
+  width: 60px;
+  height: 60px;
   background: #4ef58a;
+  color: #000;
   border-radius: 50%;
-  box-shadow: 0 0 25px #4ef58a44;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #0c1117;
-  font-size: 22px;
+  font-size: 26px;
+  font-weight: bold;
   cursor: pointer;
-  z-index: 2000; /* above admin panel */
-  transition: transform 0.2s ease;
+  border: none;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 10px rgba(0,0,0,.2);
 }
 
-#chatButton:hover {
-  transform: scale(1.08);
-}
-
-.hidden {
-  display: none !important;
-}
-
-/* ---------------------------
-   USER / ADMIN CHAT WINDOW
----------------------------- */
 #chatWindow {
   position: fixed;
-  bottom: 90px;
-  right: 20px; /* chat opens bottom-right */
-  width: 360px;
-  height: 480px;
-  background: #0f141a;
-  border: 1px solid #4ef58a33;
-  border-radius: 16px;
-  padding: 0;
+  bottom: 100px;
+  right: 30px;
+  width: 380px;
+  height: 550px;
+  background: #111;
+  border-radius: 18px;
+  border: 1px solid #333;
+  z-index: 9998;
+  display: none;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 0 25px #000a;
-  z-index: 2001; /* ABOVE admin panel */
-  animation: fadeIn 0.2s ease;
+  color: #fff;
+  box-shadow: 0 0 15px rgba(0,0,0,.3);
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(15px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
+.hidden { display: none !important; }
 
-/* ---------------------------
-   CHAT MESSAGE AREA
----------------------------- */
 .chat-messages {
-  flex: 1;
-  padding: 15px;
+  height: 65%;
   overflow-y: auto;
-  color: #d3dbe6;
+  padding: 15px;
+  scroll-behavior: smooth;
 }
 
 .msg {
-  padding: 10px 14px;
-  border-radius: 12px;
-  margin-bottom: 10px;
   max-width: 75%;
+  padding: 10px 14px;
+  border-radius: 16px;
+  margin-bottom: 10px;
   font-size: 14px;
-  line-height: 1.3;
+  word-break: break-word;
 }
 
-.msg small {
-  opacity: 0.5;
-  font-size: 11px;
-}
-
-/* sender (you) */
 .msg.me {
-  background: #4ef58a22;
-  border: 1px solid #4ef58a55;
+  background: #4ef58a;
+  color: #000;
   margin-left: auto;
-  text-align: right;
 }
 
-/* receiver */
 .msg.them {
-  background: #161c23;
-  border: 1px solid #ffffff09;
-  text-align: left;
+  background: #222;
+  color: #fff;
+  margin-right: auto;
 }
 
-/* ---------------------------
-   CHAT FOOTER INPUT
----------------------------- */
+/* Order Summary */
+#chatOrderSummary {
+  padding: 15px;
+  font-size: 14px;
+  background: #181818;
+  border-bottom: 1px solid #333;
+}
+
+/* Input row */
 .chat-input-row {
   display: flex;
-  padding: 10px;
-  background: #0c1117;
-  border-top: 1px solid #4ef58a22;
+  gap: 10px;
+  padding: 14px;
+  background: #181818;
+  border-top: 1px solid #333;
 }
 
 #chatInput {
   flex: 1;
-  background: #00000044;
-  border: 1px solid #ffffff11;
-  border-radius: 12px;
-  padding: 10px 13px;
-  color: #fff;
-  outline: none;
+  padding: 12px 14px;
   font-size: 14px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
 }
 
 .chat-send-btn {
-  margin-left: 10px;
+  width: 50px;
+  height: 50px;
   background: #4ef58a;
   border: none;
   border-radius: 12px;
-  width: 44px;
-  height: 44px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   cursor: pointer;
-  box-shadow: 0 0 10px #4ef58a55;
+  font-size: 20px;
 }
 
-.chat-send-btn:hover {
-  opacity: 0.85;
+/* ============================================================
+   ADMIN PANEL
+============================================================ */
+
+#adminChatPanel {
+  position: fixed;
+  top: 40px;
+  left: 40px;
+  width: 320px;
+  background: #181818;
+  border: 1px solid #333;
+  border-radius: 16px;
+  padding: 15px;
+  color: #fff;
+  z-index: 9998;
+  max-height: 70vh;
+  overflow-y: auto;
+  display: none;
 }
 
-/* ---------------------------
-   ORDER SUMMARY
----------------------------- */
-#chatOrderSummary {
-  padding: 12px 15px;
-  border-bottom: 1px solid #ffffff11;
-  color: #d3dbe6;
-  background: #0c1117;
+.admin-chat-item {
+  padding: 12px;
+  margin-bottom: 8px;
+  background: #222;
+  border-radius: 12px;
+  cursor: pointer;
   font-size: 14px;
 }
 
-/* ---------------------------
-   ADMIN CHAT PANEL
----------------------------- */
-#adminChatPanel {
-  position: fixed;
-  top: 100px;
-  left: 20px; /* admin panel stays on left */
-  width: 320px;
-  max-height: 520px;
-  background: #0f141a;
-  border: 1px solid #4ef58a33;
-  border-radius: 16px;
-  box-shadow: 0 0 25px #000a;
-  overflow-y: auto;
-  z-index: 1500; /* BELOW chat window */
-  backdrop-filter: blur(10px);
-}
-
-/* ADMIN title bar */
-.admin-panel-header {
-  padding: 14px;
-  font-weight: 900;
-  font-size: 16px;
-  color: #4ef58a;
-  background: #0c1117;
-  border-bottom: 1px solid #4ef58a22;
-}
-
-/* chat list items */
-.admin-chat-item {
-  padding: 12px 15px;
-  border-bottom: 1px solid #ffffff08;
-  color: #c8d0db;
-  cursor: pointer;
-  transition: background 0.15s ease;
-}
-
 .admin-chat-item:hover {
-  background: #4ef58a22;
+  background: #2d2d2d;
+}
+
+#closeTicketBtn {
+  width: 90%;
+  margin: 10px auto;
+  padding: 12px;
+  border-radius: 12px;
+  background: #ff4b4b;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+/* ============================================================
+   SCROLLBAR STYLE
+============================================================ */
+
+.chat-messages::-webkit-scrollbar,
+#adminChatPanel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb,
+#adminChatPanel::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 10px;
+}
+
+/* ============================================================
+   MOBILE RESPONSIVE FIX — iPhone & small screens
+============================================================ */
+
+@media (max-width: 600px) {
+
+  /* FAB Chat Button */
+  #chatButton {
+    bottom: 15px;
+    right: 15px;
+    width: 48px;
+    height: 48px;
+    font-size: 20px;
+  }
+
+  /* Chat Window */
+  #chatWindow {
+    bottom: 70px;
+    right: 10px;
+    width: 92vw !important;
+    height: 70vh !important;
+    border-radius: 16px;
+  }
+
+  /* Messages */
+  .chat-messages {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  .msg {
+    max-width: 90% !important;
+    padding: 9px 12px;
+    font-size: 13px;
+    border-radius: 12px;
+  }
+
+  .msg small {
+    font-size: 10px;
+  }
+
+  /* Input Row */
+  .chat-input-row {
+    padding: 8px;
+    gap: 8px;
+  }
+
+  #chatInput {
+    font-size: 14px;
+    padding: 10px 12px;
+  }
+
+  .chat-send-btn {
+    width: 42px;
+    height: 42px;
+    font-size: 18px;
+  }
+
+  /* Order Summary */
+  #chatOrderSummary {
+    font-size: 13px;
+    padding: 12px;
+  }
+
+  /* Admin Panel */
+  #adminChatPanel {
+    width: 92vw !important;
+    left: 4vw !important;
+    top: 10px !important;
+    max-height: 40vh !important;
+    border-radius: 14px;
+  }
+
+  .admin-chat-item {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  #closeTicketBtn {
+    width: 90% !important;
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  /* Safe area padding for iPhone notch */
+  body {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 }
