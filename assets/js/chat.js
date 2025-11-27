@@ -1,5 +1,9 @@
 /* ============================================================
-   TamedBlox Chat System — FINAL VERSION WITH SSE FIX
+   TamedBlox Chat System — FINAL DUPLICATE-FIXED VERSION
+   ✔ Instant messages
+   ✔ SSE real-time
+   ✔ Admin switching fix
+   ✔ No duplicate messages
 ============================================================ */
 
 console.log("%c[TAMEDBLOX CHAT] Loaded", "color:#4ef58a;font-weight:900;");
@@ -8,6 +12,9 @@ window.API = "https://website-5eml.onrender.com";
 
 let CURRENT_CHAT = null;
 let IS_ADMIN = false;
+
+// ⭐ Tracks last message timestamp to prevent duplicates
+let LAST_SENT_TIMESTAMP = null;
 
 /* ============================================================
    SSE STREAM
@@ -37,7 +44,7 @@ function qs(id) {
 }
 
 /* ============================================================
-   BUBBLE DETECTION FIX
+   BUBBLE COLOR LOGIC
 ============================================================ */
 function isMine(m) {
   if (IS_ADMIN && m.sender === "admin") return true;
@@ -54,15 +61,24 @@ function createMsgHTML(m) {
   `;
 }
 
+/* ============================================================
+   SAFE APPEND (NO DUPLICATES)
+============================================================ */
 function appendMessage(msg) {
+  // ❗ Prevent duplicates (SSE echo of our own message)
+  if (msg.timestamp === LAST_SENT_TIMESTAMP) {
+    return;
+  }
+
   const box = qs("chatMessages");
   if (!box) return;
+
   box.innerHTML += createMsgHTML(msg);
   box.scrollTop = box.scrollHeight;
 }
 
 /* ============================================================
-   LOAD MESSAGES
+   LOAD ALL MESSAGES
 ============================================================ */
 async function loadMessages(chatId) {
   const res = await fetch(`${API}/chats/messages/${chatId}`);
@@ -86,6 +102,7 @@ async function loadChatForUser(token) {
   const user = await me.json();
   IS_ADMIN = !!user.admin;
 
+  // Admin loads admin panel instead
   if (IS_ADMIN) {
     enableAdminUI();
     return loadAdminChats(token);
@@ -112,7 +129,7 @@ async function loadChatForUser(token) {
 }
 
 /* ============================================================
-   LOAD CHAT BY ID (ANONYMOUS)
+   LOAD CHAT BY STRIPE SESSION (ANONYMOUS)
 ============================================================ */
 async function loadChatById(chatId) {
   try {
@@ -181,7 +198,7 @@ async function openAdminChat(chatId) {
   await loadMessages(chatId);
   showChatWindow();
 
-  // ⭐ FIX ADDED: start SSE for the opened chat
+  // ⭐ Essential SSE fix for admin switching
   startSSE(chatId);
 }
 
@@ -206,7 +223,7 @@ function renderOrderSummary(chat) {
 }
 
 /* ============================================================
-   SEND MESSAGE — INSTANT DISPLAY
+   SEND MESSAGE — INSTANT DISPLAY (NO DELAYS)
 ============================================================ */
 async function sendMessage() {
   const input = qs("chatInput");
@@ -215,12 +232,17 @@ async function sendMessage() {
 
   input.value = "";
 
-  // ⭐ Instant local message (no waiting for SSE)
+  const timestamp = new Date().toISOString();
+
+  // ⭐ Instant local message
   const localMessage = {
     sender: IS_ADMIN ? "admin" : CURRENT_CHAT.userEmail,
     content: msg,
-    timestamp: new Date()
+    timestamp
   };
+
+  // Record timestamp to ignore SSE echo
+  LAST_SENT_TIMESTAMP = timestamp;
 
   appendMessage(localMessage);
 
@@ -235,7 +257,7 @@ async function sendMessage() {
     headers["x-purchase-verified"] = "true";
   }
 
-  // Send to backend (SSE will eventually echo it back)
+  // Send to backend (SSE will echo but be ignored)
   fetch(`${API}/chats/send`, {
     method: "POST",
     headers,
@@ -276,7 +298,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const token = localStorage.getItem("authToken");
   let loaded = false;
 
-  // Coming from Stripe
+  // CASE 1 — Stripe purchase return
   const urlParams = new URLSearchParams(location.search);
   if (urlParams.get("chat") === "open" && urlParams.get("session_id")) {
     const sid = urlParams.get("session_id");
@@ -290,12 +312,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // Logged in?
+  // CASE 2 — Logged-in user
   if (!loaded && token) {
     loaded = await loadChatForUser(token);
   }
 
-  // No access to chat
+  // CASE 3 — No access
   if (!loaded) {
     qs("chatButton").classList.add("hidden");
     qs("chatWindow").classList.add("hidden");
