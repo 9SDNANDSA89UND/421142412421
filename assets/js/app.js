@@ -1,6 +1,8 @@
 /* ============================================================
-   TamedBlox — PRODUCT SYSTEM (PATCHED & SAFE)
-   Works with new patched Cart.js + async navbar
+   TamedBlox — PRODUCT SYSTEM (PATCHED & FAST)
+   ✔ Local caching for instant load
+   ✔ Prevents duplicate tilt bindings
+   ✔ Add-to-cart buttons always work
 ============================================================ */
 
 /* Format product numbers as USD strings */
@@ -9,6 +11,7 @@ function formatUSD(amount) {
 }
 
 let products = [];
+let _TILT_BOUND = false;
 
 /* ============================================================
    WAIT FOR CONDITION
@@ -23,19 +26,31 @@ function waitFor(checkFn, callback, retry = 0) {
 }
 
 /* ============================================================
-   LOAD PRODUCTS
+   LOAD PRODUCTS (FAST WITH CACHE)
 ============================================================ */
 async function loadProducts() {
   try {
-    const res = await fetch("https://website-5eml.onrender.com/products");
-    products = await res.json();
+    // ✔ Check cached products first
+    const cached = localStorage.getItem("tamed_products");
+    if (cached) {
+      products = JSON.parse(cached);
+      renderProducts(products);
+    }
 
-    products.forEach((p) => {
+    // ✔ Always fetch updated data in background
+    const res = await fetch("https://website-5eml.onrender.com/products");
+    const fresh = await res.json();
+
+    fresh.forEach((p) => {
       p.price = Number(p.price);
       p.oldPrice = p.oldPrice ? Number(p.oldPrice) : null;
     });
 
+    products = fresh;
+    localStorage.setItem("tamed_products", JSON.stringify(fresh));
+
     renderProducts(products);
+
   } catch (err) {
     console.error("❌ Failed to load products:", err);
   }
@@ -94,7 +109,7 @@ function renderProducts(list) {
 }
 
 /* ============================================================
-   BIND ADD-TO-CART BUTTONS (SAFE)
+   BIND ADD-TO-CART BUTTONS (PATCHED)
 ============================================================ */
 function bindCartButtons() {
   const buttons = document.querySelectorAll(".buy-btn");
@@ -114,7 +129,7 @@ function bindCartButtons() {
         };
       });
 
-      console.log("🛒 Add-to-cart buttons are active.");
+      console.log("🛒 Add-to-cart buttons ready.");
     }
   );
 }
@@ -152,9 +167,12 @@ function setupSearch() {
 }
 
 /* ============================================================
-   CARD TILT EFFECT
+   CARD TILT EFFECT — PATCHED TO AVOID DUPLICATES
 ============================================================ */
 function initCardTilt() {
+  if (_TILT_BOUND) return; // prevents multiple listeners
+  _TILT_BOUND = true;
+
   const cards = document.querySelectorAll(".card");
 
   cards.forEach((card) => {
