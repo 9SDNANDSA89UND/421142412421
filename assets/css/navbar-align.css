@@ -1,35 +1,45 @@
 /* ==========================================
-   TamedBlox Logo Auto-Center Fix
-   Safe override — does NOT affect cart/hamburger
+   TamedBlox Perfect Center Logo Fix
+   Works on all devices, no cart shifting
 ========================================== */
 
-/* Center ONLY the logo container */
+/* Make nav-inner a proper positioning container */
+.nav-inner {
+  position: relative !important;
+  display: flex !important;
+  justify-content: flex-start !important; /* Important part */
+  align-items: center !important;
+}
+
+/* PERFECT CENTERING without affecting flex layout */
 .nav-center {
   position: absolute !important;
   left: 50% !important;
+  transform: translateX(-50%) !important;
+
   top: 50% !important;
   transform: translate(-50%, -50%) !important;
-  width: auto !important;
+
   white-space: nowrap !important;
-
-  /* IMPORTANT FIX:
-     Allow normal layout flow so cart doesn't shift */
-  pointer-events: auto !important;
-
-  /* Prevent the logo from influencing flex spacing */
-  z-index: 5 !important;
+  z-index: 10 !important;
+  pointer-events: none !important; /* DOES NOT affect layout */
 }
 
-/* Force only the text/logo to be centered */
+/* Keep logo clean */
 .nav-center .logo {
   display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
   gap: 0 !important;
   white-space: nowrap !important;
 }
 
-/* Mobile — ensure perfect centering */
+/* Right side buttons stay right */
+.nav-right {
+  margin-left: auto !important;
+  position: relative !important;
+  z-index: 20 !important;
+}
+
+/* Mobile portrait/landscape */
 @media (max-width: 760px) {
   .nav-center {
     top: 50% !important;
@@ -37,7 +47,7 @@
   }
 }
 
-/* Landscape (iPad horizontal) — keep perfect center */
+/* iPad landscape */
 @media (max-height: 500px) {
   .nav-center {
     top: 50% !important;
