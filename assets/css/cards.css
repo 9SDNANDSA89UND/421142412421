@@ -1,6 +1,8 @@
 /* ===============================
-   TAMEDBLOX — PREMIUM CARD SYSTEM (REWRITTEN)
-   Fully redesigned for cleaner, modern, glowing visuals
+   TAMEDBLOX — PREMIUM CARD SYSTEM (OPTIMIZED)
+   ✔ Faster load
+   ✔ Reduced reflow
+   ✔ Optimized transitions + tilt compatibility
 =============================== */
 
 /* ============================================
@@ -14,6 +16,9 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 32px;
+
+  /* Helps with fast first-paint */
+  contain: layout paint;
 }
 
 /* ============================================
@@ -33,12 +38,12 @@
   flex-direction: column;
   justify-content: space-between;
 
-  transition: 0.25s ease;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
 
-  /* Entrance animation */
+  /* Entrance animation optimized */
   opacity: 0;
   transform: translateY(12px);
-  animation: cardFade 0.45s ease forwards;
+  animation: cardFade 0.35s ease forwards;
 }
 
 @keyframes cardFade {
@@ -49,7 +54,6 @@
 }
 
 .card:hover {
-  /* Default hover reset */
   transform: translateY(-6px);
   box-shadow: 0 0 22px rgba(78, 245, 138, 0.25);
   border-color: rgba(78, 245, 138, 0.45);
@@ -64,16 +68,15 @@
   border-radius: 14px;
   padding: 6px;
   object-fit: contain;
+  
   background: rgba(255, 255, 255, 0.03);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+
   box-shadow:
     inset 0 0 18px rgba(78, 245, 138, 0.25),
     0 0 18px rgba(78, 245, 138, 0.12);
-  transition: 0.25s ease;
-}
 
+  transition: transform 0.18s ease;
+}
 
 /* ============================================
    BADGES ROW
@@ -87,6 +90,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  pointer-events: none;
 }
 
 /* ============================================
@@ -110,6 +115,9 @@
   box-shadow:
     0 0 12px currentColor,
     inset 0 0 12px rgba(255,255,255,0.08);
+
+  position: relative;
+  overflow: hidden;
 }
 
 /* GOD */
@@ -120,6 +128,27 @@
 
 /* OG */
 .tag-og { color: #ffb03a; background: rgba(255,170,60,0.22); }
+
+/* ============================================
+   HOLOGRAPHIC SWEEP EFFECT — OPTIMIZED
+============================================ */
+.tag::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0.5) 50%,
+    rgba(255,255,255,0) 100%);
+  transform: translateX(-120%);
+  animation: holoSweep 2.8s ease-in-out infinite;
+}
+
+@keyframes holoSweep {
+  0% { transform: translateX(-120%); }
+  60% { transform: translateX(120%); }
+  100% { transform: translateX(120%); }
+}
 
 /* ============================================
    DISCOUNT BADGE
@@ -183,7 +212,7 @@
 }
 
 /* ============================================
-   BUY BUTTON
+   ADD TO CART BUTTON
 ============================================ */
 .buy-btn {
   width: 100%;
@@ -204,56 +233,24 @@
   gap: 8px;
 
   cursor: pointer;
-  transition: 0.2s ease;
+  transition: 0.15s ease;
 }
 
 .buy-btn:hover {
-  transform: translateY(-2px) scale(1.02);
+  transform: translateY(-2px) scale(1.03);
   box-shadow: 0 0 16px rgba(78, 245, 138, 0.45);
 }
 
 .buy-btn:active {
-  transform: scale(0.97);
-}
-
-.btn-cart-icon {
-  width: 17px;
-  height: 17px;
-  opacity: 0.85;
+  transform: scale(0.98);
 }
 
 /* ============================================
-   HOLOGRAPHIC RARITY TAGS
-============================================ */
-.tag {
-  position: relative;
-  overflow: hidden;
-}
-
-.tag::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(120deg,
-    rgba(255,255,255,0) 0%,
-    rgba(255,255,255,0.6) 50%,
-    rgba(255,255,255,0) 100%);
-  transform: translateX(-120%);
-  animation: holoSweep 2.2s ease-in-out infinite;
-}
-
-@keyframes holoSweep {
-  0% { transform: translateX(-120%); }
-  60% { transform: translateX(120%); }
-  100% { transform: translateX(120%); }
-}
-
-/* ============================================
-   3D TILT SUPPORT (CSS PART)
-   Requires JS to apply transform dynamically
+   CARD TILT SUPPORT (OPTIMIZED)
+   JS applies transforms — CSS keeps it smooth
 ============================================ */
 .card {
+  will-change: transform;
   transform-style: preserve-3d;
   perspective: 800px;
 }
-
