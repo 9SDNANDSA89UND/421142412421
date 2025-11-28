@@ -6,14 +6,32 @@
   <title>TamedBlox — Home</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <link rel="icon" href="https://i.postimg.cc/KYrZ46jTamed-Dino.png" type="image/png">
+  <!-- =============================== -->
+  <!-- ⭐ UNIVERSAL ICONS (ALL DEVICES) -->
+  <!-- =============================== -->
 
+  <!-- Main favicon -->
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/y6pL3tKq/Tamed-Blox.png">
+
+  <!-- Apple / iOS -->
+  <link rel="apple-touch-icon" href="https://i.postimg.cc/y6pL3tKq/Tamed-Blox.png">
+
+  <!-- Android high-res -->
+  <link rel="icon" sizes="192x192" href="https://i.postimg.cc/y6pL3tKq/Tamed-Blox.png">
+  <link rel="icon" sizes="512x512" href="https://i.postimg.cc/y6pL3tKq/Tamed-Blox.png">
+
+  <!-- Safari pinned tab -->
+  <link rel="mask-icon" href="https://i.postimg.cc/y6pL3tKq/Tamed-Blox.png" color="#4ef58a">
+
+  <!-- Windows tiles -->
+  <meta name="msapplication-TileImage" content="https://i.postimg.cc/y6pL3tKq/Tamed-Blox.png">
+  <meta name="msapplication-TileColor" content="#0b0f14">
+
+  <!-- =============================== -->
   <!-- CSS -->
+  <!-- =============================== -->
   <link rel="stylesheet" href="assets/css/main.css" />
-
-  <!-- ⭐ ADDED — navbar alignment fix -->
-  <link rel="stylesheet" href="assets/css/navbar-align.css" />
-
+  <link rel="stylesheet" href="assets/css/navbar-align.css" /> <!-- ⭐ Added -->
   <link rel="stylesheet" href="assets/css/cards.css" />
   <link rel="stylesheet" href="assets/css/modal.css" />
   <link rel="stylesheet" href="assets/css/reviews.css" />
@@ -26,6 +44,7 @@
       if (el) el.innerHTML = await fetch(file).then((r) => r.text());
     }
   </script>
+
 </head>
 
 <body>
@@ -52,6 +71,7 @@
   <section class="reviews-section">
     <h2 class="reviews-title">Customer Reviews</h2>
     <div class="reviews-grid">
+      
       <div class="review-card">
         <div class="review-header">
           <img src="https://dummyimage.com/50x50/222/fff.png&text=+" class="review-pfp" />
@@ -73,6 +93,7 @@
         </div>
         <div class="review-body">Quick service and amazing prices.</div>
       </div>
+
     </div>
   </section>
 
@@ -100,9 +121,7 @@
     loadComponent("#footer", "components/footer.html");
   </script>
 
-  <!-- ======================= -->
-  <!-- 🔥 PATCHED ADMIN CHAT UI -->
-  <!-- ======================= -->
+  <!-- ADMIN CHAT PANEL -->
   <div id="adminChatPanel" class="admin-panel hidden">
     <div class="admin-panel-header">Active Chats</div>
     <div id="adminChatList" class="admin-chat-list"></div>
@@ -136,11 +155,7 @@
     </svg>
   </div>
 
-  <!-- ======================= -->
-  <!-- 🚀 JAVASCRIPT (CORRECT ORDER) -->
-  <!-- ======================= -->
-
-  <!-- CART MUST LOAD FIRST -->
+  <!-- Scripts -->
   <script src="assets/js/cart.js"></script>
   <script src="assets/js/app.js"></script>
   <script src="assets/js/drawer.js"></script>
