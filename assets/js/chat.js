@@ -1,9 +1,9 @@
 /* ============================================================
-   TamedBlox Chat System — FINAL DELETE-ENABLED FRONTEND
-   ✔ Instant send
-   ✔ SSE live updates
-   ✔ Duplicate prevention
-   ✔ Admin hard delete support
+   TamedBlox Chat System — FINAL DELETE-ENABLED FRONTEND (PATCHED)
+   ✔ Admin chats open reliably
+   ✔ Admin chat list updates when admin button is clicked
+   ✔ SSE stable reconnecting
+   ✔ Duplicate message protection
 ============================================================ */
 
 console.log("%c[TAMEDBLOX CHAT] Loaded", "color:#4ef58a;font-weight:900;");
@@ -13,11 +13,11 @@ window.API = "https://website-5eml.onrender.com";
 let CURRENT_CHAT = null;
 let IS_ADMIN = false;
 
-// ⭐ Tracks local message timestamp to prevent SSE duplicates
+// Prevent SSE duplication
 let LAST_SENT_TIMESTAMP = null;
 
 /* ============================================================
-   SSE STREAM HANDLER
+   SSE STREAM HANDLER — PATCHED FOR STABILITY
 ============================================================ */
 let evtSrc = null;
 
@@ -30,24 +30,27 @@ function startSSE(chatId) {
     try {
       const msg = JSON.parse(e.data);
 
-      // ⭐ Hard deleted ticket
+      // Hard delete case
       if (msg.deleted === true) {
         alert("This ticket has been deleted.");
         qs("chatWindow").classList.add("hidden");
 
-        // Disable input
         qs("chatInput").disabled = true;
         qs("chatSend").disabled = true;
 
         return;
       }
 
-      // Normal message
       appendMessage(msg);
 
     } catch (err) {
       console.warn("SSE parse error:", err);
     }
+  };
+
+  evtSrc.onerror = () => {
+    console.warn("SSE connection lost, retrying...");
+    setTimeout(() => startSSE(chatId), 1500);
   };
 }
 
@@ -59,7 +62,7 @@ function qs(id) {
 }
 
 /* ============================================================
-   BUBBLE STYLING LOGIC
+   MESSAGE BUBBLE LOGIC
 ============================================================ */
 function isMine(m) {
   if (IS_ADMIN && m.sender === "admin") return true;
@@ -86,10 +89,9 @@ function createMsgHTML(m) {
 }
 
 /* ============================================================
-   SAFE APPEND (NO DUPLICATES)
+   SAFE APPEND — NO DUPLICATES
 ============================================================ */
 function appendMessage(msg) {
-  // Duplicate filter (SSE echo of our instant message)
   if (msg.timestamp === LAST_SENT_TIMESTAMP) return;
 
   const box = qs("chatMessages");
@@ -100,7 +102,7 @@ function appendMessage(msg) {
 }
 
 /* ============================================================
-   LOAD MESSAGES
+   LOAD MESSAGES FROM SERVER
 ============================================================ */
 async function loadMessages(chatId) {
   const res = await fetch(`${API}/chats/messages/${chatId}`);
@@ -112,7 +114,7 @@ async function loadMessages(chatId) {
 }
 
 /* ============================================================
-   LOAD CHAT (LOGGED-IN USER)
+   LOAD USER CHAT (LOGGED-IN USERS)
 ============================================================ */
 async function loadChatForUser(token) {
   const me = await fetch(`${API}/auth/me`, {
@@ -150,7 +152,7 @@ async function loadChatForUser(token) {
 }
 
 /* ============================================================
-   LOAD STRIPE CHAT (ANONYMOUS)
+   LOAD CHAT BY ID (RETURNING FROM STRIPE)
 ============================================================ */
 async function loadChatById(chatId) {
   try {
@@ -171,14 +173,13 @@ async function loadChatById(chatId) {
     startSSE(chat._id);
     return true;
 
-  } catch (err) {
-    console.error("loadChatById error:", err);
+  } catch {
     return false;
   }
 }
 
 /* ============================================================
-   ADMIN MODE: LOAD ACTIVE CHATS
+   ADMIN MODE — LOAD ACTIVE CHATS (PATCHED)
 ============================================================ */
 async function loadAdminChats(token) {
   const res = await fetch(`${API}/chats/all`, {
@@ -193,14 +194,22 @@ async function loadAdminChats(token) {
 
   list.forEach((chat) => {
     wrap.innerHTML += `
-      <div class="admin-chat-item" onclick="openAdminChat('${chat._id}')">
-        <strong>${chat.orderDetails?.orderId || "Unknown Order"}</strong><br>
-        ${chat.participants?.[0] || "Unknown User"}
+      <div class="admin-chat-item" data-id="${chat._id}">
+        <strong>${chat.orderDetails?.orderId || "Order"}</strong><br>
+        ${chat.participants?.[0] || "User"}
       </div>
     `;
   });
+
+  // Bind click listeners (PATCHED)
+  document.querySelectorAll(".admin-chat-item").forEach((el) => {
+    el.onclick = () => openAdminChat(el.getAttribute("data-id"));
+  });
 }
 
+/* ============================================================
+   OPEN ADMIN CHAT (PATCHED)
+============================================================ */
 async function openAdminChat(chatId) {
   const token = localStorage.getItem("authToken");
 
@@ -227,7 +236,7 @@ async function openAdminChat(chatId) {
 }
 
 /* ============================================================
-   ORDER SUMMARY RENDER
+   ORDER SUMMARY BOX
 ============================================================ */
 function renderOrderSummary(chat) {
   const o = chat.orderDetails;
@@ -247,7 +256,7 @@ function renderOrderSummary(chat) {
 }
 
 /* ============================================================
-   HARD DELETE TICKET (ADMIN)
+   ADMIN HARD DELETE TICKET
 ============================================================ */
 async function closeTicket() {
   if (!CURRENT_CHAT) return;
@@ -264,17 +273,14 @@ async function closeTicket() {
     body: JSON.stringify({ chatId: CURRENT_CHAT._id })
   });
 
-  // Remove from admin list instantly
-  document.querySelector(
-    `.admin-chat-item[onclick="openAdminChat('${CURRENT_CHAT._id}')"]`
-  )?.remove();
+  // Remove chat tile
+  document.querySelector(`[data-id="${CURRENT_CHAT._id}"]`)?.remove();
 
-  // Close chat UI
   qs("chatWindow").classList.add("hidden");
 }
 
 /* ============================================================
-   SEND MESSAGE — INSTANT + DUPLICATE SAFE
+   SEND MESSAGE (PATCHED)
 ============================================================ */
 async function sendMessage() {
   const input = qs("chatInput");
@@ -297,8 +303,7 @@ async function sendMessage() {
   const token = localStorage.getItem("authToken");
   const headers = { "Content-Type": "application/json" };
 
-  if (IS_ADMIN) headers.Authorization = "Bearer " + token;
-  else if (token) headers.Authorization = "Bearer " + token;
+  if (token) headers.Authorization = "Bearer " + token;
   else headers["x-purchase-verified"] = "true";
 
   fetch(`${API}/chats/send`, {
@@ -312,13 +317,12 @@ async function sendMessage() {
 }
 
 /* ============================================================
-   UI BINDING + INIT
+   ADMIN UI ENABLER
 ============================================================ */
 function enableAdminUI() {
   qs("adminChatPanel").classList.remove("hidden");
   qs("chatButton").classList.remove("hidden");
 
-  // Add delete button once
   if (!qs("closeTicketBtn")) {
     const btn = document.createElement("button");
     btn.id = "closeTicketBtn";
@@ -344,7 +348,7 @@ function initChatUI() {
 }
 
 /* ============================================================
-   MAIN INIT
+   MAIN INIT (PATCHED)
 ============================================================ */
 document.addEventListener("DOMContentLoaded", async () => {
   initChatUI();
