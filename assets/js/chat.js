@@ -12,6 +12,9 @@ let IS_ADMIN = false;
 // Prevent SSE duplication
 let LAST_SENT_TIMESTAMP = null;
 
+// iPad global touch handler to prevent blocked touch events
+document.addEventListener("touchend", () => {}, { passive: false });
+
 /* ============================================================
    SSE STREAM HANDLER — PATCHED FOR STABILITY
 ============================================================ */
@@ -26,7 +29,6 @@ function startSSE(chatId) {
     try {
       const msg = JSON.parse(e.data);
 
-      // Hard delete case
       if (msg.deleted === true) {
         alert("This ticket has been deleted.");
         qs("chatWindow").classList.add("hidden");
@@ -273,20 +275,27 @@ async function closeTicket() {
 }
 
 /* ============================================================
-   SEND MESSAGE — WITH MOBILE FIXES
+   SEND MESSAGE — iPad/iPhone/Android SAFE VERSION
 ============================================================ */
 async function sendMessage() {
   const input = qs("chatInput");
-  const msg = input.value.trim();
+
+  // iPad: ensure last typed character is committed
+  let msg = input.value;
+  msg = msg.trim();
+  input.value = msg;
+
   if (!msg || !CURRENT_CHAT) return;
 
+  // Save message before clearing (iOS fix)
+  const sendContent = msg;
   input.value = "";
 
   const timestamp = new Date().toISOString();
 
   const localMessage = {
-    sender: IS_ADMIN ? "admin" : CURRENT_CHAT.userEmail,
-    content: msg,
+    sender: IS_ADMIN ? "admin" : (CURRENT_CHAT.userEmail || "user"),
+    content: sendContent,
     timestamp
   };
 
@@ -299,20 +308,23 @@ async function sendMessage() {
   if (token) headers.Authorization = "Bearer " + token;
   else headers["x-purchase-verified"] = "true";
 
-  fetch(`${API}/chats/send`, {
-    method: "POST",
-    headers,
-    body: JSON.stringify({
-      chatId: CURRENT_CHAT._id,
-      content: msg
-    })
-  });
+  // iPad Safari fix: delay fetch call so keyboard blur doesn't cancel it
+  setTimeout(() => {
+    fetch(`${API}/chats/send`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        chatId: CURRENT_CHAT._id,
+        content: sendContent
+      })
+    }).catch(() => {});
+  }, 50);
 
   forceScrollBottom();
 }
 
 /* ============================================================
-   ⭐ MOBILE SEND FIX
+   MOBILE/TABLET SEND FIX
 ============================================================ */
 function mobileSendFix(event) {
   event.preventDefault();
@@ -352,13 +364,14 @@ function showChatWindow() {
 
 function initChatUI() {
 
-  // Desktop click
+  // Desktop
   qs("chatSend").onclick = sendMessage;
 
-  // Mobile (iOS + Android)
+  // Mobile + iPad + Safari fixes
   qs("chatSend").addEventListener("touchstart", mobileSendFix, { passive: false });
   qs("chatSend").addEventListener("touchend", mobileSendFix, { passive: false });
   qs("chatSend").addEventListener("pointerup", mobileSendFix);
+  qs("chatSend").addEventListener("click", mobileSendFix);
 
   // Chat button toggle
   qs("chatButton").onclick = () => {
@@ -367,7 +380,7 @@ function initChatUI() {
 }
 
 /* ============================================================
-   ⭐ ADMIN BUTTON PATCH — ALWAYS BINDS EVEN IF NAVBAR LOADS LATE
+   ADMIN BUTTON PATCH
 ============================================================ */
 function bindAdminButton() {
   const btn = document.getElementById("adminChatBtn");
