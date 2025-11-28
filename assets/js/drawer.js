@@ -33,7 +33,7 @@ function initDrawer() {
   // CHECKOUT BUTTON INSIDE DRAWER
   if (drawerCheckoutBtn) {
     drawerCheckoutBtn.addEventListener("click", () => {
-      window.location.href = "/checkout";
+      window.location.href = "/checkout.html";
     });
   }
 
