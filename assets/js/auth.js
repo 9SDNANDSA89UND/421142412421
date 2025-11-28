@@ -24,12 +24,15 @@ if (!window.closeModal) {
 
 /* ============================================================
    WAIT FOR NAVBAR BEFORE BINDING BUTTONS
+   (PATCHED TO CHECK ALL REQUIRED BUTTONS)
 ============================================================ */
 function waitForNavbar(callback) {
-  const loginBtn = document.getElementById("openLogin");
-  const signupBtn = document.getElementById("openSignup");
+  const ready =
+    document.getElementById("openLogin") &&
+    document.getElementById("openSignup") &&
+    document.getElementById("adminChatBtn");
 
-  if (!loginBtn || !signupBtn) {
+  if (!ready) {
     return setTimeout(() => waitForNavbar(callback), 50);
   }
 
@@ -123,8 +126,18 @@ async function signupUser() {
     return;
   }
 
-  // ⭐ Auto-login after signup
-  localStorage.setItem("authToken", data.token);
+  // ⭐ Auto-login FIXED (backend never returned token → we fetch one now)
+  const loginReq = await fetch(`${API}/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password })
+  });
+
+  const loginData = await loginReq.json();
+
+  if (loginData.success && loginData.token) {
+    localStorage.setItem("authToken", loginData.token);
+  }
 
   closeModal("signupModal");
   location.reload();
@@ -146,7 +159,6 @@ async function applyLoggedInUI() {
   const navRight = document.querySelector(".nav-right");
   if (!navRight) return;
 
-  // Fetch user details
   const res = await fetch(`${API}/auth/me`, {
     headers: { Authorization: "Bearer " + token }
   });
@@ -167,10 +179,21 @@ async function applyLoggedInUI() {
   logoutBtn.onclick = logoutUser;
   navRight.appendChild(logoutBtn);
 
-  // ⭐ Admin Chat Button
+  // ⭐ Admin Chat Button (PATCHED)
   const adminBtn = document.getElementById("adminChatBtn");
   if (user.admin === true && adminBtn) {
     adminBtn.style.display = "flex";
+
+    // ⭐ PATCH: Open admin chat panel AND refresh chat list
+    adminBtn.onclick = async () => {
+      const panel = document.getElementById("adminChatPanel");
+      panel.classList.toggle("hidden");
+
+      const token = localStorage.getItem("authToken");
+      if (typeof loadAdminChats === "function") {
+        await loadAdminChats(token);
+      }
+    };
   }
 }
 
