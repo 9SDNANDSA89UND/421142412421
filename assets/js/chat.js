@@ -1,5 +1,6 @@
 /* ============================================================
-   TamedBlox Chat System — FINAL + ADMIN BUTTON PATCHED
+   TamedBlox Chat System — FINAL FULL PATCHED VERSION
+   Mobile guest fix + iPad send fix + correct colors
 ============================================================ */
 
 console.log("%c[TAMEDBLOX CHAT] Loaded", "color:#4ef58a;font-weight:900;");
@@ -12,11 +13,11 @@ let IS_ADMIN = false;
 // Prevent SSE duplication
 let LAST_SENT_TIMESTAMP = null;
 
-// iPad global touch handler to prevent blocked touch events
+// Required for iPad touch event propagation
 document.addEventListener("touchend", () => {}, { passive: false });
 
 /* ============================================================
-   SSE STREAM HANDLER — PATCHED FOR STABILITY
+   SSE STREAM HANDLER
 ============================================================ */
 let evtSrc = null;
 
@@ -29,13 +30,13 @@ function startSSE(chatId) {
     try {
       const msg = JSON.parse(e.data);
 
+      // Hard-delete ticket
       if (msg.deleted === true) {
         alert("This ticket has been deleted.");
         qs("chatWindow").classList.add("hidden");
 
         qs("chatInput").disabled = true;
         qs("chatSend").disabled = true;
-
         return;
       }
 
@@ -60,14 +61,17 @@ function qs(id) {
 }
 
 /* ============================================================
-   MESSAGE BUBBLE LOGIC
+   WHO OWNS MESSAGE? (Correct bubble color)
 ============================================================ */
 function isMine(m) {
-  if (IS_ADMIN && m.sender === "admin") return true;
-  if (!IS_ADMIN && m.sender === CURRENT_CHAT.userEmail) return true;
-  return false;
+  // Fallback sender logic so guests match correctly
+  const me = IS_ADMIN ? "admin" : (CURRENT_CHAT.userEmail || "customer");
+  return m.sender === me;
 }
 
+/* ============================================================
+   MESSAGE HTML TEMPLATES
+============================================================ */
 function createMsgHTML(m) {
   if (m.system) {
     return `
@@ -100,7 +104,7 @@ function appendMessage(msg) {
 }
 
 /* ============================================================
-   LOAD MESSAGES FROM SERVER
+   LOAD MESSAGES (INITIAL)
 ============================================================ */
 async function loadMessages(chatId) {
   const res = await fetch(`${API}/chats/messages/${chatId}`);
@@ -112,7 +116,7 @@ async function loadMessages(chatId) {
 }
 
 /* ============================================================
-   LOAD USER CHAT (LOGGED-IN USERS)
+   LOAD CHAT FOR LOGGED-IN USER
 ============================================================ */
 async function loadChatForUser(token) {
   const me = await fetch(`${API}/auth/me`, {
@@ -150,7 +154,7 @@ async function loadChatForUser(token) {
 }
 
 /* ============================================================
-   LOAD CHAT BY ID (RETURNING FROM STRIPE)
+   LOAD CHAT BY ID (Stripe return)
 ============================================================ */
 async function loadChatById(chatId) {
   try {
@@ -161,7 +165,7 @@ async function loadChatById(chatId) {
 
     CURRENT_CHAT = {
       _id: chat._id,
-      userEmail: "anonymous"
+      userEmail: chat.userEmail || "customer"
     };
 
     renderOrderSummary(chat);
@@ -177,7 +181,7 @@ async function loadChatById(chatId) {
 }
 
 /* ============================================================
-   ADMIN MODE — LOAD ACTIVE CHATS
+   LOAD ALL ADMIN CHATS
 ============================================================ */
 async function loadAdminChats(token) {
   const res = await fetch(`${API}/chats/all`, {
@@ -275,26 +279,26 @@ async function closeTicket() {
 }
 
 /* ============================================================
-   SEND MESSAGE — iPad/iPhone/Android SAFE VERSION
+   SEND MESSAGE — FULL PATCHED VERSION
+   (Fixes guests, iPad, iPhone, Android)
 ============================================================ */
 async function sendMessage() {
   const input = qs("chatInput");
 
-  // iPad: ensure last typed character is committed
+  // iPad input finalization bug fix
   let msg = input.value;
   msg = msg.trim();
   input.value = msg;
 
   if (!msg || !CURRENT_CHAT) return;
 
-  // Save message before clearing (iOS fix)
   const sendContent = msg;
   input.value = "";
 
   const timestamp = new Date().toISOString();
 
   const localMessage = {
-    sender: IS_ADMIN ? "admin" : (CURRENT_CHAT.userEmail || "user"),
+    sender: IS_ADMIN ? "admin" : (CURRENT_CHAT.userEmail || "customer"),
     content: sendContent,
     timestamp
   };
@@ -305,10 +309,15 @@ async function sendMessage() {
   const token = localStorage.getItem("authToken");
   const headers = { "Content-Type": "application/json" };
 
-  if (token) headers.Authorization = "Bearer " + token;
-  else headers["x-purchase-verified"] = "true";
+  // Guest-safe fallback headers
+  if (token) {
+    headers.Authorization = "Bearer " + token;
+  } else {
+    headers["x-purchase-verified"] = "true";
+    headers["x-guest"] = "true";
+  }
 
-  // iPad Safari fix: delay fetch call so keyboard blur doesn't cancel it
+  // iOS Safari bug fix: delay the fetch
   setTimeout(() => {
     fetch(`${API}/chats/send`, {
       method: "POST",
@@ -318,13 +327,13 @@ async function sendMessage() {
         content: sendContent
       })
     }).catch(() => {});
-  }, 50);
+  }, 40);
 
   forceScrollBottom();
 }
 
 /* ============================================================
-   MOBILE/TABLET SEND FIX
+   MOBILE/TABLET SEND FIXES
 ============================================================ */
 function mobileSendFix(event) {
   event.preventDefault();
@@ -336,11 +345,11 @@ function forceScrollBottom() {
   const box = qs("chatMessages");
   setTimeout(() => {
     box.scrollTop = box.scrollHeight;
-  }, 50);
+  }, 60);
 }
 
 /* ============================================================
-   ADMIN UI ENABLER
+   ADMIN UI SETUP
 ============================================================ */
 function enableAdminUI() {
   qs("adminChatPanel").classList.remove("hidden");
@@ -362,18 +371,19 @@ function showChatWindow() {
   qs("chatButton").classList.remove("hidden");
 }
 
+/* ============================================================
+   INIT CHAT UI
+============================================================ */
 function initChatUI() {
-
-  // Desktop
+  // Desktop click
   qs("chatSend").onclick = sendMessage;
 
-  // Mobile + iPad + Safari fixes
+  // Mobile + iPad fixes
   qs("chatSend").addEventListener("touchstart", mobileSendFix, { passive: false });
   qs("chatSend").addEventListener("touchend", mobileSendFix, { passive: false });
   qs("chatSend").addEventListener("pointerup", mobileSendFix);
   qs("chatSend").addEventListener("click", mobileSendFix);
 
-  // Chat button toggle
   qs("chatButton").onclick = () => {
     qs("chatWindow").classList.toggle("hidden");
   };
