@@ -1,255 +1,236 @@
 /* ============================================================
-   CHAT WIDGET — BASE STYLES
+   TamedBlox — Chat System (FINAL PATCHED VERSION)
+   ✔ Admin panel fixed
+   ✔ Proper z-index stack
+   ✔ Clean UI
 ============================================================ */
 
-#chatButton {
+/* ============================================================
+   CHAT BUTTON (Floating Circle)
+============================================================ */
+.chat-circle {
   position: fixed;
-  bottom: 25px;
-  right: 25px;
-  width: 60px;
-  height: 60px;
+  bottom: 26px;
+  right: 26px;
+  width: 55px;
+  height: 55px;
+
   background: #4ef58a;
-  color: #000;
+  color: #0b0f14;
+
   border-radius: 50%;
-  font-size: 26px;
-  font-weight: bold;
-  cursor: pointer;
-  border: none;
-  z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 10px rgba(0,0,0,.2);
+
+  box-shadow: 0 0 16px rgba(78, 245, 138, 0.5);
+  cursor: pointer;
+
+  z-index: 999999 !important;
+  transition: 0.2s ease;
 }
 
-#chatWindow {
-  position: fixed;
-  bottom: 100px;
-  right: 30px;
-  width: 380px;
-  height: 550px;
-  background: #111;
-  border-radius: 18px;
-  border: 1px solid #333;
-  z-index: 9998;
-  display: none;
-  overflow: hidden;
-  color: #fff;
-  box-shadow: 0 0 15px rgba(0,0,0,.3);
+.chat-circle:hover {
+  opacity: 0.9;
 }
 
-.hidden { display: none !important; }
+.hidden {
+  display: none !important;
+}
 
-.chat-messages {
-  height: 65%;
+/* ============================================================
+   ADMIN PANEL (Fixed Sidebar)
+============================================================ */
+.admin-panel {
+  position: fixed !important;
+  top: 80px;
+  right: 20px;
+
+  width: 360px;
+  height: 72vh;
+
+  background: #0f141a;
+  border: 1px solid rgba(78,245,138,0.25);
+  border-radius: 14px;
+
+  padding: 16px;
+
   overflow-y: auto;
-  padding: 15px;
+  scrollbar-width: thin;
+
+  box-shadow: 0 0 18px rgba(78,245,138,0.25);
+
+  z-index: 999999 !important;
+}
+
+.admin-panel-header {
+  font-size: 18px;
+  font-weight: 900;
+  margin-bottom: 12px;
+}
+
+.admin-chat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.admin-chat-item {
+  background: #10161d;
+  border: 1px solid rgba(78,245,138,0.25);
+  border-radius: 10px;
+
+  padding: 12px;
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.admin-chat-item:hover {
+  border-color: #4ef58a;
+  box-shadow: 0 0 12px rgba(78,245,138,0.25);
+}
+
+/* ============================================================
+   CHAT WINDOW (User + Admin)
+============================================================ */
+.chat-window {
+  position: fixed !important;
+  bottom: 26px;
+  right: 96px;
+
+  width: 370px;
+  height: 520px;
+
+  background: #0f141a;
+  border: 1px solid rgba(78,245,138,0.25);
+  border-radius: 14px;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+
+  box-shadow: 0 0 18px rgba(78,245,138,0.35);
+
+  z-index: 999999 !important;
+}
+
+.chat-order-summary {
+  padding: 14px;
+  font-size: 13px;
+  color: #b7bec9;
+  background: rgba(78,245,138,0.07);
+  border-bottom: 1px solid rgba(78,245,138,0.25);
+}
+
+/* ============================================================
+   MESSAGES AREA
+============================================================ */
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+
+  padding: 14px;
   scroll-behavior: smooth;
+
+  font-size: 14px;
 }
 
 .msg {
-  max-width: 75%;
+  max-width: 80%;
   padding: 10px 14px;
-  border-radius: 16px;
-  margin-bottom: 10px;
-  font-size: 14px;
-  word-break: break-word;
+  margin-bottom: 12px;
+
+  border-radius: 12px;
+  line-height: 1.3;
 }
 
+/* User (Me) */
 .msg.me {
   background: #4ef58a;
-  color: #000;
+  color: #0b0f14;
   margin-left: auto;
 }
 
+/* Them */
 .msg.them {
-  background: #222;
-  color: #fff;
-  margin-right: auto;
+  background: #1a222c;
+  border: 1px solid rgba(255,255,255,0.07);
+  color: #dce2ea;
 }
 
-/* Order Summary */
-#chatOrderSummary {
-  padding: 15px;
-  font-size: 14px;
-  background: #181818;
-  border-bottom: 1px solid #333;
+/* System messages */
+.msg.system {
+  opacity: 0.6;
+  font-size: 12px;
+  text-align: center;
 }
 
-/* Input row */
+/* ============================================================
+   INPUT ROW
+============================================================ */
 .chat-input-row {
   display: flex;
-  gap: 10px;
-  padding: 14px;
-  background: #181818;
-  border-top: 1px solid #333;
+  padding: 12px;
+  gap: 8px;
+
+  background: #0b0f14;
+  border-top: 1px solid rgba(78,245,138,0.18);
 }
 
 #chatInput {
   flex: 1;
-  padding: 12px 14px;
-  font-size: 14px;
+  padding: 12px;
+
+  background: #10161d;
+  border: 1px solid rgba(78,245,138,0.25);
   border-radius: 10px;
-  border: none;
-  outline: none;
+
+  color: white;
+}
+
+#chatInput:focus {
+  outline: 1px solid #4ef58a;
 }
 
 .chat-send-btn {
-  width: 50px;
-  height: 50px;
+  width: 55px;
+  height: 55px;
+
   background: #4ef58a;
   border: none;
   border-radius: 12px;
+
   cursor: pointer;
-  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: 0.2s ease;
+}
+
+.chat-send-btn:hover {
+  opacity: 0.85;
 }
 
 /* ============================================================
-   ADMIN PANEL
+   RESPONSIVE FIXES
 ============================================================ */
-
-#adminChatPanel {
-  position: fixed;
-  top: 40px;
-  left: 40px;
-  width: 320px;
-  background: #181818;
-  border: 1px solid #333;
-  border-radius: 16px;
-  padding: 15px;
-  color: #fff;
-  z-index: 9998;
-  max-height: 70vh;
-  overflow-y: auto;
-  display: none;
-}
-
-.admin-chat-item {
-  padding: 12px;
-  margin-bottom: 8px;
-  background: #222;
-  border-radius: 12px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.admin-chat-item:hover {
-  background: #2d2d2d;
-}
-
-#closeTicketBtn {
-  width: 90%;
-  margin: 10px auto;
-  padding: 12px;
-  border-radius: 12px;
-  background: #ff4b4b;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  font-size: 15px;
-}
-
-/* ============================================================
-   SCROLLBAR STYLE
-============================================================ */
-
-.chat-messages::-webkit-scrollbar,
-#adminChatPanel::-webkit-scrollbar {
-  width: 6px;
-}
-
-.chat-messages::-webkit-scrollbar-thumb,
-#adminChatPanel::-webkit-scrollbar-thumb {
-  background: #555;
-  border-radius: 10px;
-}
-
-/* ============================================================
-   MOBILE RESPONSIVE FIX — iPhone & small screens
-============================================================ */
-
-@media (max-width: 600px) {
-
-  /* FAB Chat Button */
-  #chatButton {
-    bottom: 15px;
-    right: 15px;
-    width: 48px;
-    height: 48px;
-    font-size: 20px;
+@media (max-width: 768px) {
+  .chat-window {
+    right: 20px;
+    bottom: 20px;
+    width: 92%;
   }
 
-  /* Chat Window */
-  #chatWindow {
-    bottom: 70px;
-    right: 10px;
-    width: 92vw !important;
-    height: 70vh !important;
-    border-radius: 16px;
+  .admin-panel {
+    width: 92%;
+    right: 4%;
+    top: 70px;
   }
 
-  /* Messages */
-  .chat-messages {
-    padding: 12px;
-    font-size: 14px;
-  }
-
-  .msg {
-    max-width: 90% !important;
-    padding: 9px 12px;
-    font-size: 13px;
-    border-radius: 12px;
-  }
-
-  .msg small {
-    font-size: 10px;
-  }
-
-  /* Input Row */
-  .chat-input-row {
-    padding: 8px;
-    gap: 8px;
-  }
-
-  #chatInput {
-    font-size: 14px;
-    padding: 10px 12px;
-  }
-
-  .chat-send-btn {
-    width: 42px;
-    height: 42px;
-    font-size: 18px;
-  }
-
-  /* Order Summary */
-  #chatOrderSummary {
-    font-size: 13px;
-    padding: 12px;
-  }
-
-  /* Admin Panel */
-  #adminChatPanel {
-    width: 92vw !important;
-    left: 4vw !important;
-    top: 10px !important;
-    max-height: 40vh !important;
-    border-radius: 14px;
-  }
-
-  .admin-chat-item {
-    padding: 12px;
-    font-size: 14px;
-  }
-
-  #closeTicketBtn {
-    width: 90% !important;
-    font-size: 14px;
-    padding: 10px;
-  }
-
-  /* Safe area padding for iPhone notch */
-  body {
-    padding-bottom: env(safe-area-inset-bottom);
+  .chat-circle {
+    right: 20px;
   }
 }
