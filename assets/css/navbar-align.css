@@ -3,7 +3,7 @@
    Safe override — does NOT affect cart/hamburger
 ========================================== */
 
-/* Center the logo container */
+/* Center ONLY the logo container */
 .nav-center {
   position: absolute !important;
   left: 50% !important;
@@ -11,10 +11,16 @@
   transform: translate(-50%, -50%) !important;
   width: auto !important;
   white-space: nowrap !important;
-  pointer-events: none !important;
+
+  /* IMPORTANT FIX:
+     Allow normal layout flow so cart doesn't shift */
+  pointer-events: auto !important;
+
+  /* Prevent the logo from influencing flex spacing */
+  z-index: 5 !important;
 }
 
-/* Make sure the logo text itself never wraps or shifts */
+/* Force only the text/logo to be centered */
 .nav-center .logo {
   display: flex !important;
   align-items: center !important;
@@ -23,7 +29,7 @@
   white-space: nowrap !important;
 }
 
-/* Mobile portrait + mobile landscape support */
+/* Mobile — ensure perfect centering */
 @media (max-width: 760px) {
   .nav-center {
     top: 50% !important;
@@ -31,6 +37,7 @@
   }
 }
 
+/* Landscape (iPad horizontal) — keep perfect center */
 @media (max-height: 500px) {
   .nav-center {
     top: 50% !important;
