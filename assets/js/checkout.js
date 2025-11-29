@@ -68,8 +68,11 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       try {
+        // ⭐ STEP 4 — Referral code added here
+        const ref = localStorage.getItem("tamed_ref") || "";
+
         const res = await fetch(
-          "https://website-5eml.onrender.com/pay/create-checkout-session",
+          `https://website-5eml.onrender.com/pay/create-checkout-session?ref=${ref}`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -78,6 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
         );
 
         const data = await res.json();
+
         if (data.url) {
           window.location.href = data.url;
         } else {
