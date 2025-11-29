@@ -1,34 +1,51 @@
-/* === SEARCH BAR (ICON INSIDE BOX) === */
+/* ============================
+   SEARCH BAR — NEON STYLE MATCH
+   ============================ */
 
 .search-container {
   margin-top: 20px;
   position: relative;
   width: 100%;
-  max-width: 480px;
+  max-width: 500px;
 }
 
+/* The input style matches cards & add-to-cart buttons */
 .search-input {
   width: 100%;
-  padding: 12px 45px 12px 14px; /* extra right padding for icon */
+  padding: 12px 50px 12px 16px;
   font-size: 16px;
-  background: #0d1218;
+
+  background: #0e1319;
   border: 2px solid #1aff71;
-  border-radius: 10px;
-  color: white;
+  border-radius: 12px;
+
+  color: #d9ffeb;
+
   outline: none;
-  box-shadow: 0 0 8px #1aff7144;
-  transition: 0.15s ease;
+
+  /* Glow like product cards */
+  box-shadow:
+    0 0 12px #1aff7166,
+    inset 0 0 6px #1aff7111;
 }
 
+/* Glow brighter on focus */
 .search-input:focus {
   border-color: #1aff71;
-  box-shadow: 0 0 12px #1aff71aa;
+  box-shadow:
+    0 0 16px #1aff71aa,
+    inset 0 0 10px #1aff7122;
 }
 
+/* Search icon inside the input */
 .search-icon {
   position: absolute;
-  right: 14px;
+  right: 16px;
   top: 50%;
   transform: translateY(-50%);
+
+  stroke: #1aff71; /* NEON GREEN ICON */
   pointer-events: none;
+
+  filter: drop-shadow(0 0 4px #1aff71);
 }
