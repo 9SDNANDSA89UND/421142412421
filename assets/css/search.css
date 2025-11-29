@@ -1,39 +1,99 @@
+/* ======================================
+   SEARCH BAR — MATCHES PRODUCT CARD STYLE
+   ====================================== */
+
 .search-container {
   margin-top: 20px;
   position: relative;
   width: 100%;
-  max-width: 480px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
+/* Input style identical to card borders + glow */
 .search-input {
   width: 100%;
-  padding: 12px 50px 12px 14px;
+  padding: 12px 50px 12px 16px;
   font-size: 16px;
+  font-weight: 500;
 
   background: #0e1319;
-  border: 2px solid #38ff99;   /* EXACT CARD COLOUR */
-  border-radius: 12px;
+  border: 2px solid #38ff99;       /* SAME BORDER AS CARDS */
+  border-radius: 14px;
 
   color: #d9ffeb;
   outline: none;
 
+  /* Glow like product cards */
   box-shadow:
-    0 0 12px #38ff9966,
-    inset 0 0 6px #38ff9911;
+    0 0 25px #38ff9955,            /* Outer glow */
+    inset 0 0 6px #00000055;       /* Dark inner depth */
 }
 
+/* Brighter glow on focus */
 .search-input:focus {
   box-shadow:
-    0 0 16px #38ff99aa,
-    inset 0 0 10px #38ff9922;
+    0 0 30px #38ff99aa,
+    inset 0 0 10px #00000077;
 }
 
+/* Neon search icon inside input */
 .search-icon {
   position: absolute;
   right: 16px;
   top: 50%;
   transform: translateY(-50%);
-  stroke: #38ff99;     /* MATCH CARD OUTLINE */
+
+  stroke: #38ff99;                 /* SAME NEON COLOR */
   pointer-events: none;
-  filter: drop-shadow(0 0 4px #38ff99);
+
+  filter: drop-shadow(0 0 6px #38ff99);
+}
+
+/* ================================
+   SORT BAR — NEON MATCHING STYLE
+   ================================ */
+
+.sort-container {
+  margin-top: 15px;
+  width: 100%;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Sort icon (SVG arrow) */
+.sort-icon {
+  stroke: #38ff99;                 /* SAME COLOR */
+  filter: drop-shadow(0 0 6px #38ff99);
+}
+
+/* Dropdown styled like cards + search */
+.sort-select {
+  flex: 1;
+  padding: 12px 14px;
+
+  background: #0e1319;
+  border: 2px solid #38ff99;       /* SAME BORDER AS CARDS */
+  border-radius: 14px;
+
+  color: #d9ffeb;
+  outline: none;
+  font-size: 16px;
+
+  box-shadow:
+    0 0 25px #38ff9955,
+    inset 0 0 6px #00000055;
+}
+
+/* Glow on focus */
+.sort-select:focus {
+  box-shadow:
+    0 0 30px #38ff99aa,
+    inset 0 0 10px #00000077;
 }
