@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Redirecting...</title>
+  <script>
+    (function () {
+
+      const full = window.location.pathname;
+
+      // If URL starts with /ref/
+      if (full.startsWith("/ref/")) {
+        const code = full.replace("/ref/", "");
+
+        // Track click on backend
+        fetch(`https://website-5eml.onrender.com/ref/${code}`)
+          .catch(() => {})
+          .finally(() => {
+            // Redirect to homepage with referral
+            window.location.href = `https://tamedblox.com/?ref=${code}`;
+          });
+
+        return; // STOP HERE
+      }
+
+      // DEFAULT: If it's a normal unknown URL, go home
+      window.location.href = "https://tamedblox.com";
+    })();
+  </script>
+</head>
+<body style="background:black;color:white;font-family:sans-serif;">
+  <p>Redirecting...</p>
+</body>
+</html>
