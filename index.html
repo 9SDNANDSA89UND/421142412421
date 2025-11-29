@@ -16,23 +16,14 @@
   </script>
 
   <!-- =============================== -->
-  <!-- ⭐ UNIVERSAL ICONS (ALL DEVICES) -->
+  <!-- UNIVERSAL ICONS -->
   <!-- =============================== -->
 
-  <!-- Main favicon -->
   <link rel="icon" type="image/png" href="https://i.postimg.cc/y6pL3tKq/Tamed-Blox.png">
-
-  <!-- Apple / iOS -->
   <link rel="apple-touch-icon" href="https://i.postimg.cc/y6pL3tKq/Tamed-Blox.png">
-
-  <!-- Android high-res -->
   <link rel="icon" sizes="192x192" href="https://i.postimg.cc/y6pL3tKq/Tamed-Blox.png">
   <link rel="icon" sizes="512x512" href="https://i.postimg.cc/y6pL3tKq/Tamed-Blox.png">
-
-  <!-- Safari pinned tab -->
   <link rel="mask-icon" href="https://i.postimg.cc/y6pL3tKq/Tamed-Blox.png" color="#4ef58a">
-
-  <!-- Windows tiles -->
   <meta name="msapplication-TileImage" content="https://i.postimg.cc/y6pL3tKq/Tamed-Blox.png">
   <meta name="msapplication-TileColor" content="#0b0f14">
 
@@ -58,7 +49,7 @@
 
 <body>
 
-  <!-- NAVBAR + AUTH MODALS -->
+  <!-- NAVBAR -->
   <div id="navbar"></div>
   <div id="modals"></div>
 
@@ -80,7 +71,7 @@
   <section class="reviews-section">
     <h2 class="reviews-title">Customer Reviews</h2>
     <div class="reviews-grid">
-      
+
       <div class="review-card">
         <div class="review-header">
           <img src="https://dummyimage.com/50x50/222/fff.png&text=+" class="review-pfp" />
@@ -138,9 +129,31 @@
 
   <!-- CHAT WINDOW -->
   <div id="chatWindow" class="chat-window hidden">
+
+    <!-- ⭐ ORDER SUMMARY (auto-filled by chat.js) -->
     <div id="chatOrderSummary" class="chat-order-summary"></div>
+
+    <!-- ⭐ DELETE TICKET BUTTON (ADMIN ONLY) -->
+    <button id="deleteTicketBtn" class="delete-ticket-btn"
+      style="
+      width: 100%;
+      background: #ff3b3b;
+      border: none;
+      padding: 10px;
+      margin-bottom: 8px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      color: white;
+      display:block;
+    ">
+      Delete Ticket
+    </button>
+
+    <!-- MESSAGES -->
     <div id="chatMessages" class="chat-messages"></div>
 
+    <!-- INPUT AREA -->
     <div class="chat-input-row">
       <input id="chatInput" placeholder="Type a message..." />
       <button id="chatSend" class="chat-send-btn">
@@ -153,9 +166,10 @@
         </svg>
       </button>
     </div>
+
   </div>
 
-  <!-- CHAT BUTTON -->
+  <!-- FLOATING CHAT BUTTON -->
   <div id="chatButton" class="chat-circle hidden">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" stroke="currentColor"
       fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
