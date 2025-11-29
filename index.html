@@ -13,9 +13,7 @@
     if (ref) localStorage.setItem("tamed_ref", ref);
   </script>
 
-  <!-- =============================== -->
   <!-- ICONS -->
-  <!-- =============================== -->
   <link rel="icon" type="image/png" href="https://i.postimg.cc/y6pL3tKq/Tamed-Blox.png">
   <link rel="apple-touch-icon" href="https://i.postimg.cc/y6pL3tKq/Tamed-Blox.png">
   <link rel="icon" sizes="192x192" href="https://i.postimg.cc/y6pL3tKq/Tamed-Blox.png">
@@ -24,9 +22,7 @@
   <meta name="msapplication-TileImage" content="https://i.postimg.cc/y6pL3tKq/Tamed-Blox.png">
   <meta name="msapplication-TileColor" content="#0b0f14">
 
-  <!-- =============================== -->
   <!-- CSS -->
-  <!-- =============================== -->
   <link rel="stylesheet" href="assets/css/main.css" />
   <link rel="stylesheet" href="assets/css/navbar-align.css" />
   <link rel="stylesheet" href="assets/css/cards.css" />
@@ -46,7 +42,7 @@
 
 <body>
 
-  <!-- NAVBAR + AUTH MODALS -->
+  <!-- NAVBAR + MODALS -->
   <div id="navbar"></div>
   <div id="modals"></div>
 
@@ -60,13 +56,57 @@
     <h1 style="font-size: 32px; font-weight: 900">Featured Products</h1>
     <p style="margin-top: 10px; color: #b7bec9;">Best-selling items from TamedBlox.</p>
 
-    <!-- ⭐ SEARCH BAR (uses existing setupSearch() in app.js) -->
-    <input
-      id="searchInput"
-      placeholder="Search products..."
-      class="modern-input"
-      style="margin-top:20px; max-width:480px; width:100%;"
-    />
+    <!-- ⭐ SEARCH BAR WITH ICON -->
+    <div style="
+      margin-top: 20px;
+      max-width: 480px;
+      width: 100%;
+      display: flex;
+      gap: 10px;
+    ">
+      <input
+        id="searchInput"
+        placeholder="Search products..."
+        class="modern-input"
+        style="flex: 1;"
+      />
+
+      <button id="searchButton" style="
+        background: #1aff71;
+        border: none;
+        padding: 8px 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.2s;
+      ">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+          viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="m21 21-4.34-4.34"/>
+          <circle cx="11" cy="11" r="8"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- ICON JS: triggers search -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const input = document.getElementById("searchInput");
+        const btn = document.getElementById("searchButton");
+
+        if (btn) {
+          btn.onclick = () => {
+            input.dispatchEvent(
+              new KeyboardEvent("keypress", { key: "Enter" })
+            );
+          };
+        }
+      });
+    </script>
+
   </section>
 
   <!-- PRODUCT GRID -->
@@ -134,11 +174,8 @@
 
   <!-- CHAT WINDOW -->
   <div id="chatWindow" class="chat-window hidden">
-
-    <!-- Order summary (filled by chat.js) -->
     <div id="chatOrderSummary" class="chat-order-summary"></div>
 
-    <!-- Delete ticket (admin only, wired in chat.js) -->
     <button id="deleteTicketBtn" class="delete-ticket-btn"
       style="
         width: 100%;
@@ -180,7 +217,7 @@
     </svg>
   </div>
 
-  <!-- Scripts -->
+  <!-- SCRIPTS -->
   <script src="assets/js/cart.js"></script>
   <script src="assets/js/app.js"></script>
   <script src="assets/js/drawer.js"></script>
