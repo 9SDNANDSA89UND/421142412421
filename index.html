@@ -6,19 +6,16 @@
   <title>TamedBlox — Home</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- ⭐ STEP 3 — SAVE REFERRAL CODE IF PRESENT -->
+  <!-- ⭐ Save referral code -->
   <script>
     const params = new URLSearchParams(window.location.search);
     const ref = params.get("ref");
-    if (ref) {
-      localStorage.setItem("tamed_ref", ref);
-    }
+    if (ref) localStorage.setItem("tamed_ref", ref);
   </script>
 
   <!-- =============================== -->
-  <!-- UNIVERSAL ICONS -->
+  <!-- ICONS -->
   <!-- =============================== -->
-
   <link rel="icon" type="image/png" href="https://i.postimg.cc/y6pL3tKq/Tamed-Blox.png">
   <link rel="apple-touch-icon" href="https://i.postimg.cc/y6pL3tKq/Tamed-Blox.png">
   <link rel="icon" sizes="192x192" href="https://i.postimg.cc/y6pL3tKq/Tamed-Blox.png">
@@ -36,6 +33,7 @@
   <link rel="stylesheet" href="assets/css/modal.css" />
   <link rel="stylesheet" href="assets/css/reviews.css" />
   <link rel="stylesheet" href="assets/css/chat.css" />
+  <link rel="stylesheet" href="assets/css/search.css" /> <!-- ⭐ NEW -->
 
   <!-- Component Loader -->
   <script>
@@ -44,12 +42,11 @@
       if (el) el.innerHTML = await fetch(file).then((r) => r.text());
     }
   </script>
-
 </head>
 
 <body>
 
-  <!-- NAVBAR -->
+  <!-- NAVBAR + MODALS -->
   <div id="navbar"></div>
   <div id="modals"></div>
 
@@ -61,7 +58,15 @@
   <!-- HERO -->
   <section class="container" style="margin-top: 40px">
     <h1 style="font-size: 32px; font-weight: 900">Featured Products</h1>
-    <p style="margin-top: 10px; color: #b7bec9;">Best-selling items from TamedBlox.</p>
+    <p style="margin-top: 10px; color: #b7bec9;">
+      Best-selling items from TamedBlox.
+    </p>
+
+    <!-- ⭐ SEARCH BAR COMPONENT -->
+    <div id="searchComponent"></div>
+    <script>
+      loadComponent("#searchComponent", "components/search.html");
+    </script>
   </section>
 
   <!-- PRODUCT GRID -->
@@ -129,31 +134,26 @@
 
   <!-- CHAT WINDOW -->
   <div id="chatWindow" class="chat-window hidden">
-
-    <!-- ⭐ ORDER SUMMARY (auto-filled by chat.js) -->
     <div id="chatOrderSummary" class="chat-order-summary"></div>
 
-    <!-- ⭐ DELETE TICKET BUTTON (ADMIN ONLY) -->
     <button id="deleteTicketBtn" class="delete-ticket-btn"
       style="
-      width: 100%;
-      background: #ff3b3b;
-      border: none;
-      padding: 10px;
-      margin-bottom: 8px;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      color: white;
-      display:block;
-    ">
+        width: 100%;
+        background: #ff3b3b;
+        border: none;
+        padding: 10px;
+        margin-bottom: 8px;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        color: white;
+        display:block;
+      ">
       Delete Ticket
     </button>
 
-    <!-- MESSAGES -->
     <div id="chatMessages" class="chat-messages"></div>
 
-    <!-- INPUT AREA -->
     <div class="chat-input-row">
       <input id="chatInput" placeholder="Type a message..." />
       <button id="chatSend" class="chat-send-btn">
@@ -166,10 +166,9 @@
         </svg>
       </button>
     </div>
-
   </div>
 
-  <!-- FLOATING CHAT BUTTON -->
+  <!-- CHAT FLOAT BUTTON -->
   <div id="chatButton" class="chat-circle hidden">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" stroke="currentColor"
       fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -178,11 +177,12 @@
     </svg>
   </div>
 
-  <!-- Scripts -->
+  <!-- SCRIPTS -->
   <script src="assets/js/cart.js"></script>
   <script src="assets/js/app.js"></script>
   <script src="assets/js/drawer.js"></script>
   <script src="assets/js/auth.js"></script>
+  <script src="assets/js/search.js"></script> <!-- ⭐ NEW -->
   <script src="assets/js/chat.js"></script>
 
 </body>
