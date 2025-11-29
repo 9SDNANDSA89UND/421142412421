@@ -1,91 +1,138 @@
-/* ===============================
-   TAMEDBLOX — PREMIUM CARD SYSTEM (OPTIMIZED)
-   ✔ Faster load
-   ✔ Reduced reflow
-   ✔ Optimized transitions + tilt compatibility
-=============================== */
+/* =============================================================
+   TamedBlox — ULTRA PREMIUM CARD SYSTEM (2025)
+   ✔ Deep neon aura
+   ✔ Soft glassmorphism
+   ✔ Premium glow edges
+   ✔ Smooth 3D lift
+   ✔ Better readability + spacing
+   ✔ Stronger product image presence
+============================================================= */
 
-/* ============================================
-   PRODUCT GRID
-============================================ */
+/* =============================================================
+   GRID
+============================================================= */
 .product-grid {
-  max-width: 1300px;
-  margin: 50px auto;
+  max-width: 1380px;
+  margin: 60px auto;
   padding: 0 20px;
 
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 32px;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 36px;
 
-  /* Helps with fast first-paint */
   contain: layout paint;
 }
 
-/* ============================================
+/* =============================================================
    CARD BASE
-============================================ */
+============================================================= */
 .card {
-  background: linear-gradient(145deg, #0f141a, #111922);
-  border: 1px solid rgba(78, 245, 138, 0.15);
-  border-radius: 20px;
+  background: rgba(15, 20, 26, 0.6);
+  border-radius: 22px;
+  padding: 20px 20px 26px;
 
-  padding: 18px 18px 22px;
+  border: 1px solid rgba(78, 245, 138, 0.18);
+
+  box-shadow:
+    0 0 25px rgba(78, 245, 138, 0.14),
+    inset 0 0 18px rgba(255,255,255,0.04);
+
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 
   position: relative;
   overflow: hidden;
 
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  transition: 
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease;
 
-  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
-
-  /* Entrance animation optimized */
+  /* entrance animation */
   opacity: 0;
-  transform: translateY(12px);
-  animation: cardFade 0.35s ease forwards;
+  transform: translateY(14px) scale(0.98);
+  animation: cardEnter 0.4s ease forwards;
 }
 
-@keyframes cardFade {
+@keyframes cardEnter {
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
+/* Hover Glow */
 .card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 0 22px rgba(78, 245, 138, 0.25);
-  border-color: rgba(78, 245, 138, 0.45);
-}
+  transform: translateY(-8px) scale(1.03);
 
-/* ============================================
-   IMAGE AREA
-============================================ */
-.product-img {
-  width: 100%;
-  height: 250px;
-  border-radius: 14px;
-  padding: 6px;
-  object-fit: contain;
-  
-  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(78, 245, 138, 0.55);
 
   box-shadow:
-    inset 0 0 18px rgba(78, 245, 138, 0.25),
-    0 0 18px rgba(78, 245, 138, 0.12);
+    0 0 35px rgba(78, 245, 138, 0.40),
+    inset 0 0 24px rgba(255,255,255,0.05);
 
-  transition: transform 0.18s ease;
+  background: rgba(18, 26, 34, 0.85);
 }
 
-/* ============================================
-   BADGES ROW
-============================================ */
+/* =============================================================
+   HOLOGRAPHIC OUTLINE (SEXY AS HELL)
+============================================================= */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 24px;
+
+  background: linear-gradient(135deg,
+    rgba(78,245,138,0) 0%,
+    rgba(78,245,138,0.35) 50%,
+    rgba(78,245,138,0) 100%
+  );
+
+  opacity: 0;
+  transition: 0.25s ease;
+  pointer-events: none;
+}
+
+.card:hover::before {
+  opacity: 1;
+}
+
+/* =============================================================
+   PRODUCT IMAGE WRAPPER
+============================================================= */
+.product-img {
+  width: 100%;
+  height: 260px;
+
+  border-radius: 14px;
+
+  object-fit: contain;
+  background: rgba(255,255,255,0.04);
+
+  box-shadow:
+    inset 0 0 20px rgba(78, 245, 138, 0.25),
+    0 0 30px rgba(78, 245, 138, 0.15);
+
+  padding: 10px;
+  margin-bottom: 18px;
+
+  transition: transform 0.25s ease;
+}
+
+.card:hover .product-img {
+  transform: scale(1.06);
+}
+
+/* =============================================================
+   BADGES 
+============================================================= */
 .card-badges {
   position: absolute;
-  top: 14px;
-  left: 14px;
-  right: 14px;
+  top: 16px;
+  left: 16px;
+  right: 16px;
 
   display: flex;
   justify-content: space-between;
@@ -94,135 +141,136 @@
   pointer-events: none;
 }
 
-/* ============================================
-   RARITY TAGS
-============================================ */
+/* =============================================================
+   RARITY TAGS — BETTER GLOW
+============================================================= */
 .tag {
-  padding: 6px 16px;
+  padding: 6px 18px;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 800;
 
   border-radius: 40px;
   color: white;
 
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.15);
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255,255,255,0.18);
 
   box-shadow:
-    0 0 12px currentColor,
-    inset 0 0 12px rgba(255,255,255,0.08);
+    0 0 18px currentColor,
+    inset 0 0 14px rgba(255,255,255,0.12);
 
   position: relative;
   overflow: hidden;
 }
 
 /* GOD */
-.tag-god { color: #ff48ff; background: rgba(255, 0, 255, 0.22); }
-
+.tag-god { background: rgba(255, 0, 255, 0.25); color: #ff4dff; }
 /* SECRET */
-.tag-secret { color: #00d2ff; background: rgba(0, 210, 255, 0.22); }
-
+.tag-secret { background: rgba(0, 210, 255, 0.25); color: #00e4ff; }
 /* OG */
-.tag-og { color: #ffb03a; background: rgba(255,170,60,0.22); }
+.tag-og { background: rgba(255,170,60,0.25); color: #ffc46b; }
 
-/* ============================================
-   HOLOGRAPHIC SWEEP EFFECT — OPTIMIZED
-============================================ */
+/* =============================================================
+   TAG HOLOGRAPHIC SWEEP (cleaner)
+============================================================= */
 .tag::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(120deg,
+  background: linear-gradient(
+    120deg,
     rgba(255,255,255,0) 0%,
-    rgba(255,255,255,0.5) 50%,
-    rgba(255,255,255,0) 100%);
-  transform: translateX(-120%);
-  animation: holoSweep 2.8s ease-in-out infinite;
+    rgba(255,255,255,0.7) 40%,
+    rgba(255,255,255,0) 100%
+  );
+  transform: translateX(-130%);
+  animation: hologram 3s ease-in-out infinite;
 }
 
-@keyframes holoSweep {
-  0% { transform: translateX(-120%); }
-  60% { transform: translateX(120%); }
-  100% { transform: translateX(120%); }
+@keyframes hologram {
+  0% { transform: translateX(-130%); }
+  50% { transform: translateX(130%); }
+  100% { transform: translateX(130%); }
 }
 
-/* ============================================
+/* =============================================================
    DISCOUNT BADGE
-============================================ */
+============================================================= */
 .discount-tag {
   display: inline-flex;
   align-items: center;
   gap: 8px;
 
-  padding: 6px 16px;
+  padding: 7px 18px;
   font-size: 13px;
-  font-weight: 800;
+  font-weight: 900;
 
   border-radius: 40px;
-  color: #0b0f14;
 
   background: #4ef58a;
-  box-shadow: 0 0 6px rgba(78, 245, 138, 0.5);
+  color: #0b0f14;
+
+  box-shadow:
+    0 0 12px rgba(78,245,138,0.55),
+    inset 0 0 14px rgba(0,0,0,0.15);
 }
 
 .discount-tag svg {
   width: 16px;
   height: 16px;
   stroke: #0b0f14;
-  flex-shrink: 0;
 }
 
-/* ============================================
+/* =============================================================
    PRODUCT NAME
-============================================ */
+============================================================= */
 .card h3 {
-  margin-top: 18px;
-  font-size: 17px;
-  font-weight: 800;
+  margin-top: 12px;
+  font-size: 18px;
+  font-weight: 900;
+
+  color: #ffffff;
 
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* ============================================
+/* =============================================================
    PRICE SECTION
-============================================ */
+============================================================= */
 .price-box {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin: 14px 0 20px;
+  gap: 14px;
+  margin: 16px 0 22px;
 }
 
 .price {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 900;
   color: #4ef58a;
+  text-shadow: 0 0 12px rgba(78, 245, 138, 0.6);
 }
 
 .old-price {
   font-size: 14px;
-  opacity: 0.7;
+  opacity: 0.62;
   text-decoration: line-through;
 }
 
-/* ============================================
+/* =============================================================
    ADD TO CART BUTTON
-============================================ */
+============================================================= */
 .buy-btn {
   width: 100%;
-  padding: 14px 0;
+  padding: 15px 0;
 
-  background: #4ef58a;
-  color: #0d1117;
+  background: linear-gradient(135deg, #4ef58a, #36df74);
+  color: #0c1117;
 
-  border: none;
   border-radius: 12px;
+  border: none;
 
   font-size: 15px;
   font-weight: 900;
@@ -233,24 +281,24 @@
   gap: 8px;
 
   cursor: pointer;
-  transition: 0.15s ease;
+
+  transition: 0.18s ease;
 }
 
 .buy-btn:hover {
-  transform: translateY(-2px) scale(1.03);
-  box-shadow: 0 0 16px rgba(78, 245, 138, 0.45);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 0 18px rgba(78, 245, 138, 0.55);
 }
 
 .buy-btn:active {
-  transform: scale(0.98);
+  transform: scale(0.96);
 }
 
-/* ============================================
-   CARD TILT SUPPORT (OPTIMIZED)
-   JS applies transforms — CSS keeps it smooth
-============================================ */
+/* =============================================================
+   TILT SUPPORT (optional JS)
+============================================================= */
 .card {
-  will-change: transform;
+  perspective: 900px;
   transform-style: preserve-3d;
-  perspective: 800px;
+  will-change: transform;
 }
