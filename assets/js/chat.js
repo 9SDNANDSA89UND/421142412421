@@ -1,9 +1,10 @@
 /* ============================================================
    TamedBlox — Chat System (Universal Working Version)
-   ✔ Works for logged-in customers
-   ✔ Works for guests
-   ✔ Works after Stripe checkout
-   ✔ Admin panel works
+   ✔ Logged-in customers
+   ✔ Guests
+   ✔ Stripe checkout
+   ✔ Admin panel
+   ✔ Correct bubble colors
    ✔ No duplicate messages
 ============================================================ */
 
@@ -49,7 +50,7 @@ async function loadSession() {
 }
 
 /* ============================================================
-   SSE
+   SSE STREAM
 ============================================================ */
 function startSSE(chatId) {
   if (!chatId) return;
@@ -67,13 +68,29 @@ function startSSE(chatId) {
 }
 
 /* ============================================================
-   RENDER MESSAGE
+   RENDER MESSAGE (FIXED BUBBLE COLORS)
 ============================================================ */
 function appendMessage(msg) {
   const box = qs("chatMessages");
   if (!box || !msg) return;
 
-  const mine = IS_ADMIN ? "admin" : (CURRENT_CHAT?.userEmail || "customer");
+  let mine;
+
+  // Admin
+  if (IS_ADMIN) {
+    mine = "admin";
+  }
+
+  // Logged-in customer (email known)
+  else if (CURRENT_CHAT?.userEmail && CURRENT_CHAT.userEmail !== "customer") {
+    mine = CURRENT_CHAT.userEmail;
+  }
+
+  // Guest & Stripe customers
+  else {
+    mine = "customer";
+  }
+
   const sender = msg.sender || "customer";
 
   const div = document.createElement("div");
@@ -81,15 +98,16 @@ function appendMessage(msg) {
     msg.system ? "system" : sender === mine ? "me" : "them"
   }`;
 
-  div.innerHTML =
-    `${msg.content}<br><small>${new Date(msg.timestamp).toLocaleTimeString()}</small>`;
+  div.innerHTML = `${msg.content}<br><small>${new Date(
+    msg.timestamp
+  ).toLocaleTimeString()}</small>`;
 
   box.appendChild(div);
   box.scrollTop = box.scrollHeight;
 }
 
 /* ============================================================
-   LOAD MESSAGES
+   LOAD ALL MESSAGES
 ============================================================ */
 async function loadMessages(chatId) {
   try {
@@ -104,7 +122,7 @@ async function loadMessages(chatId) {
 }
 
 /* ============================================================
-   LOAD LOGGED-IN CUSTOMER CHAT
+   LOGGED-IN CUSTOMER CHAT LOAD
 ============================================================ */
 async function loadCustomerChat(token, email) {
   try {
@@ -130,7 +148,7 @@ async function loadCustomerChat(token, email) {
 }
 
 /* ============================================================
-   LOAD ADMIN CHAT LIST
+   ADMIN CHAT LIST
 ============================================================ */
 async function loadAdminChats() {
   try {
@@ -192,7 +210,7 @@ async function sendMessage() {
   input.value = "";
   if (!text || !CURRENT_CHAT) return;
 
-  // DO NOT append locally — SSE will show it
+  // DO NOT append locally — SSE adds it correctly
   try {
     const token = localStorage.getItem("authToken");
 
@@ -211,7 +229,7 @@ async function sendMessage() {
 }
 
 /* ============================================================
-   ADMIN TOGGLE
+   ADMIN TOGGLE BUTTON
 ============================================================ */
 function bindAdminToggle() {
   waitForElement("adminChatBtn", (btn) => {
@@ -233,7 +251,7 @@ function bindAdminToggle() {
 }
 
 /* ============================================================
-   CHAT BUTTON
+   CHAT WINDOW BUTTON
 ============================================================ */
 function bindChatButton() {
   waitForElement("chatButton", (btn) => {
@@ -251,7 +269,7 @@ async function universalChatLoad() {
   const sessionId = params.get("session_id");
   const chatOpen = params.get("chat");
 
-  // 1️⃣ After Stripe checkout
+  // 1️⃣ Stripe checkout return
   if (chatOpen === "open" && sessionId) {
     try {
       const res = await fetch(`${API}/pay/session-info/${sessionId}`);
@@ -272,7 +290,7 @@ async function universalChatLoad() {
     }
   }
 
-  // 2️⃣ Logged-in users
+  // 2️⃣ Logged-in customers
   const token = localStorage.getItem("authToken");
   if (token) {
     const session = await loadSession();
@@ -282,7 +300,7 @@ async function universalChatLoad() {
     }
   }
 
-  // 3️⃣ Guests → no auto-load (they only get chat after purchase)
+  // 3️⃣ Guests → nothing to load until they fully purchase
 }
 
 /* ============================================================
@@ -290,17 +308,16 @@ async function universalChatLoad() {
 ============================================================ */
 document.addEventListener("DOMContentLoaded", async () => {
 
-  // Send button
+  // Send button fix
   waitForElement("chatSend", (btn) => {
     btn.onclick = () => sendMessage();
   });
 
-  // Load chat for ANY USER who purchased
+  // Load chat for every user type (guest, logged-in, stripe)
   await universalChatLoad();
 
   // Admin logic
   const session = await loadSession();
-
   if (session.loggedIn) {
     IS_ADMIN = session.admin;
 
