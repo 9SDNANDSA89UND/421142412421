@@ -6,6 +6,15 @@
   <title>TamedBlox — Home</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+  <!-- ⭐ STEP 3 — SAVE REFERRAL CODE IF PRESENT -->
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get("ref");
+    if (ref) {
+      localStorage.setItem("tamed_ref", ref);
+    }
+  </script>
+
   <!-- =============================== -->
   <!-- ⭐ UNIVERSAL ICONS (ALL DEVICES) -->
   <!-- =============================== -->
@@ -31,7 +40,7 @@
   <!-- CSS -->
   <!-- =============================== -->
   <link rel="stylesheet" href="assets/css/main.css" />
-  <link rel="stylesheet" href="assets/css/navbar-align.css" /> <!-- ⭐ Added -->
+  <link rel="stylesheet" href="assets/css/navbar-align.css" />
   <link rel="stylesheet" href="assets/css/cards.css" />
   <link rel="stylesheet" href="assets/css/modal.css" />
   <link rel="stylesheet" href="assets/css/reviews.css" />
