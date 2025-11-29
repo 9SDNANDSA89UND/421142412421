@@ -1,11 +1,11 @@
 /* ============================================================
-   TamedBlox — AUTH SYSTEM (WITH PROFILE DROPDOWN SUPPORT)
+   TamedBlox — AUTH SYSTEM (FIXED NAVBAR RACE CONDITIONS)
 ============================================================ */
 
 window.API = window.API || "https://website-5eml.onrender.com";
 
 /* ============================================================
-   SAFE FALLBACKS
+   SAFE FALLBACK MODAL HELPERS
 ============================================================ */
 if (!window.openModal) {
   window.openModal = function (id) {
@@ -22,21 +22,30 @@ if (!window.closeModal) {
 }
 
 /* ============================================================
-   WAIT FOR NAVBAR BEFORE BINDING BUTTONS
+   RELIABLE NAVBAR POLLER (FIXED)
 ============================================================ */
-function waitForNavbar(callback) {
-  const ready =
-    document.getElementById("openLogin") &&
-    document.getElementById("openSignup") &&
-    document.getElementById("profileBtn");
+function waitForNavbar(callback, retry = 0) {
+  const loginBtn = document.getElementById("openLogin");
+  const signupBtn = document.getElementById("openSignup");
+  const logoutBtn = document.getElementById("logoutBtn");
+  const profileBtn = document.getElementById("profileBtn");
+
+  const ready = loginBtn && signupBtn && logoutBtn && profileBtn;
 
   if (!ready) {
-    return setTimeout(() => waitForNavbar(callback), 50);
+    if (retry > 100) {
+      console.warn("⚠️ Navbar failed to load in time.");
+      return;
+    }
+    return setTimeout(() => waitForNavbar(callback, retry + 1), 50);
   }
 
   callback();
 }
 
+/* ============================================================
+   INIT
+============================================================ */
 document.addEventListener("DOMContentLoaded", () => {
   waitForNavbar(() => {
     bindAuthButtons();
@@ -45,7 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /* ============================================================
-   BIND LOGIN / SIGNUP BUTTONS
+   LOGIN / SIGNUP BUTTON HANDLERS
 ============================================================ */
 function bindAuthButtons() {
   const loginBtn = document.getElementById("openLogin");
@@ -59,6 +68,10 @@ function bindAuthButtons() {
 
   if (loginSubmit) loginSubmit.onclick = loginUser;
   if (signupSubmit) signupSubmit.onclick = signupUser;
+
+  // FIX: Always bind logout AFTER navbar loads
+  const logoutBtn = document.getElementById("logoutBtn");
+  if (logoutBtn) logoutBtn.onclick = logoutUser;
 }
 
 /* ============================================================
@@ -119,6 +132,7 @@ async function signupUser() {
     return;
   }
 
+  // Auto-login after signup
   const loginReq = await fetch(`${API}/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -126,6 +140,7 @@ async function signupUser() {
   });
 
   const loginData = await loginReq.json();
+
   if (loginData.success && loginData.token) {
     localStorage.setItem("authToken", loginData.token);
   }
@@ -135,7 +150,7 @@ async function signupUser() {
 }
 
 /* ============================================================
-   UPDATE NAVBAR FOR LOGGED-IN USERS
+   NAVBAR UI UPDATE (LOGGED-IN USER)
 ============================================================ */
 async function applyLoggedInUI() {
   const token = localStorage.getItem("authToken");
@@ -147,8 +162,9 @@ async function applyLoggedInUI() {
   if (loginBtn) loginBtn.style.display = "none";
   if (signupBtn) signupBtn.style.display = "none";
 
-  const navRight = document.querySelector(".nav-right");
-  if (!navRight) return;
+  const profileBtn = document.getElementById("profileBtn");
+  const logoutBtn = document.getElementById("logoutBtn");
+  const adminChatBtn = document.getElementById("adminChatBtn");
 
   const res = await fetch(`${API}/auth/me`, {
     headers: { Authorization: "Bearer " + token }
@@ -158,49 +174,37 @@ async function applyLoggedInUI() {
 
   const user = await res.json();
 
-  /* SHOW PROFILE BUTTON */
-  const profileBtn = document.getElementById("profileBtn");
-  const logoutBtn = document.getElementById("logoutBtn");
-
+  // Show profile + logout
   if (profileBtn) profileBtn.style.display = "flex";
   if (logoutBtn) logoutBtn.style.display = "flex";
 
-  // Update name with ▼ arrow
-  document.getElementById("usernameDisplay").innerText = `${user.username} ▼`;
+  const nameEl = document.getElementById("usernameDisplay");
+  if (nameEl) nameEl.innerText = `${user.username} ▼`;
 
-  /* ============================================================
-     DROPDOWN TOGGLE
-  ============================================================ */
+  // Toggle dropdown
   profileBtn.onclick = () => {
     const dd = document.getElementById("profileDropdown");
     dd.classList.toggle("hidden");
   };
 
-  /* ============================================================
-     ADMIN — CREATOR DASHBOARD BUTTON
-  ============================================================ */
+  // ADMIN OPTIONS
   const creatorBtn = document.getElementById("creatorDashboardBtn");
 
   if (user.admin === true) {
-    creatorBtn.style.display = "block";
-    creatorBtn.onclick = () => {
-      location.href = "/dashboard.html";
-    };
-  }
+    if (creatorBtn) creatorBtn.style.display = "block";
+    if (adminChatBtn) adminChatBtn.style.display = "flex";
 
-  /* ============================================================
-     ADMIN CHAT BUTTON
-  ============================================================ */
-  const adminBtn = document.getElementById("adminChatBtn");
-  if (user.admin && adminBtn) {
-    adminBtn.style.display = "flex";
+    if (creatorBtn)
+      creatorBtn.onclick = () => (location.href = "/dashboard.html");
   }
 }
 
 /* ============================================================
-   LOGOUT
+   LOGOUT (FIXED)
 ============================================================ */
 function logoutUser() {
   localStorage.removeItem("authToken");
+  localStorage.removeItem("HAS_PURCHASED");
+  localStorage.removeItem("tamed_ref");
   location.reload();
 }
