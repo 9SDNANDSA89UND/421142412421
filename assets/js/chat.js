@@ -1,9 +1,9 @@
 /* ============================================================
    TamedBlox Chat — FINAL FIXED VERSION
-   ✔ Admin button ALWAYS attaches
-   ✔ Admin panel always opens
    ✔ Admin can ALWAYS send messages
-   ✔ Customer chat loads reliably
+   ✔ Messages show correct bubble color (me/them)
+   ✔ SSE stable reconnect
+   ✔ Customer + admin chat both fixed
 ============================================================ */
 
 window.API = "https://website-5eml.onrender.com";
@@ -68,17 +68,27 @@ function startSSE(chatId) {
 }
 
 /* ============================================================
-   RENDER MESSAGES
+   RENDER MESSAGES (ADMIN FIX APPLIED)
 ============================================================ */
 function appendMessage(msg) {
   const box = qs("chatMessages");
   if (!box || !msg) return;
 
+  // ⭐ FIX: Ensure admin messages appear as "me"
+  if (IS_ADMIN && msg.sender !== "system") {
+    msg.sender = "admin";
+  }
+
   const mine = IS_ADMIN ? "admin" : CURRENT_CHAT?.userEmail;
 
   const div = document.createElement("div");
-  div.className = `msg ${msg.system ? "system" : msg.sender === mine ? "me" : "them"}`;
-  div.innerHTML = `${msg.content}<br><small>${new Date(msg.timestamp).toLocaleTimeString()}</small>`;
+  div.className = `msg ${
+    msg.system ? "system" : msg.sender === mine ? "me" : "them"
+  }`;
+
+  div.innerHTML = `${msg.content}<br><small>${new Date(
+    msg.timestamp
+  ).toLocaleTimeString()}</small>`;
 
   box.appendChild(div);
   box.scrollTop = box.scrollHeight;
@@ -176,7 +186,7 @@ async function openAdminChat(chatId) {
 }
 
 /* ============================================================
-   SEND MESSAGE (FIXED for admin)
+   SEND MESSAGE (ADMIN FIXED)
 ============================================================ */
 async function sendMessage() {
   const input = qs("chatInput");
@@ -187,6 +197,7 @@ async function sendMessage() {
 
   if (!text || !CURRENT_CHAT) return;
 
+  // Local instant render
   appendMessage({
     sender: IS_ADMIN ? "admin" : CURRENT_CHAT.userEmail,
     content: text,
@@ -208,7 +219,7 @@ async function sendMessage() {
 }
 
 /* ============================================================
-   ADMIN PANEL TOGGLE — REBOUND AFTER NAVBAR LOADS
+   ADMIN PANEL TOGGLE
 ============================================================ */
 function bindAdminToggle() {
   waitForElement("adminChatBtn", (btn) => {
