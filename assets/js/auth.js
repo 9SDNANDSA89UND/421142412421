@@ -1,11 +1,11 @@
 /* ============================================================
-   TamedBlox — AUTH SYSTEM (FINAL PATCHED VERSION + DROPDOWN)
+   TamedBlox — AUTH SYSTEM (WITH PROFILE DROPDOWN SUPPORT)
 ============================================================ */
 
 window.API = window.API || "https://website-5eml.onrender.com";
 
 /* ============================================================
-   SAFE FALLBACKS (Fix Option A)
+   SAFE FALLBACKS
 ============================================================ */
 if (!window.openModal) {
   window.openModal = function (id) {
@@ -28,7 +28,7 @@ function waitForNavbar(callback) {
   const ready =
     document.getElementById("openLogin") &&
     document.getElementById("openSignup") &&
-    document.getElementById("adminChatBtn");
+    document.getElementById("profileBtn");
 
   if (!ready) {
     return setTimeout(() => waitForNavbar(callback), 50);
@@ -37,9 +37,6 @@ function waitForNavbar(callback) {
   callback();
 }
 
-/* ============================================================
-   INITIALIZE AUTH LOGIC
-============================================================ */
 document.addEventListener("DOMContentLoaded", () => {
   waitForNavbar(() => {
     bindAuthButtons();
@@ -89,12 +86,11 @@ async function loginUser() {
 
   localStorage.setItem("authToken", data.token);
   closeModal("loginModal");
-
   location.reload();
 }
 
 /* ============================================================
-   SIGNUP HANDLER (AUTO-LOGIN)
+   SIGNUP HANDLER
 ============================================================ */
 async function signupUser() {
   const username = document.getElementById("signupUsername").value.trim();
@@ -123,7 +119,6 @@ async function signupUser() {
     return;
   }
 
-  // ⭐ Fetch login token after signup
   const loginReq = await fetch(`${API}/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -160,58 +155,50 @@ async function applyLoggedInUI() {
   });
 
   if (!res.ok) return;
+
   const user = await res.json();
 
-  /* ============================================================
-     PROFILE BUTTON
-  ============================================================ */
+  /* SHOW PROFILE BUTTON */
   const profileBtn = document.getElementById("profileBtn");
   const logoutBtn = document.getElementById("logoutBtn");
 
   if (profileBtn) profileBtn.style.display = "flex";
   if (logoutBtn) logoutBtn.style.display = "flex";
 
+  // Update name with ▼ arrow
   document.getElementById("usernameDisplay").innerText = `${user.username} ▼`;
 
   /* ============================================================
-     PROFILE DROPDOWN: TOGGLE LOGIC
+     DROPDOWN TOGGLE
   ============================================================ */
   profileBtn.onclick = () => {
-    const dropdown = document.getElementById("profileDropdown");
-    dropdown.classList.toggle("hidden");
+    const dd = document.getElementById("profileDropdown");
+    dd.classList.toggle("hidden");
   };
 
   /* ============================================================
-     ADMIN — SHOW CREATOR DASHBOARD BUTTON
+     ADMIN — CREATOR DASHBOARD BUTTON
   ============================================================ */
+  const creatorBtn = document.getElementById("creatorDashboardBtn");
+
   if (user.admin === true) {
-    const creatorBtn = document.getElementById("creatorDashboardBtn");
     creatorBtn.style.display = "block";
-    creatorBtn.onclick = () => location.href = "/dashboard.html";
+    creatorBtn.onclick = () => {
+      location.href = "/dashboard.html";
+    };
   }
 
   /* ============================================================
      ADMIN CHAT BUTTON
   ============================================================ */
   const adminBtn = document.getElementById("adminChatBtn");
-
-  if (user.admin === true && adminBtn) {
+  if (user.admin && adminBtn) {
     adminBtn.style.display = "flex";
-
-    adminBtn.onclick = async () => {
-      const panel = document.getElementById("adminChatPanel");
-      if (panel) panel.classList.toggle("hidden");
-
-      const token = localStorage.getItem("authToken");
-      if (typeof loadAdminChats === "function") {
-        await loadAdminChats(token);
-      }
-    };
   }
 }
 
 /* ============================================================
-   LOGOUT HANDLER
+   LOGOUT
 ============================================================ */
 function logoutUser() {
   localStorage.removeItem("authToken");
