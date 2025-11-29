@@ -1,85 +1,43 @@
-/* ================================================
-   TamedBlox — Profile Dropdown Styling
-   Clean + Modern + Matches Existing Theme
-================================================ */
+/* Ensure nav-right is the positioning container */
+.nav-right {
+  position: relative !important;
+}
 
 /* Dropdown container */
 .profile-dropdown {
   position: absolute;
-  top: 62px;
-  right: 20px;
+  top: 55px;   /* distance below profile button */
+  right: 0;    /* aligns directly under profile button */
   background: #0f141a;
   border: 1px solid rgba(78, 245, 138, 0.25);
   border-radius: 12px;
   width: 190px;
   padding: 8px;
   z-index: 99999;
-
-  box-shadow: 0 0 14px rgba(78, 245, 138, 0.2);
+  box-shadow: 0 0 14px rgba(78,245,138,0.2);
   backdrop-filter: blur(10px);
 }
 
-/* Hidden state */
 .profile-dropdown.hidden {
   display: none;
 }
 
-/* Dropdown option buttons */
 .dropdown-item {
   width: 100%;
-  text-align: left;
   padding: 10px 14px;
-
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.10);
   border-radius: 10px;
-
-  color: #ffffff;
-  font-size: 15px;
-  font-weight: 600;
+  color: white;
   cursor: pointer;
-
   transition: 0.18s ease;
   margin-bottom: 8px;
-
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
 }
 
-/* Hover effect */
 .dropdown-item:hover {
   background: rgba(78, 245, 138, 0.20);
   border-color: rgba(78, 245, 138, 0.45);
   color: #4ef58a;
-}
-
-/* Optional: small arrow style for Profile ▼ */
-#profileBtn span {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-#profileBtn span::after {
-  content: "▼";
-  font-size: 10px;
-  opacity: 0.75;
-  margin-left: 3px;
-}
-
-/* Animations */
-.profile-dropdown {
-  animation: dropdownFade 0.15s ease-out;
-}
-
-@keyframes dropdownFade {
-  0% {
-    opacity: 0;
-    transform: translateY(-5px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
