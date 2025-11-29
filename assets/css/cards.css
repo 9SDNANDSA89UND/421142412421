@@ -1,14 +1,16 @@
-/* ===========================================================
-   TamedBlox — STATIC VIBRANT PREMIUM CARD SYSTEM (v3)
-   ✔ Cards look amazing even when NOT hovered
-   ✔ Secret tag brighter + glowing
-   ✔ Better depth + neon aura
-   ✔ Sharper contrast for characters
-=========================================================== */
+/* =============================================================
+   TamedBlox — ULTRA PREMIUM CARD SYSTEM (2025)
+   ✔ Deep neon aura
+   ✔ Soft glassmorphism
+   ✔ Premium glow edges
+   ✔ Smooth 3D lift
+   ✔ Better readability + spacing
+   ✔ Stronger product image presence
+============================================================= */
 
-/* ============================
+/* =============================================================
    GRID
-============================ */
+============================================================= */
 .product-grid {
   max-width: 1380px;
   margin: 60px auto;
@@ -17,74 +19,136 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
   gap: 36px;
+
+  contain: layout paint;
 }
 
-/* ============================
+/* =============================================================
    CARD BASE
-============================ */
+============================================================= */
 .card {
-  background: rgba(15, 20, 26, 0.82);
-  border-radius: 22px;
-  padding: 20px 20px 26px;
+  background: linear-gradient(135deg, 
+    rgba(15, 20, 26, 0.75) 0%,
+    rgba(20, 28, 38, 0.65) 100%
+  );
+  border-radius: 24px;
+  padding: 24px;
 
-  border: 1px solid rgba(78, 245, 138, 0.35);
+  border: 1px solid rgba(78, 245, 138, 0.25);
 
-  /* STATIC AURA — VIBRANT EVEN BEFORE HOVER */
   box-shadow:
-    0 0 16px rgba(78, 245, 138, 0.25),
-    0 0 6px rgba(78, 245, 138, 0.15),
-    inset 0 0 10px rgba(255, 255, 255, 0.03);
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    0 0 40px rgba(78, 245, 138, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
 
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
 
-  transition: all 0.25s ease;
   position: relative;
   overflow: hidden;
+
+  transition: 
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    background 0.3s ease;
+
+  /* entrance animation */
+  opacity: 0;
+  transform: translateY(14px) scale(0.98);
+  animation: cardEnter 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-/* HOVER — Enhanced depth */
+@keyframes cardEnter {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Hover Glow */
 .card:hover {
-  transform: translateY(-8px) scale(1.02);
+  transform: translateY(-12px) scale(1.04);
+
   border-color: rgba(78, 245, 138, 0.65);
 
   box-shadow:
-    0 0 26px rgba(78, 245, 138, 0.48),
-    0 0 12px rgba(78, 245, 138, 0.28),
-    inset 0 0 14px rgba(255, 255, 255, 0.07);
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    0 0 60px rgba(78, 245, 138, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+
+  background: linear-gradient(135deg, 
+    rgba(20, 28, 38, 0.95) 0%,
+    rgba(25, 35, 48, 0.85) 100%
+  );
 }
 
-/* ============================
-   PRODUCT IMAGE
-============================ */
+/* =============================================================
+   HOLOGRAPHIC OUTLINE (SEXY AS HELL)
+============================================================= */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 24px;
+
+  background: linear-gradient(135deg,
+    rgba(78,245,138,0) 0%,
+    rgba(78,245,138,0.35) 50%,
+    rgba(78,245,138,0) 100%
+  );
+
+  opacity: 0;
+  transition: 0.25s ease;
+  pointer-events: none;
+}
+
+.card:hover::before {
+  opacity: 1;
+}
+
+/* =============================================================
+   PRODUCT IMAGE WRAPPER
+============================================================= */
 .product-img {
   width: 100%;
-  height: 250px;
+  height: 280px;
+
+  border-radius: 16px;
 
   object-fit: contain;
-  border-radius: 14px;
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.06) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
 
-  background: rgba(255, 255, 255, 0.05);
-
-  /* STRONGER STATIC DEPTH */
   box-shadow:
-    inset 0 0 25px rgba(78, 245, 138, 0.32),
-    0 0 30px rgba(78, 245, 138, 0.18);
+    inset 0 0 30px rgba(78, 245, 138, 0.15),
+    0 4px 20px rgba(78, 245, 138, 0.1),
+    0 0 1px rgba(255, 255, 255, 0.2);
 
-  padding: 12px;
-  margin-bottom: 18px;
+  padding: 16px;
+  margin-bottom: 20px;
 
-  transition: transform 0.25s ease, filter 0.25s ease;
+  border: 1px solid rgba(78, 245, 138, 0.1);
+
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Hover zoom */
 .card:hover .product-img {
-  transform: scale(1.05);
+  transform: scale(1.08) translateY(-4px);
+  box-shadow:
+    inset 0 0 40px rgba(78, 245, 138, 0.25),
+    0 8px 30px rgba(78, 245, 138, 0.2),
+    0 0 2px rgba(255, 255, 255, 0.3);
+  border-color: rgba(78, 245, 138, 0.3);
 }
 
-/* ============================
-   BADGES ROW
-============================ */
+/* =============================================================
+   BADGES 
+============================================================= */
 .card-badges {
   position: absolute;
   top: 16px;
@@ -94,91 +158,117 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  pointer-events: none;
 }
 
-/* ============================
-   SECRET TAG — BIG UPGRADE
-============================ */
-.tag-secret {
-  padding: 8px 20px;
+/* =============================================================
+   RARITY TAGS — BETTER GLOW
+============================================================= */
+.tag {
+  padding: 6px 18px;
   font-size: 13px;
   font-weight: 800;
 
-  color: #00faff; /* vibrant cyan */
-  background: rgba(0, 240, 255, 0.28);
+  border-radius: 40px;
+  color: white;
 
-  border: 1px solid rgba(0, 255, 255, 0.65);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255,255,255,0.18);
 
-  /* BIGGER STATIC GLOW */
   box-shadow:
-    0 0 18px rgba(0, 255, 255, 0.6),
-    inset 0 0 14px rgba(0,255,255,0.25);
+    0 0 18px currentColor,
+    inset 0 0 14px rgba(255,255,255,0.12);
 
-  border-radius: 50px;
-  backdrop-filter: blur(14px);
+  position: relative;
+  overflow: hidden;
 }
-
-/* ============================
-   OTHER RARITY TAGS (also brighter)
-============================ */
 
 /* GOD */
-.tag-god {
-  padding: 8px 20px;
-  color: #ff59ff;
-  background: rgba(255, 0, 255, 0.28);
-  border: 1px solid rgba(255, 0, 255, 0.65);
-  box-shadow: 0 0 18px rgba(255, 0, 255, 0.55),
-              inset 0 0 14px rgba(255, 0,255,0.25);
-  border-radius: 50px;
-  backdrop-filter: blur(14px);
-}
-
+.tag-god { background: rgba(255, 0, 255, 0.25); color: #ff4dff; }
+/* SECRET */
+.tag-secret { background: rgba(0, 210, 255, 0.25); color: #00e4ff; }
 /* OG */
-.tag-og {
-  padding: 8px 20px;
-  color: #ffcf6f;
-  background: rgba(255,170,60,0.28);
-  border: 1px solid rgba(255,170,60,0.65);
-  box-shadow: 0 0 18px rgba(255,200,60,0.55),
-              inset 0 0 14px rgba(255,200,60,0.25);
-  border-radius: 50px;
-  backdrop-filter: blur(14px);
+.tag-og { background: rgba(255,170,60,0.25); color: #ffc46b; }
+
+/* =============================================================
+   TAG HOLOGRAPHIC SWEEP (cleaner)
+============================================================= */
+.tag::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0.7) 40%,
+    rgba(255,255,255,0) 100%
+  );
+  transform: translateX(-130%);
+  animation: hologram 3s ease-in-out infinite;
 }
 
-/* ============================
-   DISCOUNT TAG
-============================ */
+@keyframes hologram {
+  0% { transform: translateX(-130%); }
+  50% { transform: translateX(130%); }
+  100% { transform: translateX(130%); }
+}
+
+/* =============================================================
+   DISCOUNT BADGE
+============================================================= */
 .discount-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
   padding: 7px 18px;
+  font-size: 13px;
+  font-weight: 900;
+
+  border-radius: 40px;
+
   background: #4ef58a;
   color: #0b0f14;
 
-  border-radius: 40px;
-  font-weight: 900;
-  box-shadow: 0 0 14px rgba(78, 245, 138, 0.55),
-              inset 0 0 10px rgba(0,0,0,0.15);
+  box-shadow:
+    0 0 12px rgba(78,245,138,0.55),
+    inset 0 0 14px rgba(0,0,0,0.15);
 }
 
-/* ============================
-   PRODUCT NAME
-============================ */
-.card h3 {
-  margin-top: 12px;
-  font-size: 18px;
-  font-weight: 900;
-  color: #f8fff6;
+.discount-tag svg {
+  width: 16px;
+  height: 16px;
+  stroke: #0b0f14;
+}
 
-  text-shadow: 0 0 6px rgba(78, 245, 138, 0.25);
+/* =============================================================
+   PRODUCT NAME
+============================================================= */
+.card h3 {
+  margin-top: 16px;
+  font-size: 19px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  transition: color 0.2s ease;
 }
 
-/* ============================
-   PRICE
-============================ */
+.card:hover h3 {
+  color: #4ef58a;
+  text-shadow: 0 0 20px rgba(78, 245, 138, 0.5);
+}
+
+/* =============================================================
+   PRICE SECTION
+============================================================= */
 .price-box {
   display: flex;
   align-items: center;
@@ -190,26 +280,23 @@
   font-size: 22px;
   font-weight: 900;
   color: #4ef58a;
-
-  text-shadow:
-    0 0 8px rgba(78, 245, 138, 0.65),
-    0 0 3px rgba(78, 245, 138, 0.4);
+  text-shadow: 0 0 12px rgba(78, 245, 138, 0.6);
 }
 
 .old-price {
   font-size: 14px;
-  opacity: 0.7;
+  opacity: 0.62;
   text-decoration: line-through;
 }
 
-/* ============================
+/* =============================================================
    ADD TO CART BUTTON
-============================ */
+============================================================= */
 .buy-btn {
   width: 100%;
   padding: 15px 0;
 
-  background: #4ef58a;
+  background: linear-gradient(135deg, #4ef58a, #36df74);
   color: #0c1117;
 
   border-radius: 12px;
@@ -218,11 +305,30 @@
   font-size: 15px;
   font-weight: 900;
 
-  transition: all 0.18s ease;
-  box-shadow: 0 0 14px rgba(78,245,138,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  cursor: pointer;
+
+  transition: 0.18s ease;
 }
 
 .buy-btn:hover {
-  transform: translateY(-3px) scale(1.03);
-  box-shadow: 0 0 20px rgba(78,245,138,0.6);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 0 18px rgba(78, 245, 138, 0.55);
+}
+
+.buy-btn:active {
+  transform: scale(0.96);
+}
+
+/* =============================================================
+   TILT SUPPORT (optional JS)
+============================================================= */
+.card {
+  perspective: 900px;
+  transform-style: preserve-3d;
+  will-change: transform;
 }
