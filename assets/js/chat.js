@@ -1,5 +1,5 @@
 /* ============================================================
-   TamedBlox Chat — FULLY PATCHED VERSION (NO AUTO OPEN)
+   TamedBlox Chat — FINAL STABLE VERSION (NO MORE TOGGLE BUGS)
 ============================================================ */
 
 console.log("%c[TAMEDBLOX CHAT] Loaded", "color:#4ef58a;font-weight:900;");
@@ -8,14 +8,12 @@ window.API = "https://website-5eml.onrender.com";
 
 let CURRENT_CHAT = null;
 let IS_ADMIN = false;
-let LAST_SENT_TIMESTAMP = null;
 let evtSrc = null;
 
-// Helper
 const qs = (id) => document.getElementById(id);
 
 /* ============================================================
-   SSE STREAM HANDLER
+   SSE
 ============================================================ */
 function startSSE(chatId) {
   if (evtSrc) evtSrc.close();
@@ -24,91 +22,43 @@ function startSSE(chatId) {
 
   evtSrc.onmessage = (e) => {
     try {
-      const msg = JSON.parse(e.data);
-      appendMessage(msg);
+      appendMessage(JSON.parse(e.data));
     } catch {}
   };
 
-  evtSrc.onerror = () => {
-    setTimeout(() => startSSE(chatId), 1500);
-  };
+  evtSrc.onerror = () => setTimeout(() => startSSE(chatId), 1500);
 }
 
 /* ============================================================
    MESSAGE RENDERING
 ============================================================ */
-function isMine(msg) {
-  const me = IS_ADMIN ? "admin" : (CURRENT_CHAT.userEmail || "customer");
-  return msg.sender === me;
-}
-
-function createMsgHTML(msg) {
-  return `
-    <div class="msg ${msg.system ? "system" : isMine(msg) ? "me" : "them"}">
-      ${msg.content}
-      <br><small>${new Date(msg.timestamp).toLocaleTimeString()}</small>
-    </div>`;
-}
-
 function appendMessage(msg) {
   const box = qs("chatMessages");
   if (!box) return;
 
-  box.innerHTML += createMsgHTML(msg);
+  const mine = IS_ADMIN ? "admin" : CURRENT_CHAT?.userEmail;
+
+  const html = `
+    <div class="msg ${msg.system ? "system" : msg.sender === mine ? "me" : "them"}">
+      ${msg.content}
+      <br><small>${new Date(msg.timestamp).toLocaleTimeString()}</small>
+    </div>`;
+
+  box.innerHTML += html;
   box.scrollTop = box.scrollHeight;
 }
 
-/* ============================================================
-   LOAD CHAT MESSAGES
-============================================================ */
-async function loadMessages(chatId) {
-  const res = await fetch(`${API}/chats/messages/${chatId}`);
+async function loadMessages(id) {
+  const res = await fetch(`${API}/chats/messages/${id}`);
   const msgs = await res.json();
-  qs("chatMessages").innerHTML = msgs.map(createMsgHTML).join("");
-  qs("chatMessages").scrollTop = qs("chatMessages").scrollHeight;
+  qs("chatMessages").innerHTML = msgs.map(appendMessage).join("");
 }
 
 /* ============================================================
-   LOAD USER CHAT
+   LOAD ADMIN CHAT LIST
 ============================================================ */
-async function loadChatForUser(token) {
-  const info = await fetch(`${API}/auth/me`, {
-    headers: { Authorization: "Bearer " + token }
-  });
-
-  if (!info.ok) return false;
-
-  const user = await info.json();
-  IS_ADMIN = !!user.admin;
-
-  /* ---------- ADMIN MODE ---------- */
-  if (IS_ADMIN) {
-    qs("adminChatBtn")?.classList.remove("hidden");
-    return true; // Wait for toggle to open admin panel
-  }
-
-  /* ---------- NORMAL USER ---------- */
-  const res = await fetch(`${API}/chats/my-chats`, {
-    headers: { Authorization: "Bearer " + token }
-  });
-
-  const chat = await res.json();
-  if (!chat || !chat._id) return false;
-
-  CURRENT_CHAT = { _id: chat._id, userEmail: user.email };
-
-  await loadMessages(chat._id);
-
-  // Do NOT auto-open chat window
-  qs("chatButton")?.classList.remove("hidden");
-
-  return true;
-}
-
-/* ============================================================
-   ADMIN: LOAD ALL CHATS INTO SIDEBAR
-============================================================ */
-async function loadAdminChats(token) {
+async function loadAdminChats() {
+  const token = localStorage.getItem("authToken");
   const res = await fetch(`${API}/chats/all`, {
     headers: { Authorization: "Bearer " + token }
   });
@@ -118,35 +68,96 @@ async function loadAdminChats(token) {
   wrap.innerHTML = "";
 
   list.forEach((chat) => {
-    wrap.innerHTML += `
-      <div class="admin-chat-item" data-id="${chat._id}">
-        <strong>${chat.orderDetails?.orderId || "Order"}</strong><br>
-        ${chat.participants?.[0] || "User"}
-      </div>`;
-  });
-
-  document.querySelectorAll(".admin-chat-item").forEach((el) => {
-    el.onclick = () => openAdminChat(el.getAttribute("data-id"));
+    const el = document.createElement("div");
+    el.className = "admin-chat-item";
+    el.dataset.id = chat._id;
+    el.innerHTML = `<strong>${chat.orderDetails?.orderId || "Order"}</strong><br>${chat.participants?.[0]}`;
+    el.onclick = () => openAdminChat(chat._id);
+    wrap.appendChild(el);
   });
 }
 
 /* ============================================================
-   OPEN A CHAT AS ADMIN
+   OPEN CHAT AS ADMIN
 ============================================================ */
-async function openAdminChat(chatId) {
+async function openAdminChat(id) {
   const token = localStorage.getItem("authToken");
 
-  const res = await fetch(`${API}/chats/by-id/${chatId}`, {
+  const res = await fetch(`${API}/chats/by-id/${id}`, {
     headers: { Authorization: "Bearer " + token }
   });
 
   const chat = await res.json();
 
-  CURRENT_CHAT = { _id: chatId, userEmail: "admin" };
+  CURRENT_CHAT = { _id: id, userEmail: "admin" };
 
-  await loadMessages(chatId);
   qs("chatWindow").classList.remove("hidden");
-  startSSE(chatId);
+
+  await loadMessages(id);
+  startSSE(id);
+}
+
+/* ============================================================
+   ADMIN PANEL TOGGLE — FIXED (ALWAYS OPENS)
+============================================================ */
+async function toggleAdminPanel() {
+  const panel = qs("adminChatPanel");
+  const token = localStorage.getItem("authToken");
+
+  if (!panel) return;
+
+  const opening = panel.classList.contains("hidden");
+
+  if (opening) {
+    // ALWAYS load chat list BEFORE opening (fixes stuck panel)
+    await loadAdminChats(token);
+    panel.classList.remove("hidden");
+  } else {
+    panel.classList.add("hidden");
+  }
+}
+
+function setupAdminButton() {
+  const btn = qs("adminChatBtn");
+  if (!btn) return;
+  btn.onclick = toggleAdminPanel;
+}
+
+/* ============================================================
+   LOAD USER OR ADMIN SESSION
+============================================================ */
+async function loadSession() {
+  const token = localStorage.getItem("authToken");
+  if (!token) return false;
+
+  const me = await fetch(`${API}/auth/me`, {
+    headers: { Authorization: "Bearer " + token }
+  });
+
+  if (!me.ok) return false;
+
+  const user = await me.json();
+  IS_ADMIN = !!user.admin;
+
+  // Admin shouldn't auto-open panel or chat window
+  if (IS_ADMIN) {
+    qs("adminChatBtn")?.classList.remove("hidden");
+    return true;
+  }
+
+  // Normal user chat
+  const res = await fetch(`${API}/chats/my-chats`, {
+    headers: { Authorization: "Bearer " + token }
+  });
+
+  const chat = await res.json();
+  if (!chat?._id) return false;
+
+  CURRENT_CHAT = { _id: chat._id, userEmail: user.email };
+
+  qs("chatButton")?.classList.remove("hidden");
+
+  return true;
 }
 
 /* ============================================================
@@ -154,16 +165,16 @@ async function openAdminChat(chatId) {
 ============================================================ */
 async function sendMessage() {
   const input = qs("chatInput");
-  let msg = input.value.trim();
+  const text = input.value.trim();
   input.value = "";
 
-  if (!msg || !CURRENT_CHAT) return;
+  if (!text || !CURRENT_CHAT) return;
 
   const token = localStorage.getItem("authToken");
 
   appendMessage({
     sender: IS_ADMIN ? "admin" : CURRENT_CHAT.userEmail,
-    content: msg,
+    content: text,
     timestamp: new Date()
   });
 
@@ -173,64 +184,34 @@ async function sendMessage() {
   fetch(`${API}/chats/send`, {
     method: "POST",
     headers,
-    body: JSON.stringify({
-      chatId: CURRENT_CHAT._id,
-      content: msg
-    })
+    body: JSON.stringify({ chatId: CURRENT_CHAT._id, content: text })
   });
 }
 
 /* ============================================================
-   TOGGLE ADMIN PANEL
+   CHAT WINDOW TOGGLE
 ============================================================ */
-function setupAdminPanelToggle() {
-  const btn = qs("adminChatBtn");
-  const panel = qs("adminChatPanel");
-
-  if (!btn || !panel) return;
-
-  btn.onclick = async () => {
-    panel.classList.toggle("hidden");
-
-    if (!panel.classList.contains("hidden")) {
-      const token = localStorage.getItem("authToken");
-      await loadAdminChats(token);
-    }
-  };
-}
-
-/* ============================================================
-   TOGGLE CHAT WINDOW BUTTON
-============================================================ */
-function setupChatButton() {
+function setupChatWindowToggle() {
   const btn = qs("chatButton");
   const win = qs("chatWindow");
-
   if (!btn || !win) return;
 
-  btn.onclick = () => {
-    win.classList.toggle("hidden");
-  };
+  btn.onclick = () => win.classList.toggle("hidden");
 }
 
 /* ============================================================
-   MAIN INIT
+   MAIN
 ============================================================ */
 document.addEventListener("DOMContentLoaded", async () => {
-  const token = localStorage.getItem("authToken");
+  setupAdminButton();
+  setupChatWindowToggle();
 
-  setupAdminPanelToggle();
-  setupChatButton();
+  const ok = await loadSession();
 
-  let loaded = false;
-
-  if (token) loaded = await loadChatForUser(token);
-
-  /* ---------- NOT LOGGED IN ---------- */
-  if (!loaded) {
+  if (!ok) {
     qs("adminChatPanel")?.classList.add("hidden");
+    qs("adminChatBtn")?.classList.add("hidden");
     qs("chatWindow")?.classList.add("hidden");
     qs("chatButton")?.classList.add("hidden");
-    qs("adminChatBtn")?.classList.add("hidden");
   }
 });
