@@ -6,7 +6,7 @@
   <title>TamedBlox — Home</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Save referral -->
+  <!-- Save referral if present -->
   <script>
     const params = new URLSearchParams(window.location.search);
     const ref = params.get("ref");
@@ -27,20 +27,20 @@
   <link rel="stylesheet" href="assets/css/modal.css" />
   <link rel="stylesheet" href="assets/css/reviews.css" />
   <link rel="stylesheet" href="assets/css/chat.css" />
-  <link rel="stylesheet" href="assets/css/search.css" /> <!-- ⭐ UPDATED -->
+  <link rel="stylesheet" href="assets/css/search.css" />
 
+  <!-- Component Loader -->
   <script>
     async function loadComponent(selector, file) {
       const el = document.querySelector(selector);
       if (el) el.innerHTML = await fetch(file).then(r => r.text());
     }
   </script>
-
 </head>
 
 <body>
 
-  <!-- NAVBAR / MODALS -->
+  <!-- NAVBAR / AUTH MODALS -->
   <div id="navbar"></div>
   <div id="modals"></div>
 
@@ -49,12 +49,12 @@
     loadComponent("#modals", "components/modals.html");
   </script>
 
-  <!-- HERO SECTION -->
+  <!-- HERO -->
   <section class="container" style="margin-top: 40px">
     <h1 style="font-size: 32px; font-weight: 900">Featured Products</h1>
     <p style="margin-top: 10px; color: #b7bec9;">Best-selling items from TamedBlox.</p>
 
-    <!-- ⭐ SEARCH + SORT ROW -->
+    <!-- SEARCH + SORT ROW -->
     <div class="search-sort-row">
 
       <!-- SEARCH -->
@@ -64,7 +64,6 @@
           placeholder="Search products..."
           class="search-input"
         />
-
         <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
           viewBox="0 0 24 24" fill="none" stroke="#38ff99" stroke-width="2"
           stroke-linecap="round" stroke-linejoin="round">
@@ -73,11 +72,10 @@
         </svg>
       </div>
 
-      <!-- SORT -->
+      <!-- SORT (small, right) -->
       <div class="sort-mini">
-
         <select id="sortSelect" class="sort-mini-select">
-          <option value="default">Sort</option>
+          <option value="default">A → Z</option>
           <option value="az">A → Z</option>
           <option value="za">Z → A</option>
           <option value="low">Low → High</option>
@@ -87,58 +85,72 @@
         <svg class="sort-mini-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
           viewBox="0 0 24 24" fill="none" stroke="#38ff99" stroke-width="2"
           stroke-linecap="round" stroke-linejoin="round">
-          <path d="m3 8 4-4 4 4"/>
-          <path d="M7 4v16"/>
-          <path d="M15 4h5l-5 6h5"/>
-          <path d="M15 20v-3.5a2.5 2.5 0 0 1 5 0V20"/>
-          <path d="M20 18h-5"/>
+          <path d="m3 8 4-4 4 4" />
+          <path d="M7 4v16" />
+          <path d="M15 4h5l-5 6h5" />
+          <path d="M15 20v-3.5a2.5 2.5 0 0 1 5 0V20" />
+          <path d="M20 18h-5" />
         </svg>
-
       </div>
 
     </div>
 
-    <!-- ENTER triggers search -->
+    <!-- SEARCH + SORT JS -->
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const input = document.getElementById("searchInput");
-        input.addEventListener("keypress", e => {
-          if (e.key === "Enter") {
-            input.dispatchEvent(new KeyboardEvent("keyup", { key: "Enter" }));
-          }
-        });
-      });
-    </script>
+        const sortSelect = document.getElementById("sortSelect");
 
-    <!-- ⭐ SORTING LOGIC -->
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const select = document.getElementById("sortSelect");
-        const grid = document.getElementById("productGrid");
+        if (input) {
+          // Typing triggers built-in setupSearch() logic in app.js
+          // (which listens to "input" on #searchInput)
+          input.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+              // optional: you can trigger a blur or nothing; search already reacts to typing
+              input.blur();
+            }
+          });
+        }
 
-        select.addEventListener("change", () => {
-          let cards = [...document.querySelectorAll(".product-card")];
-          const getPrice = card => parseFloat(card.querySelector(".product-price")?.innerText.replace("$", "")) || 999999;
-          const getName = card => card.querySelector(".product-title")?.innerText.toLowerCase() || "";
+        if (sortSelect) {
+          sortSelect.addEventListener("change", () => {
+            // products & renderProducts are defined globally in app.js
+            if (!window.products || !Array.isArray(window.products) || typeof renderProducts !== "function") {
+              console.warn("Sort: products/renderProducts not ready");
+              return;
+            }
 
-          switch (select.value) {
-            case "az":
-              cards.sort((a, b) => getName(a).localeCompare(getName(b)));
-              break;
-            case "za":
-              cards.sort((a, b) => getName(b).localeCompare(getName(a)));
-              break;
-            case "low":
-              cards.sort((a, b) => getPrice(a) - getPrice(b));
-              break;
-            case "high":
-              cards.sort((a, b) => getPrice(b) - getPrice(a));
-              break;
-          }
+            // Get current search query so sort + search work together
+            const qEl = document.getElementById("searchInput");
+            const q = qEl ? qEl.value.toLowerCase() : "";
 
-          grid.innerHTML = "";
-          cards.forEach(c => grid.appendChild(c));
-        });
+            // Start from full product list
+            let list = [...window.products];
+
+            // Apply search filter first (same logic as setupSearch)
+            if (q) {
+              list = list.filter((p) =>
+                p.name.toLowerCase().includes(q)
+              );
+            }
+
+            // Apply chosen sort
+            const mode = sortSelect.value;
+
+            if (mode === "az") {
+              list.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+            } else if (mode === "za") {
+              list.sort((a, b) => b.name.toLowerCase().localeCompare(a.name.toLowerCase()));
+            } else if (mode === "low") {
+              list.sort((a, b) => Number(a.price) - Number(b.price));
+            } else if (mode === "high") {
+              list.sort((a, b) => Number(b.price) - Number(a.price));
+            }
+
+            // Re-render using the same function app.js uses
+            renderProducts(list);
+          });
+        }
       });
     </script>
 
@@ -197,7 +209,9 @@
 
   <!-- FOOTER -->
   <div id="footer"></div>
-  <script>loadComponent("#footer", "components/footer.html");</script>
+  <script>
+    loadComponent("#footer", "components/footer.html");
+  </script>
 
   <!-- ADMIN CHAT PANEL -->
   <div id="adminChatPanel" class="admin-panel hidden">
@@ -231,23 +245,24 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
           viewBox="0 0 24 24" fill="none" stroke="currentColor"
           stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3.714 3.048a.498.498 0 0 0-.683.627l2.843 7.627a2 2 0 0 1 0 1.396l-2.842 7.627a.498.498 0 0 0 .682.627l18-8.5a.5.5 0 0 0 0-.904z" />
+          <path
+            d="M3.714 3.048a.498.498 0 0 0-.683.627l2.843 7.627a2 2 0 0 1 0 1.396l-2.842 7.627a.498.498 0 0 0 .682.627l18-8.5a.5.5 0 0 0 0-.904z" />
           <path d="M6 12h16" />
         </svg>
       </button>
     </div>
   </div>
 
-  <!-- CHAT FLOAT BUTTON -->
+  <!-- FLOATING CHAT BUTTON -->
   <div id="chatButton" class="chat-circle hidden">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-      stroke="currentColor" fill="none" stroke-width="2"
-      stroke-linecap="round" stroke-linejoin="round">
-      <path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" />
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" stroke="currentColor"
+      fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path
+        d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" />
     </svg>
   </div>
 
-  <!-- SCRIPTS -->
+  <!-- JS -->
   <script src="assets/js/cart.js"></script>
   <script src="assets/js/app.js"></script>
   <script src="assets/js/drawer.js"></script>
