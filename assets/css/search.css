@@ -1,99 +1,46 @@
 /* ============================
-   SEARCH + SORT — FLEX ROW
+   SORT MINI VERSION (FIXED HEIGHT)
    ============================ */
 
-.search-sort-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-
-  margin-top: 20px;
-  width: 100%;
-  max-width: 700px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* ============================
-   SEARCH BAR (unchanged look)
-   ============================ */
-
-.search-container {
+.sort-mini {
   position: relative;
-  flex: 1; /* search bar takes most space */
+  width: 120px;
 }
 
-.search-input {
+/* MATCHES EXACT HEIGHT OF SEARCH BAR */
+.sort-mini-select {
   width: 100%;
-  padding: 12px 50px 12px 16px;
+  padding: 12px 40px 12px 14px;  /* ⭐ SAME padding as search bar */
   background: #0e1319;
   border: 2px solid #38ff99;
   border-radius: 14px;
   color: #d9ffeb;
-  font-size: 16px;
+  font-size: 16px;               /* ⭐ same font size */
+  appearance: none;
+  outline: none;
+
+  height: 48px;                  /* ⭐ EXACT MATCH */
+  box-sizing: border-box;
 
   box-shadow:
     0 0 25px #38ff9955,
     inset 0 0 6px #00000055;
 }
 
-.search-input:focus {
+.sort-mini-select:focus {
   box-shadow:
     0 0 30px #38ff99aa,
     inset 0 0 10px #00000077;
 }
 
-.search-icon {
-  position: absolute;
-  right: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-  stroke: #38ff99;
-  filter: drop-shadow(0 0 6px #38ff99);
-  pointer-events: none;
-}
-
-/* ============================
-   SORT MINI VERSION
-   ============================ */
-
-.sort-mini {
-  position: relative;
-  width: 120px; /* ⭐ smaller */
-}
-
-.sort-mini-select {
-  width: 100%;
-  padding: 10px 14px;
-  background: #0e1319;
-  border: 2px solid #38ff99;
-  border-radius: 12px;
-  color: #d9ffeb;
-  font-size: 14px; /* ⭐ smaller font */
-  appearance: none; /* hide browser arrows */
-  outline: none;
-
-  box-shadow:
-    0 0 20px #38ff9955,
-    inset 0 0 6px #00000055;
-}
-
-.sort-mini-select:focus {
-  box-shadow:
-    0 0 25px #38ff99aa,
-    inset 0 0 10px #00000077;
-}
-
-/* sort icon inside the select */
 .sort-mini-icon {
   position: absolute;
-  right: 10px;
+  right: 12px;
   top: 50%;
-  width: 18px;
-  height: 18px;
   transform: translateY(-50%);
   stroke: #38ff99;
   filter: drop-shadow(0 0 5px #38ff99);
   pointer-events: none;
+  width: 18px;
+  height: 18px;
 }
