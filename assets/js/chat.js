@@ -1,11 +1,5 @@
 /* ============================================================
-   TamedBlox — Chat System (Universal Working Version)
-   ✔ Logged-in customers
-   ✔ Guests
-   ✔ Stripe checkout
-   ✔ Admin panel
-   ✔ Correct bubble colors
-   ✔ No duplicate messages
+   TamedBlox — FINAL UNIVERSAL CHAT.JS
 ============================================================ */
 
 window.API = "https://website-5eml.onrender.com";
@@ -26,7 +20,7 @@ function waitForElement(id, cb) {
 }
 
 /* ============================================================
-   AUTH CHECK
+   LOAD AUTH SESSION
 ============================================================ */
 async function loadSession() {
   const token = localStorage.getItem("authToken");
@@ -64,11 +58,12 @@ function startSSE(chatId) {
     } catch {}
   };
 
-  evtSrc.onerror = () => setTimeout(() => startSSE(chatId), 1500);
+  evtSrc.onerror = () =>
+    setTimeout(() => startSSE(chatId), 1500);
 }
 
 /* ============================================================
-   RENDER MESSAGE (FIXED BUBBLE COLORS)
+   RENDER MESSAGE  (MATCHES BACKEND SENDER LOGIC)
 ============================================================ */
 function appendMessage(msg) {
   const box = qs("chatMessages");
@@ -76,17 +71,17 @@ function appendMessage(msg) {
 
   let mine;
 
-  // Admin
+  // --- ADMIN ---
   if (IS_ADMIN) {
     mine = "admin";
   }
 
-  // Logged-in customer (email known)
+  // --- LOGGED-IN CUSTOMER ---
   else if (CURRENT_CHAT?.userEmail && CURRENT_CHAT.userEmail !== "customer") {
     mine = CURRENT_CHAT.userEmail;
   }
 
-  // Guest & Stripe customers
+  // --- GUEST or STRIPE CUSTOMER ---
   else {
     mine = "customer";
   }
@@ -98,16 +93,18 @@ function appendMessage(msg) {
     msg.system ? "system" : sender === mine ? "me" : "them"
   }`;
 
-  div.innerHTML = `${msg.content}<br><small>${new Date(
-    msg.timestamp
-  ).toLocaleTimeString()}</small>`;
+  div.innerHTML = `
+    ${msg.content}
+    <br>
+    <small>${new Date(msg.timestamp).toLocaleTimeString()}</small>
+  `;
 
   box.appendChild(div);
   box.scrollTop = box.scrollHeight;
 }
 
 /* ============================================================
-   LOAD ALL MESSAGES
+   LOAD MESSAGES
 ============================================================ */
 async function loadMessages(chatId) {
   try {
@@ -122,7 +119,7 @@ async function loadMessages(chatId) {
 }
 
 /* ============================================================
-   LOGGED-IN CUSTOMER CHAT LOAD
+   LOAD LOGGED-IN CUSTOMER CHAT
 ============================================================ */
 async function loadCustomerChat(token, email) {
   try {
@@ -148,7 +145,7 @@ async function loadCustomerChat(token, email) {
 }
 
 /* ============================================================
-   ADMIN CHAT LIST
+   LOAD ADMIN CHAT LIST
 ============================================================ */
 async function loadAdminChats() {
   try {
@@ -167,10 +164,12 @@ async function loadAdminChats() {
       const item = document.createElement("div");
       item.className = "admin-chat-item";
       item.dataset.id = chat._id;
+
       item.innerHTML = `
         <strong>${chat.orderDetails?.orderId || "Order"}</strong><br>
         ${chat.participants?.[0] || "User"}
       `;
+
       item.onclick = () => openAdminChat(chat._id);
       wrap.appendChild(item);
     });
@@ -200,7 +199,7 @@ async function openAdminChat(chatId) {
 }
 
 /* ============================================================
-   SEND MESSAGE (NO DUPLICATES)
+   SEND MESSAGE (MATCHES BACKEND)
 ============================================================ */
 async function sendMessage() {
   const input = qs("chatInput");
@@ -210,11 +209,19 @@ async function sendMessage() {
   input.value = "";
   if (!text || !CURRENT_CHAT) return;
 
-  // DO NOT append locally — SSE adds it correctly
-  try {
-    const token = localStorage.getItem("authToken");
+  // ⭐ Determine sender EXACTLY the same way backend expects
+  let sender =
+    IS_ADMIN
+      ? "admin"
+      : CURRENT_CHAT.userEmail && CURRENT_CHAT.userEmail !== "customer"
+      ? CURRENT_CHAT.userEmail
+      : "customer";
 
-    fetch(`${API}/chats/send`, {
+  const token = localStorage.getItem("authToken");
+
+  // DO NOT append locally — SSE will add it correctly
+  try {
+    await fetch(`${API}/chats/send`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -222,25 +229,27 @@ async function sendMessage() {
       },
       body: JSON.stringify({
         chatId: CURRENT_CHAT._id,
-        content: text
+        content: text,
+        sender // ⭐ CRITICAL: frontend sends sender → backend uses it
       })
     });
-  } catch {}
+  } catch (err) {
+    console.error("Send failed", err);
+  }
 }
 
 /* ============================================================
-   ADMIN TOGGLE BUTTON
+   ADMIN BUTTON
 ============================================================ */
 function bindAdminToggle() {
   waitForElement("adminChatBtn", (btn) => {
     btn.classList.remove("hidden");
+
     btn.onclick = async () => {
       const panel = qs("adminChatPanel");
       if (!panel) return;
 
-      const opening = panel.classList.contains("hidden");
-
-      if (opening) {
+      if (panel.classList.contains("hidden")) {
         await loadAdminChats();
         panel.classList.remove("hidden");
       } else {
@@ -251,7 +260,7 @@ function bindAdminToggle() {
 }
 
 /* ============================================================
-   CHAT WINDOW BUTTON
+   CHAT TOGGLE BUTTON
 ============================================================ */
 function bindChatButton() {
   waitForElement("chatButton", (btn) => {
@@ -262,7 +271,10 @@ function bindChatButton() {
 }
 
 /* ============================================================
-   UNIVERSAL CHAT LOADER (LOGGED-IN OR GUEST)
+   UNIVERSAL CHAT LOADER
+   ✔ Works for Stripe
+   ✔ Works for logged-in
+   ✔ Works for guests
 ============================================================ */
 async function universalChatLoad() {
   const params = new URLSearchParams(window.location.search);
@@ -276,7 +288,10 @@ async function universalChatLoad() {
       const data = await res.json();
 
       if (data.chatId) {
-        CURRENT_CHAT = { _id: data.chatId, userEmail: "customer" };
+        CURRENT_CHAT = {
+          _id: data.chatId,
+          userEmail: "customer"
+        };
 
         qs("chatButton")?.classList.remove("hidden");
         qs("chatWindow")?.classList.remove("hidden");
@@ -285,12 +300,10 @@ async function universalChatLoad() {
         startSSE(data.chatId);
         return;
       }
-    } catch (err) {
-      console.error("Stripe chat load failed", err);
-    }
+    } catch {}
   }
 
-  // 2️⃣ Logged-in customers
+  // 2️⃣ Logged-in session
   const token = localStorage.getItem("authToken");
   if (token) {
     const session = await loadSession();
@@ -300,23 +313,22 @@ async function universalChatLoad() {
     }
   }
 
-  // 3️⃣ Guests → nothing to load until they fully purchase
+  // 3️⃣ Guests have no pre-existing chat until purchase creates it
 }
 
 /* ============================================================
    MAIN INIT
 ============================================================ */
 document.addEventListener("DOMContentLoaded", async () => {
-
-  // Send button fix
+  // Send button
   waitForElement("chatSend", (btn) => {
     btn.onclick = () => sendMessage();
   });
 
-  // Load chat for every user type (guest, logged-in, stripe)
+  // Load chat for logged-in + guest + Stripe
   await universalChatLoad();
 
-  // Admin logic
+  // Admin setup
   const session = await loadSession();
   if (session.loggedIn) {
     IS_ADMIN = session.admin;
