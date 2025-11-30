@@ -19,6 +19,10 @@
   backdrop-filter: blur(16px);
   transition: 0.25s ease;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 350px;
 }
 
 .card:hover {
@@ -152,24 +156,42 @@
   text-decoration: line-through;
 }
 
-.buy-btn {
-  width: 100%;
+.card-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.add-cart-btn,
+.buy-now-btn {
+  flex: 1;
   padding: 10px 0;
-  background: #4ef58a;
-  color: #0c1117;
   border-radius: 8px;
-  border: none;
-  font-size: 13px;
   font-weight: 900;
-  box-shadow: 0 0 12px rgba(78,245,138,0.55);
+  font-size: 12px;
+  border: none;
+  cursor: pointer;
   transition: 0.18s ease;
+  color: #0c1117;
 }
 
-.buy-btn:hover {
+.add-cart-btn {
+  background: #4ef58a;
+  box-shadow: 0 0 12px rgba(78,245,138,0.45);
+}
+
+.buy-now-btn {
+  background: #38ffaa;
+  box-shadow: 0 0 12px rgba(56,255,170,0.45);
+}
+
+.add-cart-btn:hover,
+.buy-now-btn:hover {
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 0 18px rgba(78,245,138,0.75);
 }
 
-.buy-btn:active {
+.add-cart-btn:active,
+.buy-now-btn:active {
   transform: scale(0.96);
 }
