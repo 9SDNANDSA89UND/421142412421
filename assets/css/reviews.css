@@ -16,29 +16,31 @@
   gap: 20px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
-  padding: 10px 0 14px 0;
+  padding: 0;
+  margin-top: 10px;
   scroll-behavior: smooth;
   scrollbar-width: thin;
 }
 
 .review-slider::-webkit-scrollbar {
-  height: 10px;
+  height: 6px;
 }
 
 .review-slider::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.05);
   border-radius: 10px;
+  margin: 0 30px;
 }
 
 .review-slider::-webkit-scrollbar-thumb {
   background: #4ef58a;
   border-radius: 10px;
-  box-shadow: 0 0 12px #4ef58a;
+  box-shadow: 0 0 10px #4ef58a;
 }
 
 .review-slider::-webkit-scrollbar-thumb:hover {
-  background: #64ff9d;
-  box-shadow: 0 0 16px #64ff9d;
+  background: #6affae;
+  box-shadow: 0 0 14px #6affae;
 }
 
 .review-card {
