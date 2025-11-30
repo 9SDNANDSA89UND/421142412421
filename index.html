@@ -198,6 +198,30 @@
   <div id="footer"></div>
   <script>loadComponent("#footer", "components/footer.html");</script>
 
+  <div id="adminChatPanel" class="admin-panel hidden">
+    <div class="admin-panel-header">Active Chats</div>
+    <div id="adminChatList" class="admin-chat-list"></div>
+  </div>
+
+  <div id="chatWindow" class="chat-window hidden">
+    <div id="chatOrderSummary" class="chat-order-summary"></div>
+
+    <button id="deleteTicketBtn" class="delete-ticket-btn">
+      Delete Ticket
+    </button>
+
+    <div id="chatMessages" class="chat-messages"></div>
+
+    <div class="chat-input-row">
+      <input id="chatInput" class="chat-input" placeholder="Type a message...">
+      <button id="chatSend" class="chat-send">Send</button>
+    </div>
+  </div>
+
+  <div id="chatButton" class="chat-circle hidden">
+    <span>Chat</span>
+  </div>
+
   <script src="assets/js/cart.js"></script>
   <script src="assets/js/app.js"></script>
   <script src="assets/js/drawer.js"></script>
