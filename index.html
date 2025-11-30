@@ -206,6 +206,31 @@
 
   <div id="cartOverlay" class="cart-overlay"></div>
 
+
+  <!-- ⭐ ADMIN + CHAT SYSTEM -->
+  <div id="adminChatPanel" class="admin-panel hidden">
+    <div class="admin-panel-header">Active Tickets</div>
+    <div id="adminChatList" class="admin-chat-list"></div>
+  </div>
+
+  <div id="chatWindow" class="chat-window hidden">
+    <div id="chatOrderSummary" class="chat-order-summary"></div>
+
+    <button id="deleteTicketBtn" class="delete-ticket-btn">
+      Delete Ticket
+    </button>
+
+    <div id="chatMessages" class="chat-messages"></div>
+
+    <div class="chat-input-row">
+      <input id="chatInput" placeholder="Type a message..." />
+      <button id="chatSend" class="chat-send-btn">Send</button>
+    </div>
+  </div>
+
+  <div id="chatButton" class="chat-circle hidden">💬</div>
+
+
   <div id="footer"></div>
   <script>loadComponent("#footer", "components/footer.html");</script>
 
