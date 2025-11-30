@@ -1,79 +1,56 @@
-/* ============================================================
-   TamedBlox — PRODUCT SYSTEM (PATCHED & FAST)
-   ✔ Local caching for instant load
-   ✔ Prevents duplicate tilt bindings
-   ✔ Add-to-cart buttons always work
-============================================================ */
-
-/* Format product numbers as USD strings */
 function formatUSD(amount) {
   return `$${Number(amount).toFixed(2)} USD`;
 }
 
 let products = [];
+let productsOriginal = [];
 let _TILT_BOUND = false;
 
-/* ============================================================
-   WAIT FOR CONDITION
-============================================================ */
 function waitFor(checkFn, callback, retry = 0) {
   if (checkFn()) return callback();
-  if (retry > 50) {
-    console.warn("⚠️ Timeout waiting for condition:", checkFn);
-    return;
-  }
+  if (retry > 50) return;
   setTimeout(() => waitFor(checkFn, callback, retry + 1), 40);
 }
 
-/* ============================================================
-   LOAD PRODUCTS (FAST WITH CACHE)
-============================================================ */
 async function loadProducts() {
   try {
-    // ✔ Check cached products first
     const cached = localStorage.getItem("tamed_products");
     if (cached) {
       products = JSON.parse(cached);
+      productsOriginal = [...products];
       renderProducts(products);
     }
 
-    // ✔ Always fetch updated data in background
     const res = await fetch("https://website-5eml.onrender.com/products");
     const fresh = await res.json();
 
-    fresh.forEach((p) => {
+    fresh.forEach(p => {
       p.price = Number(p.price);
       p.oldPrice = p.oldPrice ? Number(p.oldPrice) : null;
     });
 
     products = fresh;
+    productsOriginal = [...fresh];
     localStorage.setItem("tamed_products", JSON.stringify(fresh));
 
     renderProducts(products);
-
   } catch (err) {
     console.error("❌ Failed to load products:", err);
   }
 }
 
-/* ============================================================
-   DISCOUNT CALCULATOR
-============================================================ */
 function getDiscountPercent(price, oldPrice) {
   if (!oldPrice || oldPrice <= price) return 0;
   return Math.round(((oldPrice - price) / oldPrice) * 100);
 }
 
-/* ============================================================
-   RENDER PRODUCTS
-============================================================ */
 function renderProducts(list) {
   const grid = document.getElementById("productGrid");
   if (!grid) return;
 
   grid.innerHTML = "";
 
-  list.forEach((p) => {
+  list.forEach(p => {
     const discount = getDiscountPercent(p.price, p.oldPrice);
 
     grid.innerHTML += `
@@ -95,7 +72,6 @@ function renderProducts(list) {
           ${p.oldPrice ? `<span class="old-price">${formatUSD(p.oldPrice)}</span>` : ""}
         </div>
 
-        <!-- Buttons use data attributes instead of raw JS in HTML -->
         <button class="buy-btn" data-name="${p.name}">
           Add to Cart
         </button>
@@ -108,38 +84,27 @@ function renderProducts(list) {
   bindCartButtons();
 }
 
-/* ============================================================
-   BIND ADD-TO-CART BUTTONS (PATCHED)
-============================================================ */
 function bindCartButtons() {
   const buttons = document.querySelectorAll(".buy-btn");
-
-  if (!buttons.length) {
-    return setTimeout(bindCartButtons, 40);
-  }
+  if (!buttons.length) return setTimeout(bindCartButtons, 40);
 
   waitFor(
     () => window.Cart && typeof window.Cart.addItem === "function",
     () => {
-      buttons.forEach((btn) => {
+      buttons.forEach(btn => {
         btn.onclick = () => {
           const name = btn.getAttribute("data-name");
           const imgElement = btn.closest(".card").querySelector(".product-img");
           addToCart(name, imgElement);
         };
       });
-
-      console.log("🛒 Add-to-cart buttons ready.");
     }
   );
 }
 
-/* ============================================================
-   ADD TO CART (PATCHED)
-============================================================ */
 function addToCart(name, imgElement) {
-  const product = products.find((p) => p.name === name);
-  if (!product) return console.error("❌ Product not found:", name);
+  const product = products.find(p => p.name === name);
+  if (!product) return;
 
   const fixedProduct = {
     ...product,
@@ -150,33 +115,53 @@ function addToCart(name, imgElement) {
   window.Cart.addItem(fixedProduct, imgElement);
 }
 
-/* ============================================================
-   SEARCH BAR
-============================================================ */
 function setupSearch() {
   const input = document.getElementById("searchInput");
   if (!input) return;
 
   input.addEventListener("input", () => {
     const q = input.value.toLowerCase();
-    const filtered = products.filter((p) =>
+    const filtered = productsOriginal.filter(p =>
       p.name.toLowerCase().includes(q)
     );
+    products = filtered;
     renderProducts(filtered);
   });
 }
 
-/* ============================================================
-   CARD TILT EFFECT — PATCHED TO AVOID DUPLICATES
-============================================================ */
+function setupSorting() {
+  const sortSelect = document.getElementById("sortSelect");
+  if (!sortSelect) return;
+
+  sortSelect.addEventListener("change", () => {
+    const v = sortSelect.value;
+
+    if (v === "relevance") {
+      products = [...productsOriginal];
+      renderProducts(products);
+      return;
+    }
+
+    const sorted = [...productsOriginal];
+
+    if (v === "az") sorted.sort((a, b) => a.name.localeCompare(b.name));
+    if (v === "za") sorted.sort((a, b) => b.name.localeCompare(a.name));
+    if (v === "low") sorted.sort((a, b) => a.price - b.price);
+    if (v === "high") sorted.sort((a, b) => b.price - a.price);
+
+    products = sorted;
+    renderProducts(sorted);
+  });
+}
+
 function initCardTilt() {
-  if (_TILT_BOUND) return; // prevents multiple listeners
+  if (_TILT_BOUND) return;
   _TILT_BOUND = true;
 
   const cards = document.querySelectorAll(".card");
 
-  cards.forEach((card) => {
-    card.addEventListener("mousemove", (e) => {
+  cards.forEach(card => {
+    card.addEventListener("mousemove", e => {
       const r = card.getBoundingClientRect();
       const x = e.clientX - r.left;
       const y = e.clientY - r.top;
@@ -193,18 +178,15 @@ function initCardTilt() {
   });
 }
 
-/* ============================================================
-   INIT EVERYTHING
-============================================================ */
 document.addEventListener("DOMContentLoaded", async () => {
   await loadProducts();
   setupSearch();
+  setupSorting();
 
   waitFor(
     () => window.Cart && typeof window.Cart.init === "function",
     () => {
       window.Cart.init();
-      console.log("🛒 Cart initialized.");
     }
   );
 });
