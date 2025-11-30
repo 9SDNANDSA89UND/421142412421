@@ -106,7 +106,7 @@ function bindBuyNowButtons() {
   const buttons = document.querySelectorAll(".buy-now-btn");
 
   buttons.forEach(btn => {
-    btn.onclick = () => {
+    btn.onclick = async () => {
       const name = btn.getAttribute("data-name");
       const product = products.find(p => p.name === name);
       if (!product) return;
@@ -118,11 +118,15 @@ function bindBuyNowButtons() {
       };
 
       const imgElement = btn.closest(".card").querySelector(".product-img");
+
+      const before = localStorage.getItem("cartItems");
+
       window.Cart.addItem(fixedProduct, imgElement);
 
-      setTimeout(() => {
-        window.location.href = "/checkout.html";
-      }, 200);
+      waitFor(
+        () => localStorage.getItem("cartItems") !== before,
+        () => window.location.href = "/checkout.html"
+      );
     };
   });
 }
