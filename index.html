@@ -3,20 +3,24 @@
 
 <head>
   <meta charset="UTF-8" />
-  <title>TamedBlox — Home</title>
+  <title>TamedBlox — Premium Roblox Shop</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const ref = params.get("ref");
-    if (ref) localStorage.setItem("tamed_ref", ref);
-  </script>
+  <!-- SEO -->
+  <meta name="description" content="Premium Roblox pets, brainrots, items & boosts. Fast delivery. Trusted by hundreds of buyers." />
+  <meta name="theme-color" content="#38ff99" />
 
-  <link rel="icon" type="image/png" href="https://i.postimg.cc/y6pL3tKq/Tamed-Blox.png">
-  <link rel="apple-touch-icon" href="https://i.postimg.cc/y6pL3tKq/Tamed-Blox.png">
-  <link rel="icon" sizes="192x192" href="https://i.postimg.cc/y6pL3tKq/Tamed-Blox.png">
-  <link rel="icon" sizes="512x512" href="https://i.postimg.cc/y6pL3tKq/Tamed-Blox.png">
-  <link rel="mask-icon" href="https://i.postimg.cc/y6pL3tKq/Tamed-Blox.png" color="#4ef58a">
+  <!-- Favicons -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/favicon.ico">
+
+  <!-- Social Embed (Discord, Twitter, etc.) -->
+  <meta property="og:title" content="TamedBlox — Premium Roblox Shop">
+  <meta property="og:description" content="Fast delivery. Best prices. Trusted by hundreds of Roblox buyers.">
+  <meta property="og:image" content="https://i.postimg.cc/Vv2d3hxV/Tamed-Blox.png">
+  <meta property="og:url" content="https://tamedblox.com">
+  <meta name="twitter:card" content="summary_large_image">
 
   <link rel="stylesheet" href="assets/css/main.css" />
   <link rel="stylesheet" href="assets/css/navbar-align.css" />
@@ -27,6 +31,10 @@
   <link rel="stylesheet" href="assets/css/search.css" />
 
   <script>
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get("ref");
+    if (ref) localStorage.setItem("tamed_ref", ref);
+
     async function loadComponent(sel, file) {
       const el = document.querySelector(sel);
       if (el) el.innerHTML = await fetch(file).then(r => r.text());
@@ -48,8 +56,8 @@
     <h1 style="font-size: 32px; font-weight: 900">Featured Products</h1>
     <p style="margin-top: 10px; color: #b7bec9;">Best-selling items from TamedBlox.</p>
 
+    <!-- SEARCH + SORT -->
     <div class="search-sort-row">
-
       <div class="search-container">
         <input id="searchInput" placeholder="Search products..." class="search-input" />
         <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
@@ -62,7 +70,6 @@
 
       <div class="sort-mini">
         <select id="sortSelect" class="sort-mini-select">
-          <option value="default">A → Z</option>
           <option value="az">A → Z</option>
           <option value="za">Z → A</option>
           <option value="low">Low → High</option>
@@ -79,35 +86,32 @@
           <path d="M20 18h-5" />
         </svg>
       </div>
-
     </div>
 
+    <!-- SORT + SEARCH LOGIC -->
     <script>
       document.addEventListener("DOMContentLoaded", () => {
-        const input = document.getElementById("searchInput");
-        input.addEventListener("keypress", (e) => {
-          if (e.key === "Enter") input.blur();
-        });
+        const search = document.getElementById("searchInput");
+        const sort = document.getElementById("sortSelect");
 
-        const sortSelect = document.getElementById("sortSelect");
-        const searchInput = document.getElementById("searchInput");
+        search.addEventListener("keypress", e => {
+          if (e.key === "Enter") search.blur();
+        });
 
         const wait = setInterval(() => {
           if (window.products && typeof renderProducts === "function") {
             clearInterval(wait);
 
-            sortSelect.addEventListener("change", () => {
+            sort.addEventListener("change", () => {
               let list = [...window.products];
-              const q = searchInput.value.toLowerCase();
+              const q = search.value.toLowerCase();
 
               if (q) list = list.filter(p => p.name.toLowerCase().includes(q));
 
-              const mode = sortSelect.value;
-
-              if (mode === "az") list.sort((a, b) => a.name.localeCompare(b.name));
-              if (mode === "za") list.sort((a, b) => b.name.localeCompare(a.name));
-              if (mode === "low") list.sort((a, b) => Number(a.price) - Number(b.price));
-              if (mode === "high") list.sort((a, b) => Number(b.price) - Number(a.price));
+              if (sort.value === "az") list.sort((a, b) => a.name.localeCompare(b.name));
+              if (sort.value === "za") list.sort((a, b) => b.name.localeCompare(a.name));
+              if (sort.value === "low") list.sort((a, b) => Number(a.price) - Number(b.price));
+              if (sort.value === "high") list.sort((a, b) => Number(b.price) - Number(a.price));
 
               renderProducts(list);
             });
@@ -167,9 +171,7 @@
   <div id="cartOverlay" class="cart-overlay"></div>
 
   <div id="footer"></div>
-  <script>
-    loadComponent("#footer", "components/footer.html");
-  </script>
+  <script>loadComponent("#footer", "components/footer.html");</script>
 
   <div id="adminChatPanel" class="admin-panel hidden">
     <div class="admin-panel-header">Active Chats</div>
@@ -192,7 +194,8 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
           viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
           stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3.714 3.048a.498.498 0 0 0-.683.627l2.843 7.627a2 2 0 0 1 0 1.396l-2.842 7.627a.498.498 0 0 0 .682.627l18-8.5a.5.5 0 0 0 0-.904z" />
+          <path
+            d="M3.714 3.048a.498.498 0 0 0-.683.627l2.843 7.627a2 2 0 0 1 0 1.396l-2.842 7.627a.498.498 0 0 0 .682.627l18-8.5a.5.5 0 0 0 0-.904z" />
           <path d="M6 12h16" />
         </svg>
       </button>
