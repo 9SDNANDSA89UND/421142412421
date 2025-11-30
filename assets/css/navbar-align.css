@@ -1,44 +1,31 @@
-/* ==========================================
-   PERFECT FIX — Centers only the logo itself
-   WITHOUT transform and WITHOUT shifting text
-========================================== */
-
-/* Make nav-inner a proper container */
 .nav-inner {
   position: relative !important;
   display: flex !important;
   align-items: center !important;
-  justify-content: space-between !important; /* key fix */
+  justify-content: space-between !important;
   width: 100% !important;
 }
 
-/* LOGO CENTER WRAPPER — true centering */
 .nav-center {
   position: absolute !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
-
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
-
   width: max-content !important;
-
   pointer-events: none !important;
   z-index: 2 !important;
 }
 
-/* Logo text stays exactly how YOU designed it */
 .nav-center .logo {
   display: inline-flex !important;
   align-items: center !important;
   gap: 0 !important;
   white-space: nowrap !important;
-
   pointer-events: none !important;
 }
 
-/* NAV RIGHT (Login, Cart, Account, etc.) */
 .nav-right {
   margin-left: auto !important;
   display: flex !important;
@@ -47,12 +34,10 @@
   z-index: 3 !important;
 }
 
-/* NAV LEFT — for hamburger button on mobile */
 .nav-hamburger-wrapper {
   z-index: 3 !important;
 }
 
-/* Mobile portrait & landscape */
 @media (max-width: 760px) {
   .nav-center {
     left: 50% !important;
@@ -60,7 +45,6 @@
   }
 }
 
-/* iPad landscape */
 @media (max-height: 500px) {
   .nav-center {
     left: 50% !important;
