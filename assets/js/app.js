@@ -34,9 +34,7 @@ async function loadProducts() {
     localStorage.setItem("tamed_products", JSON.stringify(fresh));
 
     renderProducts(products);
-  } catch (err) {
-    console.error("❌ Failed to load products:", err);
-  }
+  } catch (err) {}
 }
 
 function getDiscountPercent(price, oldPrice) {
@@ -57,9 +55,7 @@ function renderProducts(list) {
       <div class="card">
 
         <div class="card-badges">
-          <span class="tag tag-${(p.rarity || "Secret").toLowerCase()}">
-            ${p.rarity || "Secret"}
-          </span>
+          <span class="tag-secret">${p.rarity || "Secret"}</span>
           ${discount ? `<span class="discount-tag">${discount}% OFF</span>` : ""}
         </div>
 
@@ -72,9 +68,10 @@ function renderProducts(list) {
           ${p.oldPrice ? `<span class="old-price">${formatUSD(p.oldPrice)}</span>` : ""}
         </div>
 
-        <button class="buy-btn" data-name="${p.name}">
-          Add to Cart
-        </button>
+        <div class="card-actions">
+          <button class="add-cart-btn" data-name="${p.name}">Add to Cart</button>
+          <button class="buy-now-btn" data-name="${p.name}">Buy Now</button>
+        </div>
 
       </div>
     `;
@@ -82,10 +79,11 @@ function renderProducts(list) {
 
   initCardTilt();
   bindCartButtons();
+  bindBuyNowButtons();
 }
 
 function bindCartButtons() {
-  const buttons = document.querySelectorAll(".buy-btn");
+  const buttons = document.querySelectorAll(".add-cart-btn");
   if (!buttons.length) return setTimeout(bindCartButtons, 40);
 
   waitFor(
@@ -100,6 +98,25 @@ function bindCartButtons() {
       });
     }
   );
+}
+
+function bindBuyNowButtons() {
+  const buttons = document.querySelectorAll(".buy-now-btn");
+
+  buttons.forEach(btn => {
+    btn.onclick = () => {
+      const name = btn.getAttribute("data-name");
+      const product = products.find(p => p.name === name);
+      if (!product) return;
+
+      const query = new URLSearchParams({
+        product: name,
+        price: product.price
+      });
+
+      window.location.href = "/checkout.html?" + query.toString();
+    };
+  });
 }
 
 function addToCart(name, imgElement) {
@@ -165,10 +182,8 @@ function initCardTilt() {
       const r = card.getBoundingClientRect();
       const x = e.clientX - r.left;
       const y = e.clientY - r.top;
-
       const rx = ((y - r.height / 2) / (r.height / 2)) * -10;
       const ry = ((x - r.width / 2) / (r.width / 2)) * 10;
-
       card.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg)`;
     });
 
@@ -185,8 +200,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   waitFor(
     () => window.Cart && typeof window.Cart.init === "function",
-    () => {
-      window.Cart.init();
-    }
+    () => window.Cart.init()
   );
 });
