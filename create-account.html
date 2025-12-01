@@ -114,6 +114,9 @@ button:active {
   <label>Email</label>
   <input id="email" type="email" placeholder="you@example.com">
 
+  <label>Username</label>
+  <input id="username" type="text" placeholder="Username">
+
   <label>Password</label>
   <input id="password" type="password" placeholder="Password">
 
@@ -125,13 +128,16 @@ button:active {
 <script>
 const params = new URLSearchParams(location.search);
 const sessionId = params.get("session_id");
-const storedUsername = localStorage.getItem("postPurchaseRobloxUser") || "";
+
+// Stored Roblox username from step 2
+const storedRobloxUsername = localStorage.getItem("postPurchaseRobloxUser") || "";
 
 document.getElementById("createBtn").onclick = async () => {
   const email = document.getElementById("email").value.trim();
+  const username = document.getElementById("username").value.trim();
   const password = document.getElementById("password").value.trim();
 
-  if (!email || !password) {
+  if (!email || !password || !username) {
     showError("Missing fields");
     return;
   }
@@ -141,16 +147,11 @@ document.getElementById("createBtn").onclick = async () => {
     return;
   }
 
-  // use Roblox username as site username, fallback to email prefix
-  const username =
-    storedUsername && storedUsername.length > 0
-      ? storedUsername
-      : email.split("@")[0];
-
+  // Register user
   let registerReq = await fetch("https://website-5eml.onrender.com/auth/register", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password, username })
+    body: JSON.stringify({ email, username, password })
   });
 
   let reg = await registerReq.json();
@@ -160,21 +161,34 @@ document.getElementById("createBtn").onclick = async () => {
     return;
   }
 
-  // if you later make /auth/register return token, set it here
-  if (reg.token) {
-    localStorage.setItem("authToken", reg.token);
+  // Auto-login
+  let loginReq = await fetch("https://website-5eml.onrender.com/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password })
+  });
+
+  let login = await loginReq.json();
+
+  if (!login.success) {
+    showError("Failed to log in after creating account");
+    return;
   }
 
+  localStorage.setItem("authToken", login.token);
+
+  // Link Roblox username to this account + chat + order
   await fetch("https://website-5eml.onrender.com/pay/link-user-roblox", {
     method:"POST",
     headers:{ "Content-Type":"application/json" },
     body: JSON.stringify({
       sessionId,
-      robloxUser: storedUsername,
+      robloxUser: storedRobloxUsername,
       email
     })
   });
 
+  // Redirect to live chat
   window.location.href = `/index.html?chat=open&session_id=${sessionId}`;
 };
 
