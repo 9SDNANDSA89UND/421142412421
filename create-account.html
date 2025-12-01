@@ -125,8 +125,7 @@ button:active {
 <script>
 const params = new URLSearchParams(location.search);
 const sessionId = params.get("session_id");
-
-const storedUsername = localStorage.getItem("postPurchaseRobloxUser");
+const storedUsername = localStorage.getItem("postPurchaseRobloxUser") || "";
 
 document.getElementById("createBtn").onclick = async () => {
   const email = document.getElementById("email").value.trim();
@@ -142,10 +141,16 @@ document.getElementById("createBtn").onclick = async () => {
     return;
   }
 
+  // use Roblox username as site username, fallback to email prefix
+  const username =
+    storedUsername && storedUsername.length > 0
+      ? storedUsername
+      : email.split("@")[0];
+
   let registerReq = await fetch("https://website-5eml.onrender.com/auth/register", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password })
+    body: JSON.stringify({ email, password, username })
   });
 
   let reg = await registerReq.json();
@@ -155,7 +160,10 @@ document.getElementById("createBtn").onclick = async () => {
     return;
   }
 
-  localStorage.setItem("authToken", reg.token);
+  // if you later make /auth/register return token, set it here
+  if (reg.token) {
+    localStorage.setItem("authToken", reg.token);
+  }
 
   await fetch("https://website-5eml.onrender.com/pay/link-user-roblox", {
     method:"POST",
