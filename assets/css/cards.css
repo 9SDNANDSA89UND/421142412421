@@ -21,7 +21,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   height: 350px;
 }
 
@@ -34,10 +34,12 @@
     inset 0 0 12px rgba(255,255,255,0.08);
 }
 
-/* FIXED IMAGE HEIGHT (IMPORTANT FIX) */
+/* =========================
+   FIXED IMAGE HEIGHT
+   ========================= */
 .product-img {
   width: 100%;
-  height: 145px;        /* <— FIXED HEIGHT */
+  height: 145px;          /* FIXED HEIGHT */
   border-radius: 10px;
   background: rgba(255,255,255,0.05);
   padding: 8px;
@@ -45,15 +47,20 @@
   box-shadow:
     inset 0 0 20px rgba(78,245,138,0.35),
     0 0 18px rgba(78,245,138,0.18);
+
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
 }
 
 .product-img img {
   width: 100%;
   height: 100%;
-  object-fit: contain; /* <— COVER REMOVED */
+  object-fit: contain;    /* NO aspect-ratio issues */
+}
+
+.card:hover .product-img {
+  transform: scale(1.04);
 }
 
 .card-badges {
@@ -93,7 +100,42 @@
   gap: 4px;
 }
 
-/* LOCK TITLE HEIGHT (IMPORTANT FIX) */
+.discount-tag svg {
+  width: 10px;
+  height: 10px;
+}
+
+.tag-secret::after,
+.tag-god::after,
+.tag-og::after,
+.discount-tag::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(255,255,255,0.65) 50%,
+    transparent 100%
+  );
+  filter: blur(3px);
+  transform: skewX(-25deg);
+  opacity: 0.85;
+  animation: tagShine 1.8s ease-in-out infinite;
+}
+
+@keyframes tagShine {
+  0% { left: -120%; }
+  50% { left: 120%; }
+  100% { left: 120%; }
+}
+
+/* =========================
+   FIXED TITLE HEIGHT
+   ========================= */
 .card h3 {
   margin-top: 6px;
   font-size: 14px;
@@ -102,18 +144,23 @@
   text-shadow:
     0 0 4px rgba(78,245,138,0.25),
     0 0 1px rgba(78,245,138,0.12);
+
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  height: 32px;      /* <— FIXED TITLE BOX */
+
+  height: 32px;      /* FIXED HEIGHT */
 }
 
+/* =========================
+   FIXED PRICE ROW
+   ========================= */
 .price-box {
   display: flex;
   align-items: center;
   gap: 10px;
   margin: 10px 0 14px;
-  height: 24px;      /* <— FIXED PRICE BOX */
+  height: 24px;      /* FIXED HEIGHT */
 }
 
 .price {
@@ -131,13 +178,15 @@
   text-decoration: line-through;
 }
 
+/* =========================
+   SECURE CHECKOUT FIXED
+   ========================= */
 .secure-checkout {
   display: flex;
   align-items: center;
   gap: 6px;
   width: fit-content;
   padding: 6px 10px;
-  margin-top: -4px;
   margin-bottom: 10px;
   font-size: 11px;
   font-weight: 800;
@@ -148,6 +197,8 @@
   box-shadow:
     0 0 10px rgba(78,245,138,0.35),
     inset 0 0 6px rgba(78,245,138,0.2);
+
+  height: 24px;     /* FIXED HEIGHT */
 }
 
 .secure-checkout .shield-icon {
@@ -157,11 +208,14 @@
   filter: drop-shadow(0 0 4px rgba(78,245,138,0.6));
 }
 
+/* =========================
+   BUTTONS ALWAYS AT BOTTOM
+   ========================= */
 .card-actions {
+  margin-top: auto;
   display: flex;
   justify-content: space-between;
   gap: 8px;
-  margin-top: auto; /* stays at bottom */
 }
 
 .add-cart-btn,
