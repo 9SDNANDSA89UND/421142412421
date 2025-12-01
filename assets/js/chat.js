@@ -12,6 +12,9 @@ function waitForElement(id, cb) {
   setTimeout(() => waitForElement(id, cb), 30);
 }
 
+/* ============================================================
+   SESSION LOADING
+============================================================ */
 async function loadSession() {
   const token = localStorage.getItem("authToken");
   if (!token) return { loggedIn: false };
@@ -31,6 +34,9 @@ async function loadSession() {
   }
 }
 
+/* ============================================================
+   RESTORE ORDER SUMMARY
+============================================================ */
 function renderOrderSummary(order) {
   const box = qs("chatOrderSummary");
   if (!box) return;
@@ -52,6 +58,9 @@ function renderOrderSummary(order) {
   `;
 }
 
+/* ============================================================
+   SSE STREAM + MESSAGE LOADING
+============================================================ */
 function startSSE(chatId) {
   if (!chatId) return;
   if (evtSrc) evtSrc.close();
@@ -70,8 +79,11 @@ function appendMessage(msg) {
   if (!box || !msg) return;
   if (msg.deleted) {
     qs("chatWindow")?.classList.add("hidden");
+    localStorage.removeItem("tamed_last_session");
+    localStorage.removeItem("tamed_chat_id");
     return;
   }
+
   let mine;
   if (IS_ADMIN) {
     mine = "admin";
@@ -80,9 +92,9 @@ function appendMessage(msg) {
   } else {
     mine = "customer";
   }
-  const sender = msg.sender || "customer";
+
   const div = document.createElement("div");
-  div.className = `msg ${msg.system ? "system" : sender === mine ? "me" : "them"}`;
+  div.className = `msg ${msg.system ? "system" : msg.sender === mine ? "me" : "them"}`;
   div.innerHTML = `
     ${msg.content}
     <br>
@@ -103,6 +115,86 @@ async function loadMessages(chatId) {
   } catch {}
 }
 
+/* ============================================================
+   RESTORE CHAT FROM SESSION — NEW LOGIC
+============================================================ */
+async function restoreChatFromSession(sessionId) {
+  try {
+    const res = await fetch(`${API}/pay/session-info/${sessionId}`);
+    const data = await res.json();
+    if (!data.chatId) return false;
+
+    // SAVE chatId to localStorage
+    localStorage.setItem("tamed_chat_id", data.chatId);
+
+    CURRENT_CHAT = { _id: data.chatId, userEmail: "customer" };
+
+    const chatInfo = await fetch(`${API}/chats/by-id/${data.chatId}`).then(r => r.json());
+    renderOrderSummary(chatInfo.orderDetails);
+
+    qs("chatWindow")?.classList.remove("hidden");
+    qs("chatButton")?.classList.remove("hidden");
+
+    await loadMessages(data.chatId);
+    startSSE(data.chatId);
+
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/* ============================================================
+   UNIVERSAL CHAT LOAD — FULLY PATCHED
+============================================================ */
+async function universalChatLoad() {
+  const params = new URLSearchParams(window.location.search);
+
+  // 1️⃣ Get URL session ID
+  let sessionId = params.get("session_id");
+
+  // 2️⃣ Fallback to saved session
+  if (!sessionId) {
+    sessionId = localStorage.getItem("tamed_last_session");
+  }
+
+  // 3️⃣ If session exists, save it
+  if (sessionId) {
+    localStorage.setItem("tamed_last_session", sessionId);
+
+    const restored = await restoreChatFromSession(sessionId);
+    if (restored) return;
+  }
+
+  // 4️⃣ Fallback: If chatId exists, restore chat directly
+  const savedChatId = localStorage.getItem("tamed_chat_id");
+  if (savedChatId) {
+    CURRENT_CHAT = { _id: savedChatId, userEmail: "customer" };
+    const chatInfo = await fetch(`${API}/chats/by-id/${savedChatId}`).then(r => r.json());
+    renderOrderSummary(chatInfo.orderDetails);
+
+    qs("chatWindow")?.classList.remove("hidden");
+    qs("chatButton")?.classList.remove("hidden");
+
+    await loadMessages(savedChatId);
+    startSSE(savedChatId);
+    return;
+  }
+
+  // 5️⃣ Logged-in user fallback to customer chat
+  const token = localStorage.getItem("authToken");
+  if (token) {
+    const session = await loadSession();
+    if (session.loggedIn) {
+      const ok = await loadCustomerChat(token, session.email);
+      if (ok) return;
+    }
+  }
+}
+
+/* ============================================================
+   LOAD CUSTOMER CHAT (existing logic)
+============================================================ */
 async function loadCustomerChat(token, email) {
   try {
     const res = await fetch(`${API}/chats/my-chats`, {
@@ -110,6 +202,9 @@ async function loadCustomerChat(token, email) {
     });
     const chat = await res.json();
     if (!chat?._id) return false;
+
+    localStorage.setItem("tamed_chat_id", chat._id);
+
     CURRENT_CHAT = { _id: chat._id, userEmail: email };
     renderOrderSummary(chat.orderDetails);
     qs("chatButton")?.classList.remove("hidden");
@@ -120,6 +215,82 @@ async function loadCustomerChat(token, email) {
   } catch {
     return false;
   }
+}
+
+/* ============================================================
+   SEND MESSAGE
+============================================================ */
+async function sendMessage() {
+  const input = qs("chatInput");
+  if (!input) return;
+  const text = input.value.trim();
+  input.value = "";
+  if (!text || !CURRENT_CHAT) return;
+
+  let sender =
+    IS_ADMIN
+      ? "admin"
+      : CURRENT_CHAT.userEmail && CURRENT_CHAT.userEmail !== "customer"
+      ? CURRENT_CHAT.userEmail
+      : "customer";
+
+  const token = localStorage.getItem("authToken");
+  try {
+    await fetch(`${API}/chats/send`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token ? "Bearer " + token : ""
+      },
+      body: JSON.stringify({
+        chatId: CURRENT_CHAT._id,
+        content: text,
+        sender
+      })
+    });
+  } catch {}
+}
+
+/* ============================================================
+   ADMIN CONTROLS
+============================================================ */
+function enableAdminDelete() {
+  waitForElement("deleteTicketBtn", (btn) => {
+    btn.onclick = async () => {
+      if (!CURRENT_CHAT?._id) return;
+      const token = localStorage.getItem("authToken");
+      const res = await fetch(`${API}/chats/close`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token
+        },
+        body: JSON.stringify({ chatId: CURRENT_CHAT._id })
+      });
+      const data = await res.json();
+      if (data.success) {
+        localStorage.removeItem("tamed_last_session");
+        localStorage.removeItem("tamed_chat_id");
+        location.reload();
+      }
+    };
+  });
+}
+
+function bindAdminToggle() {
+  waitForElement("adminChatBtn", (btn) => {
+    btn.classList.remove("hidden");
+    btn.onclick = async () => {
+      const panel = qs("adminChatPanel");
+      if (!panel) return;
+      if (panel.classList.contains("hidden")) {
+        await loadAdminChats();
+        panel.classList.remove("hidden");
+      } else {
+        panel.classList.add("hidden");
+      }
+    };
+  });
 }
 
 async function loadAdminChats() {
@@ -161,72 +332,9 @@ async function openAdminChat(chatId) {
   } catch {}
 }
 
-async function sendMessage() {
-  const input = qs("chatInput");
-  if (!input) return;
-  const text = input.value.trim();
-  input.value = "";
-  if (!text || !CURRENT_CHAT) return;
-  let sender =
-    IS_ADMIN
-      ? "admin"
-      : CURRENT_CHAT.userEmail && CURRENT_CHAT.userEmail !== "customer"
-      ? CURRENT_CHAT.userEmail
-      : "customer";
-  const token = localStorage.getItem("authToken");
-  try {
-    await fetch(`${API}/chats/send`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token ? "Bearer " + token : ""
-      },
-      body: JSON.stringify({
-        chatId: CURRENT_CHAT._id,
-        content: text,
-        sender
-      })
-    });
-  } catch {}
-}
-
-function enableAdminDelete() {
-  waitForElement("deleteTicketBtn", (btn) => {
-    btn.onclick = async () => {
-      if (!CURRENT_CHAT?._id) return;
-      const token = localStorage.getItem("authToken");
-      const res = await fetch(`${API}/chats/close`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token
-        },
-        body: JSON.stringify({ chatId: CURRENT_CHAT._id })
-      });
-      const data = await res.json();
-      if (data.success) {
-        location.reload();
-      }
-    };
-  });
-}
-
-function bindAdminToggle() {
-  waitForElement("adminChatBtn", (btn) => {
-    btn.classList.remove("hidden");
-    btn.onclick = async () => {
-      const panel = qs("adminChatPanel");
-      if (!panel) return;
-      if (panel.classList.contains("hidden")) {
-        await loadAdminChats();
-        panel.classList.remove("hidden");
-      } else {
-        panel.classList.add("hidden");
-      }
-    };
-  });
-}
-
+/* ============================================================
+   CHAT BUTTON
+============================================================ */
 function bindChatButton() {
   waitForElement("chatButton", (btn) => {
     btn.onclick = () =>
@@ -234,38 +342,9 @@ function bindChatButton() {
   });
 }
 
-async function universalChatLoad() {
-  const params = new URLSearchParams(window.location.search);
-  const sessionId = params.get("session_id");
-  const chatOpen = params.get("chat");
-  if (chatOpen === "open" && sessionId) {
-    try {
-      const res = await fetch(`${API}/pay/session-info/${sessionId}`);
-      const data = await res.json();
-      if (data.chatId) {
-        CURRENT_CHAT = { _id: data.chatId, userEmail: "customer" };
-        const chatInfo = await fetch(`${API}/chats/by-id/${data.chatId}`).then(
-          (r) => r.json()
-        );
-        renderOrderSummary(chatInfo.orderDetails);
-        qs("chatButton")?.classList.remove("hidden");
-        qs("chatWindow")?.classList.remove("hidden");
-        await loadMessages(data.chatId);
-        startSSE(data.chatId);
-        return;
-      }
-    } catch {}
-  }
-  const token = localStorage.getItem("authToken");
-  if (token) {
-    const session = await loadSession();
-    if (session.loggedIn) {
-      const ok = await loadCustomerChat(token, session.email);
-      if (ok) return;
-    }
-  }
-}
-
+/* ============================================================
+   INIT
+============================================================ */
 window.chatInit = () => {
   loadSession().then((session) => {
     if (session.loggedIn) {
