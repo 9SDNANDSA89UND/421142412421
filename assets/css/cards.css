@@ -1,252 +1,228 @@
+/* =======================================
+   GRID LAYOUT
+======================================= */
 .product-grid {
-  max-width: 1380px;
+  max-width: 1400px;
   margin: 40px auto;
   padding: 0 20px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-  gap: 22px;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 26px;
 }
 
+
+/* =======================================
+   CARD BASE
+======================================= */
 .card {
-  background: rgba(15, 20, 26, 0.82);
+  background: rgba(15, 20, 26, 0.85);
   border-radius: 18px;
-  padding: 14px 14px 18px;
-  border: 1px solid rgba(78, 245, 138, 0.45);
-  box-shadow:
-    0 0 16px rgba(78,245,138,0.28),
-    0 0 8px rgba(78,245,138,0.18),
-    inset 0 0 8px rgba(255,255,255,0.05);
-  backdrop-filter: blur(16px);
-  transition: 0.25s ease;
-  position: relative;
+  border: 1px solid rgba(78, 245, 138, 0.4);
+  padding: 14px;
+  height: 440px;                     /* FIXED HEIGHT */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  height: 350px;
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    0 0 18px rgba(78,245,138,0.25),
+    inset 0 0 12px rgba(255,255,255,0.05);
+  transition: 0.25s ease;
 }
 
 .card:hover {
-  transform: translateY(-5px) scale(1.015);
-  border-color: rgba(78, 245, 138, 0.85);
+  transform: translateY(-6px) scale(1.015);
+  border-color: rgba(78,245,138,0.9);
   box-shadow:
-    0 0 24px rgba(78,245,138,0.55),
-    0 0 10px rgba(78,245,138,0.38),
-    inset 0 0 12px rgba(255,255,255,0.08);
+    0 0 28px rgba(78,245,138,0.6),
+    inset 0 0 10px rgba(255,255,255,0.08);
 }
 
-/* ——————————————————————————————————
-   SQUARE IMAGE — NO STRETCHING
-—————————————————————————————————— */
+
+/* =======================================
+   PRODUCT IMAGE (SQUARE, NO STRETCHING)
+======================================= */
 .product-img {
   width: 100%;
-  height: 190px;          /* PERFECT SQUARE based on 190px card width */
-  border-radius: 10px;
+  height: 200px;                    /* 1:1 SQUARE */
   background: rgba(255,255,255,0.05);
-  padding: 8px;
+  border-radius: 12px;
   margin-bottom: 12px;
-  box-shadow:
-    inset 0 0 20px rgba(78,245,138,0.35),
-    0 0 18px rgba(78,245,138,0.18);
 
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+
+  box-shadow:
+    inset 0 0 18px rgba(78,245,138,0.35),
+    0 0 18px rgba(78,245,138,0.2);
 }
 
 .product-img img {
   max-width: 100%;
   max-height: 100%;
-  width: auto;         /* ✔ no stretching */
-  height: auto;        /* ✔ no stretching */
-  object-fit: contain; /* ✔ maintains original shape */
+  width: auto;
+  height: auto;
+  object-fit: contain;              /* NEVER DISTORT */
   display: block;
 }
 
-.card:hover .product-img {
-  transform: scale(1.04);
-}
 
-/* ——————————————————————————————————
+/* =======================================
    BADGES
-—————————————————————————————————— */
+======================================= */
 .card-badges {
   position: absolute;
-  top: 8px;
-  left: 8px;
-  right: 8px;
+  top: 10px;
+  left: 10px;
+  right: 10px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
 }
 
 .tag-secret,
 .tag-god,
-.tag-og,
-.discount-tag {
-  position: relative;
-  overflow: hidden;
-  border-radius: 40px;
-  padding: 5px 12px;
-  font-size: 10px;
+.tag-og {
+  padding: 6px 14px;
+  font-size: 11px;
   font-weight: 900;
+  border-radius: 40px;
+  color: #000;
+  backdrop-filter: blur(6px);
   box-shadow:
-    0 0 14px currentColor,
-    inset 0 0 8px rgba(255,255,255,0.22);
+    0 0 10px currentColor,
+    inset 0 0 8px rgba(255,255,255,0.2);
 }
 
-.tag-secret { background: #00eaff; color: #00171d; }
-.tag-god { background: #ff37ff; color: #1d001d; }
-.tag-og { background: #ffc65a; color: #2d1d00; }
+.tag-secret { background: #00eaff; color:#00171d; }
+.tag-god { background: #ff37ff; color:#1d001d; }
+.tag-og { background: #ffc65a; color:#2d1d00; }
 
 .discount-tag {
+  padding: 6px 14px;
   background: #4ef58a;
-  color: #001d0b;
+  color: #001d09;
+  font-size: 11px;
+  font-weight: 900;
+  border-radius: 40px;
   display: flex;
   align-items: center;
   gap: 4px;
+  box-shadow:
+    0 0 10px #4ef58a,
+    inset 0 0 8px rgba(255,255,255,0.22);
 }
 
-.discount-tag svg {
-  width: 10px;
-  height: 10px;
-}
 
-.tag-secret::after,
-.tag-god::after,
-.tag-og::after,
-.discount-tag::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -120%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    120deg,
-    transparent 0%,
-    rgba(255,255,255,0.65) 50%,
-    transparent 100%
-  );
-  filter: blur(3px);
-  transform: skewX(-25deg);
-  opacity: 0.85;
-  animation: tagShine 1.8s ease-in-out infinite;
-}
-
-@keyframes tagShine {
-  0% { left: -120%; }
-  50% { left: 120%; }
-  100% { left: 120%; }
-}
-
-/* ——————————————————————————————————
-   FIXED TITLE HEIGHT
-—————————————————————————————————— */
+/* =======================================
+   TITLE (2 lines max, fade-out)
+======================================= */
 .card h3 {
-  margin-top: 6px;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 800;
-  color: #f8fff6;
-  text-shadow:
-    0 0 4px rgba(78,245,138,0.25),
-    0 0 1px rgba(78,245,138,0.12);
-  white-space: nowrap;
+  color: #ebffee;
+  margin: 4px 0 0;
+  height: 38px;                   /* LOCKED HEIGHT */
   overflow: hidden;
-  text-overflow: ellipsis;
-  height: 32px; /* FIXED HEIGHT so all titles align */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;         /* 2-line title */
+  -webkit-box-orient: vertical;
 }
 
-/* ——————————————————————————————————
-   FIXED PRICE ROW
-—————————————————————————————————— */
+
+/* =======================================
+   PRICE
+======================================= */
 .price-box {
+  margin-top: 10px;
+  height: 28px;                   /* LOCKED */
   display: flex;
   align-items: center;
   gap: 10px;
-  margin: 10px 0 14px;
-  height: 24px; /* FIXED HEIGHT */
 }
 
 .price {
-  font-size: 16px;
-  font-weight: 900;
   color: #4ef58a;
-  text-shadow:
-    0 0 8px rgba(78,245,138,0.6),
-    0 0 3px rgba(78,245,138,0.4);
+  font-size: 17px;
+  font-weight: 900;
+  text-shadow: 0 0 6px rgba(78,245,138,0.6);
 }
 
 .old-price {
-  font-size: 11px;
-  opacity: 0.7;
+  font-size: 12px;
+  opacity: 0.6;
   text-decoration: line-through;
 }
 
-/* ——————————————————————————————————
-   SECURE CHECKOUT BADGE
-—————————————————————————————————— */
+
+/* =======================================
+   SECURE CHECKOUT
+======================================= */
 .secure-checkout {
+  margin-top: 8px;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #4ef58a;
+
   display: flex;
   align-items: center;
   gap: 6px;
-  width: fit-content;
-  padding: 6px 10px;
-  margin-bottom: 10px;
-  font-size: 11px;
-  font-weight: 800;
-  color: #4ef58a;
-  background: rgba(78,245,138,0.12);
-  border: 1px solid rgba(78,245,138,0.35);
+
+  background: rgba(78,245,138,0.15);
+  border: 1px solid rgba(78,245,138,0.4);
   border-radius: 10px;
+
   box-shadow:
-    0 0 10px rgba(78,245,138,0.35),
-    inset 0 0 6px rgba(78,245,138,0.2);
-  height: 26px; /* FIXED HEIGHT */
+    0 0 14px rgba(78,245,138,0.4),
+    inset 0 0 10px rgba(78,245,138,0.2);
+
+  height: 30px;                   /* LOCKED */
 }
 
 .secure-checkout .shield-icon {
   width: 14px;
   height: 14px;
   stroke: #4ef58a;
-  filter: drop-shadow(0 0 4px rgba(78,245,138,0.6));
 }
 
-/* ——————————————————————————————————
-   BUTTONS ALWAYS AT THE BOTTOM
-—————————————————————————————————— */
+
+/* =======================================
+   BUTTONS (LOCKED BOTTOM)
+======================================= */
 .card-actions {
-  margin-top: auto;
+  margin-top: auto;               /* ALWAYS AT BOTTOM */
   display: flex;
-  justify-content: space-between;
-  gap: 8px;
+  gap: 10px;
 }
 
 .add-cart-btn,
 .buy-now-btn {
   flex: 1;
-  padding: 10px 0;
-  border-radius: 8px;
+  padding: 11px 0;
+  border-radius: 10px;
   font-weight: 900;
-  font-size: 12px;
+  font-size: 13px;
   border: none;
+  color: #0b0f14;
   cursor: pointer;
-  transition: 0.18s ease;
-  color: #0c1117;
+  transition: 0.2s ease;
 }
 
 .add-cart-btn {
   background: #4ef58a;
-  box-shadow: 0 0 12px rgba(78,245,138,0.45);
+  box-shadow: 0 0 14px rgba(78,245,138,0.45);
 }
 
 .buy-now-btn {
   background: #38ffaa;
-  box-shadow: 0 0 12px rgba(56,255,170,0.45);
+  box-shadow: 0 0 14px rgba(56,255,170,0.45);
 }
 
 .add-cart-btn:hover,
 .buy-now-btn:hover {
-  transform: translateY(-2px) scale(1.02);
+  transform: translateY(-2px);
 }
 
 .add-cart-btn:active,
