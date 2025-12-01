@@ -34,12 +34,12 @@
     inset 0 0 12px rgba(255,255,255,0.08);
 }
 
-/* =========================
-   SQUARE PRODUCT IMAGES
-   ========================= */
+/* ——————————————————————————————————
+   SQUARE IMAGE — NO STRETCHING
+—————————————————————————————————— */
 .product-img {
   width: 100%;
-  height: 190px;        /* <— PERFECT SQUARE AREA */
+  height: 190px;          /* PERFECT SQUARE based on 190px card width */
   border-radius: 10px;
   background: rgba(255,255,255,0.05);
   padding: 8px;
@@ -47,20 +47,28 @@
   box-shadow:
     inset 0 0 20px rgba(78,245,138,0.35),
     0 0 18px rgba(78,245,138,0.18);
+
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .product-img img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;     /* prevents distortion */
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;         /* ✔ no stretching */
+  height: auto;        /* ✔ no stretching */
+  object-fit: contain; /* ✔ maintains original shape */
+  display: block;
 }
 
-/* =========================
+.card:hover .product-img {
+  transform: scale(1.04);
+}
+
+/* ——————————————————————————————————
    BADGES
-   ========================= */
+—————————————————————————————————— */
 .card-badges {
   position: absolute;
   top: 8px;
@@ -131,9 +139,9 @@
   100% { left: 120%; }
 }
 
-/* =========================
-   LOCKED TITLE HEIGHT
-   ========================= */
+/* ——————————————————————————————————
+   FIXED TITLE HEIGHT
+—————————————————————————————————— */
 .card h3 {
   margin-top: 6px;
   font-size: 14px;
@@ -145,18 +153,18 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  height: 32px;      /* locked */
+  height: 32px; /* FIXED HEIGHT so all titles align */
 }
 
-/* =========================
-   LOCKED PRICE ROW
-   ========================= */
+/* ——————————————————————————————————
+   FIXED PRICE ROW
+—————————————————————————————————— */
 .price-box {
   display: flex;
   align-items: center;
   gap: 10px;
   margin: 10px 0 14px;
-  height: 24px;      /* locked */
+  height: 24px; /* FIXED HEIGHT */
 }
 
 .price {
@@ -174,31 +182,26 @@
   text-decoration: line-through;
 }
 
-/* =========================
-   SECURE CHECKOUT LOCKED
-   ========================= */
+/* ——————————————————————————————————
+   SECURE CHECKOUT BADGE
+—————————————————————————————————— */
 .secure-checkout {
   display: flex;
   align-items: center;
   gap: 6px;
   width: fit-content;
-
   padding: 6px 10px;
   margin-bottom: 10px;
-
   font-size: 11px;
   font-weight: 800;
   color: #4ef58a;
-
   background: rgba(78,245,138,0.12);
   border: 1px solid rgba(78,245,138,0.35);
   border-radius: 10px;
-
   box-shadow:
     0 0 10px rgba(78,245,138,0.35),
     inset 0 0 6px rgba(78,245,138,0.2);
-
-  height: 26px; /* locked */
+  height: 26px; /* FIXED HEIGHT */
 }
 
 .secure-checkout .shield-icon {
@@ -208,9 +211,9 @@
   filter: drop-shadow(0 0 4px rgba(78,245,138,0.6));
 }
 
-/* =========================
-   BUTTONS ALWAYS AT BOTTOM
-   ========================= */
+/* ——————————————————————————————————
+   BUTTONS ALWAYS AT THE BOTTOM
+—————————————————————————————————— */
 .card-actions {
   margin-top: auto;
   display: flex;
